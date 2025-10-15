@@ -1,0 +1,14 @@
+{
+  "tag": "footer",
+  "attributes": {
+    "class": "site-footer",
+    "style": "background: #34495e; color: white; padding: 20px; text-align: center; margin-top: 50px;"
+  },
+  "children": [
+    {
+      "tag": "p",
+      "attributes": { "style": "margin: 0;" },
+      "text": "© {{year}} {{siteName}} - All rights reserved"
+    }
+  ]
+}

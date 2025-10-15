@@ -1,0 +1,83 @@
+{
+  "project": "editor-project",
+  "description": "WYSIWYGエディタ用ルーティング定義",
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/editor",
+      "handler": "renderPage",
+      "template": "main.json",
+      "data": {
+        "title": "WYSIWYG Editor",
+        "editorConfig": "config.json"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/editor/api/components",
+      "handler": "json",
+      "template": "../shared/layout.json"
+    },
+    {
+      "method": "POST",
+      "path": "/editor/api/save",
+      "handler": "saveProject",
+      "validation": {
+        "projectName": "required|string",
+        "content": "required|object"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/editor/preview/:template",
+      "handler": "renderPage",
+      "template": "{{params.template}}.json",
+      "data": {
+        "previewMode": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/projects",
+      "handler": "listProjects"
+    },
+    {
+      "method": "POST",
+      "path": "/projects/create",
+      "handler": "createProject",
+      "validation": {
+        "name": "required|string",
+        "template": "string",
+        "description": "string"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/projects/:name",
+      "handler": "getProject"
+    },
+    {
+      "method": "PUT",
+      "path": "/projects/:name",
+      "handler": "updateProject",
+      "validation": {
+        "routes": "required|object",
+        "description": "string"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/projects/:name",
+      "handler": "deleteProject"
+    },
+    {
+      "method": "GET",
+      "path": "/manager",
+      "handler": "renderPage",
+      "template": "project-manager.json",
+      "data": {
+        "title": "プロジェクト管理"
+      }
+    }
+  ]
+}

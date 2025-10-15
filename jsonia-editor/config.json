@@ -1,0 +1,259 @@
+{
+  "editor": {
+    "name": "Jsonia WYSIWYG Editor",
+    "version": "1.0.0",
+    "config": {
+      "dragAndDrop": {
+        "enabled": true,
+        "previewMode": true,
+        "autoScroll": true
+      },
+      "realTimePreview": {
+        "enabled": true,
+        "debounceDelay": 300
+      },
+      "undoRedo": {
+        "enabled": true,
+        "maxHistorySize": 50
+      },
+      "devicePreview": {
+        "enabled": true,
+        "devices": ["desktop", "tablet", "mobile"],
+        "breakpoints": {
+          "mobile": "375px",
+          "tablet": "768px",
+          "desktop": "1200px"
+        }
+      }
+    },
+    "componentLibrary": {
+      "loadFromFiles": [
+        "/components/layout.json",
+        "/components/text.json",
+        "/components/form.json",
+        "/components/media.json",
+        "/components/custom.json",
+        "/components/ejs.json"
+      ]
+    },
+    "actions": {
+      "preview": {
+        "type": "navigation",
+        "target": "/preview",
+        "method": "POST"
+      },
+      "export-json": {
+        "type": "export",
+        "format": "json",
+        "filename": "page-config.json"
+      },
+      "export-html": {
+        "type": "export", 
+        "format": "html",
+        "filename": "generated-page.html"
+      },
+      "export-ejs": {
+        "type": "export",
+        "format": "ejs", 
+        "filename": "generated-template.ejs"
+      },
+      "save": {
+        "type": "storage",
+        "method": "save",
+        "target": "localStorage"
+      },
+      "load": {
+        "type": "storage",
+        "method": "load",
+        "target": "localStorage"
+      },
+      "undo": {
+        "type": "history",
+        "method": "undo"
+      },
+      "redo": {
+        "type": "history", 
+        "method": "redo"
+      },
+      "device-desktop": {
+        "type": "devicePreview",
+        "device": "desktop"
+      },
+      "device-tablet": {
+        "type": "devicePreview",
+        "device": "tablet"
+      },
+      "device-mobile": {
+        "type": "devicePreview",
+        "device": "mobile"
+      },
+      "clear-canvas": {
+        "type": "canvas",
+        "method": "clear"
+      },
+      "show-properties": {
+        "type": "panel",
+        "target": "properties"
+      },
+      "show-json-editor": {
+        "type": "panel",
+        "target": "json-editor"
+      },
+      "apply-json": {
+        "type": "editor",
+        "method": "applyJsonChanges"
+      }
+    },
+    "eventHandlers": {
+      "actionClick": {
+        "event": "click",
+        "selector": "[data-action]",
+        "handler": "handleAction",
+        "dataAttribute": "action"
+      },
+      "dragstart": {
+        "event": "dragstart",
+        "selector": "[draggable='true']",
+        "handler": "handleDragStart"
+      },
+      "dragend": {
+        "event": "dragend",
+        "selector": "[draggable='true']",
+        "handler": "handleDragEnd"
+      },
+      "dragover": {
+        "event": "dragover",
+        "selector": "#drop-zone",
+        "handler": "handleDragOver"
+      },
+      "drop": {
+        "event": "drop",
+        "selector": "#drop-zone", 
+        "handler": "handleDrop"
+      },
+      "categoryToggle": {
+        "event": "click",
+        "selector": ".category-header",
+        "handler": "toggleCategory"
+      }
+    },
+    "propertyPanels": {
+      "container": {
+        "properties": [
+          {
+            "name": "tag",
+            "type": "select",
+            "label": "タグ",
+            "options": ["div", "section", "article", "main", "aside"],
+            "default": "div"
+          },
+          {
+            "name": "class",
+            "type": "text",
+            "label": "CSSクラス"
+          },
+          {
+            "name": "id",
+            "type": "text", 
+            "label": "ID"
+          }
+        ]
+      },
+      "heading": {
+        "properties": [
+          {
+            "name": "tag",
+            "type": "select",
+            "label": "見出しレベル",
+            "options": ["h1", "h2", "h3", "h4", "h5", "h6"],
+            "default": "h2"
+          },
+          {
+            "name": "text",
+            "type": "text",
+            "label": "テキスト",
+            "default": "見出し"
+          },
+          {
+            "name": "class",
+            "type": "text",
+            "label": "CSSクラス"
+          }
+        ]
+      },
+      "paragraph": {
+        "properties": [
+          {
+            "name": "text",
+            "type": "textarea",
+            "label": "テキスト",
+            "default": "段落のテキストです。"
+          },
+          {
+            "name": "class",
+            "type": "text",
+            "label": "CSSクラス"
+          }
+        ]
+      },
+      "button": {
+        "properties": [
+          {
+            "name": "text",
+            "type": "text",
+            "label": "ボタンテキスト",
+            "default": "ボタン"
+          },
+          {
+            "name": "type",
+            "type": "select",
+            "label": "タイプ",
+            "options": ["button", "submit", "reset"],
+            "default": "button"
+          },
+          {
+            "name": "class",
+            "type": "text",
+            "label": "CSSクラス"
+          },
+          {
+            "name": "onclick",
+            "type": "text",
+            "label": "クリックイベント"
+          }
+        ]
+      },
+      "input": {
+        "properties": [
+          {
+            "name": "type",
+            "type": "select",
+            "label": "入力タイプ",
+            "options": ["text", "email", "password", "number", "tel", "url"],
+            "default": "text"
+          },
+          {
+            "name": "name",
+            "type": "text",
+            "label": "名前"
+          },
+          {
+            "name": "placeholder",
+            "type": "text",
+            "label": "プレースホルダー"
+          },
+          {
+            "name": "required",
+            "type": "checkbox",
+            "label": "必須項目"
+          },
+          {
+            "name": "class",
+            "type": "text",
+            "label": "CSSクラス"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "jsonia-html-json",
+  "version": "1.0.0",
+  "description": "JSON-based HTML generation for both server-side and client-side",
+  "main": "server/jsonia.js",
+  "scripts": {
+    "start": "node server/jsonia.js",
+    "dev": "nodemon server/jsonia.js",
+    "server": "node server/jsonia.js",
+    "editor": "node server/jsonia.js",
+    "project": "node server/jsonia.js",
+    "build": "node scripts/build.js"
+  },
+  "keywords": [
+    "json",
+    "html",
+    "server-side-rendering",
+    "client-side"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "ejs": "^3.1.10",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

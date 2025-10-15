@@ -1,0 +1,43 @@
+{
+  "tag": "header",
+  "attributes": {
+    "class": "site-header",
+    "style": "background: #2c3e50; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center;"
+  },
+  "children": [
+    {
+      "tag": "h1",
+      "attributes": { "style": "margin: 0;" },
+      "text": "{{title}}"
+    },
+    {
+      "tag": "nav",
+      "children": [
+        {
+          "tag": "a",
+          "attributes": { 
+            "href": "/",
+            "style": "color: white; margin: 0 10px; text-decoration: none;"
+          },
+          "text": "ホーム"
+        },
+        {
+          "tag": "a",
+          "attributes": { 
+            "href": "/about",
+            "style": "color: white; margin: 0 10px; text-decoration: none;"
+          },
+          "text": "About"
+        },
+        {
+          "tag": "a",
+          "attributes": { 
+            "href": "/contact",
+            "style": "color: white; margin: 0 10px; text-decoration: none;"
+          },
+          "text": "お問い合わせ"
+        }
+      ]
+    }
+  ]
+}

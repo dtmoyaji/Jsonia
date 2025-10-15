@@ -1,0 +1,259 @@
+{
+  "title": "Jsonia Project Manager",
+  "meta": {
+    "charset": "UTF-8",
+    "viewport": "width=device-width, initial-scale=1.0"
+  },
+  "styles": [
+    {
+      "$include": "css.json"
+    }
+  ],
+  "body": [
+    {
+      "tag": "div",
+      "attributes": {
+        "class": "manager-container"
+      },
+      "children": [
+        {
+          "tag": "header",
+          "attributes": {
+            "class": "header"
+          },
+          "children": [
+            {
+              "tag": "h1",
+              "text": "📁 Jsonia プロジェクト管理"
+            },
+            {
+              "tag": "div",
+              "children": [
+                {
+                  "tag": "button",
+                  "text": "🎨 エディターに戻る",
+                  "attributes": {
+                    "class": "btn",
+                    "onclick": "window.location.href='/editor'"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "main",
+          "attributes": {
+            "class": "content"
+          },
+          "children": [
+            {
+              "tag": "section",
+              "attributes": {
+                "class": "create-section"
+              },
+              "children": [
+                {
+                  "tag": "h2",
+                  "text": "🚀 新しいプロジェクトを作成"
+                },
+                {
+                  "tag": "form",
+                  "attributes": {
+                    "id": "create-project-form",
+                    "onsubmit": "return createProject(event)"
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "attributes": {
+                        "style": "display: grid; grid-template-columns: 1fr 1fr; gap: 20px;"
+                      },
+                      "children": [
+                        {
+                          "tag": "div",
+                          "attributes": {
+                            "class": "form-group"
+                          },
+                          "children": [
+                            {
+                              "tag": "label",
+                              "text": "プロジェクト名 *",
+                              "attributes": {
+                                "class": "form-label"
+                              }
+                            },
+                            {
+                              "tag": "input",
+                              "attributes": {
+                                "type": "text",
+                                "class": "form-input",
+                                "id": "project-name",
+                                "name": "name",
+                                "placeholder": "my-awesome-project",
+                                "required": "true"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "div",
+                          "attributes": {
+                            "class": "form-group"
+                          },
+                          "children": [
+                            {
+                              "tag": "label",
+                              "text": "テンプレート",
+                              "attributes": {
+                                "class": "form-label"
+                              }
+                            },
+                            {
+                              "tag": "select",
+                              "attributes": {
+                                "class": "form-select",
+                                "id": "project-template",
+                                "name": "template"
+                              },
+                              "children": [
+                                {
+                                  "tag": "option",
+                                  "text": "空のプロジェクト",
+                                  "attributes": {
+                                    "value": "empty"
+                                  }
+                                },
+                                {
+                                  "tag": "option",
+                                  "text": "ブログテンプレート",
+                                  "attributes": {
+                                    "value": "blog"
+                                  }
+                                },
+                                {
+                                  "tag": "option",
+                                  "text": "フォームテンプレート",
+                                  "attributes": {
+                                    "value": "form"
+                                  }
+                                },
+                                {
+                                  "tag": "option",
+                                  "text": "ランディングページ",
+                                  "attributes": {
+                                    "value": "landing"
+                                  }
+                                },
+                                {
+                                  "tag": "option",
+                                  "text": "ダッシュボード",
+                                  "attributes": {
+                                    "value": "dashboard"
+                                  }
+                                },
+                                {
+                                  "tag": "option",
+                                  "text": "Eコマース",
+                                  "attributes": {
+                                    "value": "ecommerce"
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "div",
+                      "attributes": {
+                        "class": "form-group"
+                      },
+                      "children": [
+                        {
+                          "tag": "label",
+                          "text": "説明",
+                          "attributes": {
+                            "class": "form-label"
+                          }
+                        },
+                        {
+                          "tag": "input",
+                          "attributes": {
+                            "type": "text",
+                            "class": "form-input",
+                            "id": "project-description",
+                            "name": "description",
+                            "placeholder": "このプロジェクトの詳細説明..."
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "button",
+                      "text": "🚀 プロジェクトを作成",
+                      "attributes": {
+                        "type": "submit",
+                        "class": "btn btn-success"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "section",
+              "attributes": {
+                "class": "projects-section"
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "attributes": {
+                    "style": "display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;"
+                  },
+                  "children": [
+                    {
+                      "tag": "h2",
+                      "text": "📂 既存プロジェクト"
+                    },
+                    {
+                      "tag": "button",
+                      "text": "🔄 更新",
+                      "attributes": {
+                        "class": "btn",
+                        "onclick": "loadProjects()"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "attributes": {
+                    "id": "projects-grid",
+                    "class": "project-grid"
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "attributes": {
+                        "class": "loading"
+                      },
+                      "text": "プロジェクトを読み込み中..."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "scripts": [
+    {
+      "content": "async function loadProjects() { try { const response = await fetch('/projects'); const projects = await response.json(); const grid = document.getElementById('projects-grid'); if (projects.length === 0) { grid.innerHTML = '<div class=\"empty-state\"><h3>📁 プロジェクトがありません</h3><p>新しいプロジェクトを作成してみましょう！</p></div>'; return; } grid.innerHTML = projects.map(project => `<div class=\"project-card\"><h3><span>${getProjectIcon(project.template)}</span> ${project.name}</h3><p>${project.description || 'プロジェクトの説明がありません'}</p><div class=\"project-meta\">作成: ${new Date(project.created).toLocaleDateString('ja-JP')} | テンプレート: ${project.template}</div><div class=\"project-actions\"><button class=\"btn\" onclick=\"openProject('${project.name}')\">📝 編集</button><button class=\"btn\" onclick=\"previewProject('${project.name}')\">👁️ プレビュー</button><button class=\"btn btn-danger\" onclick=\"deleteProject('${project.name}')\">🗑️ 削除</button></div></div>`).join(''); } catch (error) { console.error('プロジェクト読み込みエラー:', error); document.getElementById('projects-grid').innerHTML = '<div class=\"empty-state\"><h3>❌ エラー</h3><p>プロジェクトの読み込みに失敗しました</p></div>'; } } function getProjectIcon(template) { const icons = { empty: '📄', blog: '📝', form: '📋', landing: '🎯', dashboard: '📊', ecommerce: '🛒' }; return icons[template] || '📄'; } async function createProject(event) { event.preventDefault(); const formData = new FormData(event.target); const projectData = { name: formData.get('name'), template: formData.get('template'), description: formData.get('description') }; try { const response = await fetch('/projects/create', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(projectData) }); if (response.ok) { alert('✅ プロジェクトが作成されました!'); event.target.reset(); loadProjects(); } else { const error = await response.json(); alert('❌ エラー: ' + (error.message || 'プロジェクトの作成に失敗しました')); } } catch (error) { console.error('プロジェクト作成エラー:', error); alert('❌ ネットワークエラーが発生しました'); } return false; } function openProject(name) { window.location.href = `/editor?project=${encodeURIComponent(name)}`; } function previewProject(name) { window.open(`/projects/${encodeURIComponent(name)}`, '_blank'); } async function deleteProject(name) { if (!confirm(`プロジェクト「${name}」を削除しますか？\\nこの操作は元に戻せません。`)) return; try { const response = await fetch(`/projects/${encodeURIComponent(name)}`, { method: 'DELETE' }); if (response.ok) { alert('✅ プロジェクトが削除されました'); loadProjects(); } else { const error = await response.json(); alert('❌ エラー: ' + (error.message || 'プロジェクトの削除に失敗しました')); } } catch (error) { console.error('プロジェクト削除エラー:', error); alert('❌ ネットワークエラーが発生しました'); } } document.addEventListener('DOMContentLoaded', loadProjects);"
+    }
+  ]
+}

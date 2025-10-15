@@ -1,0 +1,92 @@
+{
+  "components": {
+    "image": {
+      "name": "画像",
+      "icon": "🖼️",
+      "category": "media",
+      "template": {
+        "tag": "img",
+        "attributes": {
+          "src": "https://via.placeholder.com/400x200?text=Sample+Image",
+          "alt": "サンプル画像",
+          "class": "image",
+          "style": "max-width: 100%; height: auto; border-radius: 4px;"
+        }
+      },
+      "description": "画像を表示する要素"
+    },
+    "video": {
+      "name": "動画",
+      "icon": "🎥",
+      "category": "media", 
+      "template": {
+        "tag": "video",
+        "attributes": {
+          "controls": true,
+          "class": "video",
+          "style": "max-width: 100%; height: auto;",
+          "width": "400",
+          "height": "200"
+        },
+        "children": [
+          {
+            "tag": "source",
+            "attributes": {
+              "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+              "type": "video/mp4"
+            }
+          },
+          {
+            "tag": "p",
+            "text": "お使いのブラウザは動画タグをサポートしていません。"
+          }
+        ]
+      },
+      "description": "動画ファイルを再生する要素"
+    },
+    "audio": {
+      "name": "音声",
+      "icon": "🔊",
+      "category": "media",
+      "template": {
+        "tag": "audio",
+        "attributes": {
+          "controls": true,
+          "class": "audio"
+        },
+        "children": [
+          {
+            "tag": "source",
+            "attributes": {
+              "src": "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+              "type": "audio/wav"
+            }
+          },
+          {
+            "tag": "p",
+            "text": "お使いのブラウザは音声タグをサポートしていません。"
+          }
+        ]
+      },
+      "description": "音声ファイルを再生する要素"
+    },
+    "iframe": {
+      "name": "埋め込み",
+      "icon": "🌐",
+      "category": "media",
+      "template": {
+        "tag": "iframe",
+        "attributes": {
+          "src": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+          "width": "400",
+          "height": "225",
+          "frameborder": "0",
+          "allowfullscreen": true,
+          "class": "iframe",
+          "style": "border-radius: 4px;"
+        }
+      },
+      "description": "外部コンテンツを埋め込む要素"
+    }
+  }
+}

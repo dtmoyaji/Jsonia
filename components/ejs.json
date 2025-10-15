@@ -1,0 +1,223 @@
+{
+  "components": {
+    "dynamic-text": {
+      "name": "動的テキスト",
+      "icon": "🔄",
+      "category": "ejs",
+      "template": {
+        "tag": "p",
+        "text": "{{variableName}}",
+        "attributes": {
+          "class": "dynamic-text"
+        }
+      },
+      "description": "EJS変数を表示するテキスト要素"
+    },
+    "conditional-block": {
+      "name": "条件分岐ブロック",
+      "icon": "🔀",
+      "category": "ejs",
+      "template": {
+        "tag": "div",
+        "text": "{{#if condition}}表示される内容{{#else}}別の内容{{/if}}",
+        "attributes": {
+          "class": "conditional-block"
+        }
+      },
+      "description": "条件に基づいて表示を切り替えるブロック"
+    },
+    "loop-list": {
+      "name": "ループリスト",
+      "icon": "🔁",
+      "category": "ejs",
+      "template": {
+        "tag": "ul",
+        "attributes": {
+          "class": "loop-list"
+        },
+        "children": [
+          {
+            "tag": "li",
+            "text": "{{#each items}}{{item}}{{/each}}"
+          }
+        ]
+      },
+      "description": "配列データをループ表示するリスト"
+    },
+    "user-profile": {
+      "name": "ユーザープロファイル",
+      "icon": "👤",
+      "category": "ejs",
+      "template": {
+        "tag": "div",
+        "attributes": {
+          "class": "user-profile",
+          "style": "border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin: 16px 0; background: #f9f9f9;"
+        },
+        "children": [
+          {
+            "tag": "img",
+            "attributes": {
+              "src": "{{user.avatar}}",
+              "alt": "{{user.name}}のアバター",
+              "style": "width: 64px; height: 64px; border-radius: 50%; margin-right: 16px;"
+            }
+          },
+          {
+            "tag": "div",
+            "children": [
+              {
+                "tag": "h3",
+                "text": "{{user.name}}",
+                "attributes": {
+                  "style": "margin: 0 0 8px 0;"
+                }
+              },
+              {
+                "tag": "p",
+                "text": "役割: {{user.role}}",
+                "attributes": {
+                  "style": "margin: 0; color: #666;"
+                }
+              },
+              {
+                "tag": "p",
+                "text": "{{#if user.isActive}}アクティブ{{#else}}非アクティブ{{/if}}",
+                "attributes": {
+                  "style": "margin: 8px 0 0 0; color: {{#if user.isActive}}#28a745{{#else}}#dc3545{{/if}};"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "description": "EJS変数を使ったユーザープロファイル表示"
+    },
+    "product-grid": {
+      "name": "商品グリッド",
+      "icon": "🛒",
+      "category": "ejs",
+      "template": {
+        "tag": "div",
+        "attributes": {
+          "class": "product-grid",
+          "style": "display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;"
+        },
+        "children": [
+          {
+            "tag": "div",
+            "text": "{{#each products}}<div class='product-item' style='border: 1px solid #ccc; border-radius: 4px; padding: 16px; text-align: center; background: white;'><h4>{{item.name}}</h4><p>価格: ¥{{item.price}}</p><button onclick='buyProduct({{item.id}})' style='background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;'>購入</button></div>{{/each}}"
+          }
+        ]
+      },
+      "description": "商品データをグリッド表示するコンポーネント"
+    },
+    "navigation-menu": {
+      "name": "動的ナビゲーション",
+      "icon": "🧭",
+      "category": "ejs",
+      "template": {
+        "tag": "nav",
+        "attributes": {
+          "class": "navigation-menu",
+          "style": "background: #343a40; padding: 10px 20px;"
+        },
+        "children": [
+          {
+            "tag": "ul",
+            "attributes": {
+              "style": "display: flex; list-style: none; margin: 0; padding: 0; gap: 20px;"
+            },
+            "children": [
+              {
+                "tag": "li",
+                "text": "{{#each menuItems}}<li><a href='{{item.url}}' style='color: white; text-decoration: none;'>{{item.title}}</a></li>{{/each}}"
+              }
+            ]
+          }
+        ]
+      },
+      "description": "メニューデータから動的に生成されるナビゲーション"
+    },
+    "stats-card": {
+      "name": "統計カード",
+      "icon": "📊",
+      "category": "ejs",
+      "template": {
+        "tag": "div",
+        "attributes": {
+          "class": "stats-card",
+          "style": "border: 1px solid #dee2e6; border-radius: 8px; padding: 20px; margin: 16px 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center;"
+        },
+        "children": [
+          {
+            "tag": "h3",
+            "text": "{{stats.title}}",
+            "attributes": {
+              "style": "margin: 0 0 10px 0; font-size: 18px;"
+            }
+          },
+          {
+            "tag": "div",
+            "text": "{{stats.value}}",
+            "attributes": {
+              "style": "font-size: 36px; font-weight: bold; margin: 10px 0;"
+            }
+          },
+          {
+            "tag": "p",
+            "text": "{{stats.description}}",
+            "attributes": {
+              "style": "margin: 10px 0 0 0; opacity: 0.8; font-size: 14px;"
+            }
+          }
+        ]
+      },
+      "description": "統計情報を表示するカード"
+    },
+    "table-data": {
+      "name": "データテーブル",
+      "icon": "📋",
+      "category": "ejs", 
+      "template": {
+        "tag": "div",
+        "attributes": {
+          "class": "table-container",
+          "style": "overflow-x: auto; margin: 16px 0;"
+        },
+        "children": [
+          {
+            "tag": "table",
+            "attributes": {
+              "style": "width: 100%; border-collapse: collapse; border: 1px solid #ddd;"
+            },
+            "children": [
+              {
+                "tag": "thead",
+                "children": [
+                  {
+                    "tag": "tr",
+                    "attributes": {
+                      "style": "background: #f8f9fa;"
+                    },
+                    "text": "{{#each tableHeaders}}<th style='border: 1px solid #ddd; padding: 12px; text-align: left;'>{{item}}</th>{{/each}}"
+                  }
+                ]
+              },
+              {
+                "tag": "tbody",
+                "children": [
+                  {
+                    "tag": "tr",
+                    "text": "{{#each tableData}}<tr>{{#each item}}<td style='border: 1px solid #ddd; padding: 12px;'>{{item}}</td>{{/each}}</tr>{{/each}}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "description": "配列データから動的にテーブルを生成"
+    }
+  }
+}
