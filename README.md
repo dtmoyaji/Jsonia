@@ -1,13 +1,5 @@
 # Jsonia - JSON-Driven Web Development Framework
 
-**JavaScriptコードを一切書かずに**、JSONだけで完全なWebアプリケーションを構築できる革新的なフレームワークです。
-
-## 📖 目次
-
-- [主な特徴](#-主な特徴)
-````markdown
-# Jsonia - JSON-Driven Web Development Framework
-
 Build full web applications using only JSON — no project-specific JavaScript required.
 
 ## 📖 Table of Contents
