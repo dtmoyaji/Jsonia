@@ -15,8 +15,7 @@
     {
       "method": "GET",
       "path": "/editor/api/components",
-      "handler": "json",
-      "template": "../shared/layout.json"
+      "handler": "loadComponentLibrary"
     },
     {
       "method": "POST",
@@ -72,12 +71,18 @@
     },
     {
       "method": "GET",
-      "path": "/manager",
+      "path": "/runtime-demo",
       "handler": "renderPage",
-      "template": "project-manager.json",
+      "template": "runtime-demo.json",
       "data": {
-        "title": "プロジェクト管理"
+        "title": "Jsonia Runtime デモ"
       }
+    },
+    {
+      "method": "GET",
+      "path": "/test-components",
+      "handler": "renderPage",
+      "template": "test-components.html"
     }
   ]
 }

@@ -1,0 +1,20 @@
+{
+  "tag": "footer",
+  "attributes": { "class": "footer" },
+  "children": [
+    {
+      "tag": "div",
+      "children": [
+        {
+          "tag": "span",
+          "text": "Ready",
+          "attributes": { "id": "status" }
+        }
+      ]
+    },
+    {
+      "tag": "div",
+      "text": "Jsonia WYSIWYG Editor v1.0"
+    }
+  ]
+}

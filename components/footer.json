@@ -1,14 +1,27 @@
 {
+  "icon": "📄",
+  "name": "フッター",
   "tag": "footer",
-  "attributes": {
-    "class": "site-footer",
-    "style": "background: #34495e; color: white; padding: 20px; text-align: center; margin-top: 50px;"
+  "type": "container",
+  "category": "layout",
+  "description": "ページ下部のフッターセクション",
+  "template": {
+    "tag": "footer",
+    "attributes": {
+      "class": "site-footer",
+      "style": "background: #34495e; color: white; padding: 20px; text-align: center; margin-top: 50px;"
+    },
+    "children": [
+      {
+        "tag": "p",
+        "text": "© 2025 Your Site Name. All rights reserved.",
+        "attributes": {
+          "style": "margin: 0;"
+        }
+      }
+    ]
   },
-  "children": [
-    {
-      "tag": "p",
-      "attributes": { "style": "margin: 0;" },
-      "text": "© {{year}} {{siteName}} - All rights reserved"
-    }
-  ]
+  "defaultAttributes": {
+    "class": "footer"
+  }
 }

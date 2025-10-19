@@ -1,176 +1,56 @@
 {
-  "components": {
-    "button": {
-      "name": "ボタン",
-      "icon": "🔘",
-      "category": "form",
-      "template": {
-        "tag": "button",
-        "text": "ボタン",
-        "attributes": {
-          "type": "button",
-          "class": "btn",
-          "style": "background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;"
-        }
-      },
-      "description": "クリック可能なボタン要素"
+  "icon": "📋",
+  "name": "フォーム",
+  "tag": "form",
+  "type": "container",
+  "category": "form",
+  "description": "入力フォーム要素のコンテナ",
+  "template": {
+    "tag": "form",
+    "attributes": {
+      "class": "form",
+      "method": "post",
+      "style": "max-width: 400px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9;"
     },
-    "input": {
-      "name": "入力フィールド",
-      "icon": "📝", 
-      "category": "form",
-      "template": {
-        "tag": "input",
-        "attributes": {
-          "type": "text",
-          "name": "input-field",
-          "placeholder": "入力してください...",
-          "class": "form-input",
-          "style": "padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; width: 100%; max-width: 300px;"
-        }
-      },
-      "description": "テキスト入力フィールド"
-    },
-    "textarea": {
-      "name": "テキストエリア",
-      "icon": "📄",
-      "category": "form",
-      "template": {
-        "tag": "textarea",
-        "attributes": {
-          "name": "textarea-field",
-          "placeholder": "複数行のテキストを入力してください...",
-          "rows": "4",
-          "class": "form-textarea",
-          "style": "padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; width: 100%; max-width: 300px; resize: vertical;"
-        }
-      },
-      "description": "複数行テキスト入力エリア"
-    },
-    "select": {
-      "name": "セレクトボックス",
-      "icon": "📋",
-      "category": "form",
-      "template": {
-        "tag": "select",
-        "attributes": {
-          "name": "select-field",
-          "class": "form-select",
-          "style": "padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; background: white;"
-        },
-        "children": [
-          {
-            "tag": "option",
-            "text": "オプション1",
-            "attributes": { "value": "option1" }
-          },
-          {
-            "tag": "option",
-            "text": "オプション2", 
-            "attributes": { "value": "option2" }
-          },
-          {
-            "tag": "option",
-            "text": "オプション3",
-            "attributes": { "value": "option3" }
-          }
-        ]
-      },
-      "description": "選択肢のドロップダウンメニュー"
-    },
-    "checkbox": {
-      "name": "チェックボックス",
-      "icon": "☑️",
-      "category": "form",
-      "template": {
+    "children": [
+      {
         "tag": "div",
         "attributes": {
-          "class": "checkbox-group",
-          "style": "display: flex; align-items: center; gap: 8px;"
+          "class": "form-group",
+          "style": "margin-bottom: 16px;"
         },
         "children": [
+          {
+            "tag": "label",
+            "text": "お名前",
+            "attributes": {
+              "style": "display: block; margin-bottom: 4px; font-weight: bold;"
+            }
+          },
           {
             "tag": "input",
             "attributes": {
-              "type": "checkbox",
-              "id": "checkbox-1",
-              "name": "checkbox-field",
-              "value": "checkbox-value"
-            }
-          },
-          {
-            "tag": "label",
-            "text": "チェックボックスのラベル",
-            "attributes": {
-              "for": "checkbox-1"
+              "type": "text",
+              "name": "name",
+              "class": "form-input",
+              "style": "width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;"
             }
           }
         ]
       },
-      "description": "チェック可能な選択肢"
-    },
-    "radio": {
-      "name": "ラジオボタン",
-      "icon": "🔘",
-      "category": "form",
-      "template": {
-        "tag": "div",
+      {
+        "tag": "button",
+        "text": "送信",
         "attributes": {
-          "class": "radio-group",
-          "style": "display: flex; flex-direction: column; gap: 8px;"
-        },
-        "children": [
-          {
-            "tag": "div",
-            "attributes": {
-              "style": "display: flex; align-items: center; gap: 8px;"
-            },
-            "children": [
-              {
-                "tag": "input",
-                "attributes": {
-                  "type": "radio",
-                  "id": "radio-1",
-                  "name": "radio-group",
-                  "value": "option1"
-                }
-              },
-              {
-                "tag": "label",
-                "text": "オプション1",
-                "attributes": {
-                  "for": "radio-1"
-                }
-              }
-            ]
-          },
-          {
-            "tag": "div", 
-            "attributes": {
-              "style": "display: flex; align-items: center; gap: 8px;"
-            },
-            "children": [
-              {
-                "tag": "input",
-                "attributes": {
-                  "type": "radio",
-                  "id": "radio-2",
-                  "name": "radio-group",
-                  "value": "option2"
-                }
-              },
-              {
-                "tag": "label",
-                "text": "オプション2",
-                "attributes": {
-                  "for": "radio-2"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "description": "単一選択のラジオボタングループ"
-    }
+          "type": "submit",
+          "class": "btn",
+          "style": "background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;"
+        }
+      }
+    ]
+  },
+  "defaultAttributes": {
+    "class": "form",
+    "method": "post"
   }
 }

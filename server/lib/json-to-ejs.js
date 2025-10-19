@@ -109,25 +109,12 @@ class JsonToEJS {
                 // $include ディレクティブの処理
                 if (style.$include) {
                     try {
-                        const includeResult = this.handleInclude(style.$include, options);
-                        // includeしたJSONをパース（スタイルオブジェクトとして処理）
                         const fs = require('fs');
-                        const path = require('path');
-                        const basePath = options.basePath || process.cwd();
                         
-                        let fullPath;
-                        if (style.$include.startsWith('/')) {
-                            fullPath = path.join(basePath, style.$include.substring(1));
-                        } else if (style.$include.startsWith('shared/')) {
-                            fullPath = path.join(basePath, '..', 'projects', style.$include);
-                        } else {
-                            fullPath = path.join(basePath, style.$include);
-                        }
-                        if (!fullPath.endsWith('.json')) {
-                            fullPath += '.json';
-                        }
+                        // パス解決（フォールバック機能付き）
+                        const fullPath = this.resolveIncludePath(style.$include, options);
                         
-                        if (fs.existsSync(fullPath)) {
+                        if (fullPath) {
                             const includeContent = fs.readFileSync(fullPath, 'utf8');
                             const includeConfig = JSON.parse(includeContent);
                             const cssText = this.styleObjectToCss(includeConfig);
@@ -170,9 +157,61 @@ class JsonToEJS {
         // スクリプトの追加
         scripts.forEach(script => {
             if (typeof script === 'string') {
+                // 外部スクリプトファイル
                 ejs += `    <script src="${script}"></script>\n`;
-            } else {
+            } else if (script.content) {
+                // インラインスクリプト（従来型）
                 ejs += `    <script>\n${script.content}\n    </script>\n`;
+            } else if (script.$include) {
+                // $include で外部JSファイルを読み込み
+                try {
+                    const fs = require('fs');
+                    
+                    // パス解決（フォールバック機能付き）
+                    const fullPath = this.resolveIncludePath(script.$include, options);
+                    
+                    if (fullPath) {
+                        const includeContent = fs.readFileSync(fullPath, 'utf8');
+                        
+                        // .jsonファイルの場合はJSONとして解析してJavaScriptに変換
+                        if (fullPath.endsWith('.json')) {
+                            const JsonToJS = require('./json-to-js');
+                            const jsGenerator = new JsonToJS();
+                            const includeConfig = JSON.parse(includeContent);
+                            const jsCode = jsGenerator.generate(includeConfig);
+                            ejs += `    <script>\n${jsCode}\n    </script>\n`;
+                        } else {
+                            // .jsファイルの場合はそのまま埋め込み
+                            ejs += `    <script>\n${includeContent}\n    </script>\n`;
+                        }
+                    } else {
+                        ejs += `    <!-- Script include not found: ${script.$include} -->\n`;
+                    }
+                } catch (err) {
+                    ejs += `    <!-- Failed to include script: ${this.escapeHtml(err.message)} -->\n`;
+                }
+            } else {
+                // JSON形式のJavaScript定義 - JsoniaRuntimeを使用
+                try {
+                    // JSONをそのまま埋め込んでクライアント側で実行
+                    const jsonStr = JSON.stringify(script, null, 2);
+                    ejs += `    <script>\n`;
+                    ejs += `        // JSON定義をJsoniaRuntimeで実行\n`;
+                    ejs += `        document.addEventListener('DOMContentLoaded', function() {\n`;
+                    ejs += `            if (window.JsoniaRuntime) {\n`;
+                    ejs += `                const runtime = new JsoniaRuntime();\n`;
+                    ejs += `                const definition = ${jsonStr};\n`;
+                    ejs += `                runtime.init(definition);\n`;
+                    ejs += `                window.jsoniaRuntime = runtime;\n`;
+                    ejs += `                console.log('✅ JsoniaRuntime実行完了');\n`;
+                    ejs += `            } else {\n`;
+                    ejs += `                console.error('❌ JsoniaRuntime が見つかりません');\n`;
+                    ejs += `            }\n`;
+                    ejs += `        });\n`;
+                    ejs += `    </script>\n`;
+                } catch (err) {
+                    ejs += `    <!-- Failed to generate script: ${this.escapeHtml(err.message)} -->\n`;
+                }
             }
         });
         
@@ -367,6 +406,58 @@ class JsonToEJS {
     }
 
     /**
+     * includeパスを解決（フォールバック機能付き）
+     * @param {string} includePath - インクルードするファイルのパス
+     * @param {Object} options - レンダリングオプション（basePathを含む）
+     * @returns {string|null} - 解決されたフルパス、または null
+     */
+    static resolveIncludePath(includePath, options = {}) {
+        const fs = require('fs');
+        const path = require('path');
+        const basePath = options.basePath || process.cwd();
+        
+        // ワークスペースルート（Jsoniaのルートディレクトリ）を取得
+        // basePathがprojects/sample-projectなら、../..でルートへ
+        const workspaceRoot = path.resolve(basePath, '..', '..');
+        
+        // パスの解決候補リスト（フォールバック機能）
+        let candidatePaths = [];
+        
+        if (includePath.startsWith('/')) {
+            // 絶対パス（プロジェクトルートから）
+            candidatePaths.push(path.join(basePath, includePath.substring(1)));
+        } else if (includePath.startsWith('components/')) {
+            // componentsフォルダからの参照：専用 → 共有 の順でフォールバック
+            const componentName = includePath.substring('components/'.length);
+            
+            // 1. プロジェクト内の専用components
+            candidatePaths.push(path.join(basePath, 'components', componentName));
+            
+            // 2. ルートの共有components（フォールバック）
+            candidatePaths.push(path.join(workspaceRoot, 'components', componentName));
+        } else {
+            // 相対パス（現在のプロジェクトディレクトリから）
+            candidatePaths.push(path.join(basePath, includePath));
+        }
+
+        // .json 拡張子の自動補完
+        candidatePaths = candidatePaths.map(p => p.endsWith('.json') ? p : p + '.json');
+
+        // ファイルの検索（最初に見つかったファイルを使用）
+        for (const candidate of candidatePaths) {
+            if (fs.existsSync(candidate)) {
+                console.log(`✅ Component found: ${candidate}`);
+                return candidate;
+            }
+        }
+
+        // 見つからない場合
+        const searchedPaths = candidatePaths.join('\n  - ');
+        console.warn(`❌ Include file not found: ${includePath}\nSearched paths:\n  - ${searchedPaths}`);
+        return null;
+    }
+
+    /**
      * $include ディレクティブを処理して外部JSONファイルを埋め込む
      * @param {string} includePath - インクルードするファイルのパス
      * @param {Object} options - レンダリングオプション（basePathを含む）
@@ -381,33 +472,12 @@ class JsonToEJS {
 
         try {
             const fs = require('fs');
-            const path = require('path');
-
-            // ベースパスの取得（options.basePath または現在のプロジェクトパス）
-            const basePath = options.basePath || process.cwd();
             
-            // パスの解決（相対パス、プロジェクト内、shared）
-            let fullPath;
-            if (includePath.startsWith('/')) {
-                // 絶対パス（プロジェクトルートから）
-                fullPath = path.join(basePath, includePath.substring(1));
-            } else if (includePath.startsWith('shared/')) {
-                // shared コンポーネント
-                fullPath = path.join(basePath, '..', 'projects', includePath);
-            } else {
-                // 相対パス（現在のプロジェクトディレクトリから）
-                fullPath = path.join(basePath, includePath);
-            }
-
-            // .json 拡張子の自動補完
-            if (!fullPath.endsWith('.json')) {
-                fullPath += '.json';
-            }
-
-            // ファイルの読み込み
-            if (!fs.existsSync(fullPath)) {
-                console.warn(`Include file not found: ${fullPath}`);
-                return `<!-- $include: ${includePath} (file not found) -->`;
+            // パス解決（フォールバック機能付き）
+            const fullPath = this.resolveIncludePath(includePath, options);
+            
+            if (!fullPath) {
+                return `<!-- $include: ${includePath} (file not found in project or shared components) -->`;
             }
 
             const includeContent = fs.readFileSync(fullPath, 'utf8');

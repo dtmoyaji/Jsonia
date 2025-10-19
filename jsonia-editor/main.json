@@ -14,151 +14,21 @@
       "tag": "div",
       "attributes": { "class": "editor-container" },
       "children": [
-        {
-          "tag": "header",
-          "attributes": { "class": "header" },
-          "children": [
-            {
-              "tag": "h1",
-              "text": "🎨 Jsonia WYSIWYG Editor"
-            },
-            {
-              "tag": "div",
-              "attributes": { "class": "header-actions" },
-              "children": [
-                {
-                  "tag": "button",
-                  "text": "📁 プロジェクト",
-                  "attributes": {
-                    "class": "btn",
-                    "onclick": "window.location.href='/manager'"
-                  }
-                },
-                {
-                  "tag": "button",
-                  "text": "👁️ プレビュー",
-                  "attributes": {
-                    "class": "btn",
-                    "data-action": "preview"
-                  }
-                },
-                {
-                  "tag": "button",
-                  "text": "📋 JSON出力",
-                  "attributes": {
-                    "class": "btn btn-warning",
-                    "data-action": "export-json"
-                  }
-                },
-                {
-                  "tag": "button",
-                  "text": "💾 保存",
-                  "attributes": {
-                    "class": "btn btn-success",
-                    "data-action": "save"
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "tag": "aside",
-          "attributes": { "class": "components-panel" },
-          "children": [
-            {
-              "tag": "div",
-              "attributes": { "class": "panel-header" },
-              "text": "コンポーネント"
-            }
-          ]
-        },
-        {
-          "tag": "main",
-          "attributes": { "class": "canvas-area" },
-          "children": [
-            {
-              "tag": "div",
-              "attributes": { "class": "canvas-toolbar" },
-              "children": [
-                {
-                  "tag": "button",
-                  "text": "↶ 元に戻す",
-                  "attributes": {
-                    "class": "btn",
-                    "data-action": "undo"
-                  }
-                },
-                {
-                  "tag": "button",
-                  "text": "↷ やり直し",
-                  "attributes": {
-                    "class": "btn",
-                    "data-action": "redo"
-                  }
-                }
-              ]
-            },
-            {
-              "tag": "div",
-              "attributes": { "class": "canvas-content" },
-              "children": [
-                {
-                  "tag": "div",
-                  "attributes": {
-                    "id": "drop-zone",
-                    "class": "drop-zone"
-                  },
-                  "text": "🎨 コンポーネントをここにドラッグ&ドロップしてください"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "tag": "aside",
-          "attributes": { "class": "properties-panel" },
-          "children": [
-            {
-              "tag": "div",
-              "attributes": { "class": "panel-header" },
-              "text": "プロパティ"
-            },
-            {
-              "tag": "div",
-              "attributes": {
-                "class": "properties-content",
-                "id": "properties-content"
-              },
-              "text": "要素を選択してプロパティを編集"
-            }
-          ]
-        },
-        {
-          "tag": "footer",
-          "attributes": { "class": "footer" },
-          "children": [
-            {
-              "tag": "div",
-              "children": [
-                {
-                  "tag": "span",
-                  "text": "Ready",
-                  "attributes": { "id": "status" }
-                }
-              ]
-            },
-            {
-              "tag": "div",
-              "text": "Jsonia WYSIWYG Editor v1.0"
-            }
-          ]
-        }
+        { "$include": "components/header.json" },
+        { "$include": "components/tabs.json" },
+        { "$include": "components/sidebar.json" },
+        { "$include": "components/canvas.json" },
+        { "$include": "components/behavior-panel.json" },
+        { "$include": "components/properties-panel.json" },
+        { "$include": "components/footer.json" }
       ]
     }
   ],
   "scripts": [
-    "/js/jsonia-client.js",
-    "/js/jsonia-editor.js"
+    "/js/jsonia-runtime.js",
+    "/js/editor-extensions.js",
+    {
+      "content": "console.log('🔄 behaviors/editor.jsonを読み込み中...'); fetch('/editor/behaviors/editor.json').then(r => { console.log('📡 Fetch完了:', r.status); return r.json(); }).then(behaviorDef => { console.log('✅ JSON解析完了:', behaviorDef); window.jsoniaRuntime = new JsoniaRuntime(); window.jsoniaRuntime.init(behaviorDef); console.log('✅ JsoniaRuntime初期化完了'); }).catch(err => console.error('❌ 読み込みエラー:', err));"
+    }
   ]
 }

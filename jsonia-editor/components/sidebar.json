@@ -1,0 +1,77 @@
+{
+  "tag": "aside",
+  "attributes": { "class": "left-sidebar", "data-panel": "structure" },
+  "children": [
+    {
+      "tag": "div",
+      "attributes": { "class": "accordion-section" },
+      "children": [
+        {
+          "tag": "div",
+          "attributes": { 
+            "class": "accordion-header expanded",
+            "data-accordion": "structure-tree"
+          },
+          "children": [
+            {
+              "tag": "span",
+              "attributes": { "class": "accordion-icon" },
+              "text": "▼"
+            },
+            {
+              "tag": "span",
+              "text": "🌳 構造ツリー"
+            }
+          ]
+        },
+        {
+          "tag": "div",
+          "attributes": { 
+            "id": "structure-tree",
+            "class": "accordion-content",
+            "data-accordion-content": "structure-tree"
+          },
+          "children": [
+            {
+              "tag": "div",
+              "attributes": { "class": "tree-empty" },
+              "text": "要素を追加すると構造が表示されます"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "div",
+      "attributes": { "class": "accordion-section" },
+      "children": [
+        {
+          "tag": "div",
+          "attributes": { 
+            "class": "accordion-header expanded",
+            "data-accordion": "components"
+          },
+          "children": [
+            {
+              "tag": "span",
+              "attributes": { "class": "accordion-icon" },
+              "text": "▼"
+            },
+            {
+              "tag": "span",
+              "text": "📦 コンポーネント"
+            }
+          ]
+        },
+        {
+          "tag": "div",
+          "attributes": { 
+            "id": "components-list",
+            "class": "accordion-content",
+            "data-accordion-content": "components"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,84 +1,20 @@
 {
-  "components": {
-    "heading": {
-      "name": "見出し",
-      "icon": "H",
-      "category": "text",
-      "template": {
-        "tag": "h2",
-        "text": "見出し",
-        "attributes": {
-          "class": "heading"
-        }
-      },
-      "description": "ページの見出し要素"
-    },
-    "paragraph": {
-      "name": "段落",
-      "icon": "¶",
-      "category": "text",
-      "template": {
-        "tag": "p",
-        "text": "ここに段落のテキストが入ります。JSONからHTMLを生成するシステムです。",
-        "attributes": {
-          "class": "paragraph"
-        }
-      },
-      "description": "テキストの段落"
-    },
-    "link": {
-      "name": "リンク",
-      "icon": "🔗",
-      "category": "text", 
-      "template": {
-        "tag": "a",
-        "text": "リンクテキスト",
-        "attributes": {
-          "href": "#",
-          "class": "link"
-        }
-      },
-      "description": "他のページへのリンク"
-    },
-    "list": {
-      "name": "リスト",
-      "icon": "📋",
-      "category": "text",
-      "template": {
-        "tag": "ul",
-        "attributes": {
-          "class": "list"
-        },
-        "children": [
-          {
-            "tag": "li",
-            "text": "リストアイテム 1"
-          },
-          {
-            "tag": "li",
-            "text": "リストアイテム 2"
-          },
-          {
-            "tag": "li",
-            "text": "リストアイテム 3"
-          }
-        ]
-      },
-      "description": "箇条書きリスト"
-    },
-    "blockquote": {
-      "name": "引用",
-      "icon": "❝",
-      "category": "text",
-      "template": {
-        "tag": "blockquote",
-        "attributes": {
-          "class": "blockquote",
-          "style": "border-left: 4px solid #007bff; padding-left: 16px; margin: 16px 0; font-style: italic; color: #6c757d;"
-        },
-        "text": "ここに引用文が入ります。重要な文章や他の人の言葉を引用する時に使用します。"
-      },
-      "description": "他の文書からの引用"
+  "icon": "📝",
+  "name": "段落",
+  "tag": "p",
+  "type": "paragraph",
+  "category": "text",
+  "description": "テキストの段落",
+  "template": {
+    "tag": "p",
+    "text": "ここに段落のテキストが入ります。",
+    "attributes": {
+      "class": "paragraph",
+      "style": "margin: 16px 0; line-height: 1.6;"
     }
+  },
+  "defaultText": "段落のテキスト",
+  "defaultAttributes": {
+    "class": "paragraph"
   }
 }

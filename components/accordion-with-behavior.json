@@ -1,0 +1,91 @@
+{
+  "icon": "📂",
+  "name": "アコーディオン",
+  "tag": "div",
+  "type": "container",
+  "category": "interactive",
+  "description": "開閉可能なアコーディオンコンポーネント",
+  "template": {
+    "tag": "div",
+    "attributes": { 
+      "class": "accordion",
+      "style": "border: 1px solid #ddd; border-radius: 4px; overflow: hidden;"
+    },
+    "children": [
+      {
+        "tag": "div",
+        "attributes": {
+          "class": "accordion-item"
+        },
+        "children": [
+          {
+            "tag": "div",
+            "attributes": {
+              "class": "accordion-header",
+              "data-accordion-header": "true",
+              "data-accordion-id": "section-1",
+              "style": "padding: 12px 16px; background: #f8f9fa; cursor: pointer; font-weight: bold; border-bottom: 1px solid #ddd;"
+            },
+            "text": "セクション 1"
+          },
+          {
+            "tag": "div",
+            "attributes": {
+              "class": "accordion-content collapsed",
+              "data-accordion-content": "section-1",
+              "style": "padding: 16px; display: none;"
+            },
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  "defaultAttributes": {
+    "class": "accordion"
+  },
+  "behavior": {
+    "state": {
+      "expandedSections": []
+    },
+    "events": [
+      {
+        "target": "[data-accordion-header]",
+        "type": "click",
+        "actions": [
+          {
+            "type": "sequence",
+            "actions": [
+              {
+                "type": "dom.select",
+                "selector": "[data-accordion-header]",
+                "storeIn": "header"
+              },
+              {
+                "type": "dom.getAttribute",
+                "element": "{{header}}",
+                "attribute": "data-accordion-id",
+                "storeIn": "sectionId"
+              },
+              {
+                "type": "dom.select",
+                "selector": "[data-accordion-content='{{sectionId}}']",
+                "storeIn": "content"
+              },
+              {
+                "type": "dom.toggleClass",
+                "element": "{{content}}",
+                "className": "collapsed"
+              },
+              {
+                "type": "dom.toggleClass",
+                "element": "{{header}}",
+                "className": "expanded"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "tag": "aside",
+  "attributes": { "class": "properties-panel", "data-panel": "structure" },
+  "children": [
+    {
+      "tag": "div",
+      "attributes": { "class": "panel-header" },
+      "text": "プロパティ"
+    },
+    {
+      "tag": "div",
+      "attributes": {
+        "class": "properties-content",
+        "id": "properties-content"
+      },
+      "text": "要素を選択してプロパティを編集"
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "icon": "📑",
+  "name": "タブ",
+  "tag": "div",
+  "type": "container",
+  "category": "interactive",
+  "description": "切り替え可能なタブコンポーネント",
+  "template": {
+    "tag": "div",
+    "attributes": { 
+      "class": "tabs-container",
+      "style": "border: 1px solid #ddd; border-radius: 4px;"
+    },
+    "children": [
+      {
+        "tag": "div",
+        "attributes": {
+          "class": "tabs-header",
+          "style": "display: flex; gap: 2px; background: #f8f9fa; border-bottom: 1px solid #ddd;"
+        },
+        "children": [
+          {
+            "tag": "button",
+            "text": "タブ 1",
+            "attributes": {
+              "class": "tab-button active",
+              "data-tab": "tab-1",
+              "style": "padding: 12px 20px; background: white; border: none; border-bottom: 2px solid #007bff; cursor: pointer; font-weight: bold; color: #007bff;"
+            }
+          },
+          {
+            "tag": "button",
+            "text": "タブ 2",
+            "attributes": {
+              "class": "tab-button",
+              "data-tab": "tab-2",
+              "style": "padding: 12px 20px; background: transparent; border: none; cursor: pointer; color: #666;"
+            }
+          },
+          {
+            "tag": "button",
+            "text": "タブ 3",
+            "attributes": {
+              "class": "tab-button",
+              "data-tab": "tab-3",
+              "style": "padding: 12px 20px; background: transparent; border: none; cursor: pointer; color: #666;"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "attributes": {
+          "class": "tabs-content"
+        },
+        "children": [
+          {
+            "tag": "div",
+            "attributes": {
+              "class": "tab-panel active",
+              "data-tab-content": "tab-1",
+              "style": "padding: 20px;"
+            },
+            "children": []
+          },
+          {
+            "tag": "div",
+            "attributes": {
+              "class": "tab-panel",
+              "data-tab-content": "tab-2",
+              "style": "padding: 20px; display: none;"
+            },
+            "children": []
+          },
+          {
+            "tag": "div",
+            "attributes": {
+              "class": "tab-panel",
+              "data-tab-content": "tab-3",
+              "style": "padding: 20px; display: none;"
+            },
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  "defaultAttributes": {
+    "class": "tabs-container"
+  }
+}

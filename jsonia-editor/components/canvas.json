@@ -1,0 +1,42 @@
+{
+  "tag": "main",
+  "attributes": { "class": "canvas-area" },
+  "children": [
+    {
+      "tag": "div",
+      "attributes": { "class": "canvas-toolbar" },
+      "children": [
+        {
+          "tag": "button",
+          "text": "↶ 元に戻す",
+          "attributes": {
+            "class": "btn",
+            "data-action": "undo"
+          }
+        },
+        {
+          "tag": "button",
+          "text": "↷ やり直し",
+          "attributes": {
+            "class": "btn",
+            "data-action": "redo"
+          }
+        }
+      ]
+    },
+    {
+      "tag": "div",
+      "attributes": { "class": "canvas-content" },
+      "children": [
+        {
+          "tag": "div",
+          "attributes": {
+            "id": "drop-zone",
+            "class": "drop-zone"
+          },
+          "text": "🎨 コンポーネントをここにドラッグ&ドロップしてください"
+        }
+      ]
+    }
+  ]
+}

@@ -430,6 +430,9 @@ function handleProjectRoute(projectPath, route, req, res) {
             case 'saveProject':
                 handleSaveProject(req, res);
                 break;
+            case 'loadComponentLibrary':
+                handleLoadComponentLibrary(req, res);
+                break;
             default:
                 res.status(404).json({ error: `Handler not found: ${route.handler}` });
         }
@@ -501,6 +504,57 @@ function handleJsonResponse(projectPath, route, req, res) {
         
         res.json(data);
     } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+// コンポーネントライブラリ読み込み処理
+function handleLoadComponentLibrary(req, res) {
+    console.log('📡 /editor/api/components APIが呼ばれました');
+    try {
+        const componentsDir = path.join(__dirname, '..', 'components');
+        
+        if (!fs.existsSync(componentsDir)) {
+            return res.status(404).json({ 
+                error: 'Components directory not found',
+                path: componentsDir 
+            });
+        }
+        
+        // componentsフォルダ内のすべてのJSONファイルを読み込む
+        const files = fs.readdirSync(componentsDir)
+            .filter(file => file.endsWith('.json'));
+        
+        const components = [];
+        
+        for (const file of files) {
+            try {
+                const filePath = path.join(componentsDir, file);
+                const content = fs.readFileSync(filePath, 'utf8');
+                const data = JSON.parse(content);
+                
+                // カテゴリ情報を追加
+                components.push({
+                    filename: file,
+                    category: file.replace('.json', ''),
+                    ...data
+                });
+                
+            } catch (err) {
+                console.warn(`⚠️  Failed to load component file: ${file}`, err.message);
+            }
+        }
+        
+        console.log(`✅ Loaded ${components.length} component files from /components`);
+        
+        res.json({
+            success: true,
+            componentsDir,
+            components
+        });
+        
+    } catch (error) {
+        console.error('❌ Error loading component library:', error);
         res.status(500).json({ error: error.message });
     }
 }

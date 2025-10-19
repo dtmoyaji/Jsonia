@@ -1,0 +1,59 @@
+{
+  "tag": "aside",
+  "attributes": { "class": "behavior-panel", "data-panel": "behavior", "style": "display: none;" },
+  "children": [
+    {
+      "tag": "div",
+      "attributes": { "class": "panel-header" },
+      "text": "⚡ 動作定義"
+    },
+    {
+      "tag": "div",
+      "attributes": { "class": "behavior-tabs" },
+      "children": [
+        {
+          "tag": "button",
+          "attributes": { "class": "behavior-tab active", "data-tab": "events" },
+          "text": "🎯 イベント"
+        },
+        {
+          "tag": "button",
+          "attributes": { "class": "behavior-tab", "data-tab": "state" },
+          "text": "💾 状態"
+        },
+        {
+          "tag": "button",
+          "attributes": { "class": "behavior-tab", "data-tab": "validation" },
+          "text": "✅ バリデーション"
+        },
+        {
+          "tag": "button",
+          "attributes": { "class": "behavior-tab", "data-tab": "apis" },
+          "text": "🌐 API"
+        }
+      ]
+    },
+    {
+      "tag": "div",
+      "attributes": { "class": "behavior-content" },
+      "children": [
+        {
+          "tag": "div",
+          "attributes": { "id": "events-panel", "class": "behavior-section active" }
+        },
+        {
+          "tag": "div",
+          "attributes": { "id": "state-panel", "class": "behavior-section" }
+        },
+        {
+          "tag": "div",
+          "attributes": { "id": "validation-panel", "class": "behavior-section" }
+        },
+        {
+          "tag": "div",
+          "attributes": { "id": "apis-panel", "class": "behavior-section" }
+        }
+      ]
+    }
+  ]
+}

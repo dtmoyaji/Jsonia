@@ -1,0 +1,128 @@
+{
+  "description": "エディターで使用可能なコンポーネント定義",
+  "components": [
+    {
+      "icon": "📦",
+      "name": "Container",
+      "tag": "div",
+      "type": "container",
+      "description": "コンテナ要素"
+    },
+    {
+      "icon": "🔤",
+      "name": "Heading",
+      "tag": "h2",
+      "type": "heading",
+      "description": "見出し",
+      "defaultText": "見出し"
+    },
+    {
+      "icon": "📝",
+      "name": "Paragraph",
+      "tag": "p",
+      "type": "paragraph",
+      "description": "テキスト段落",
+      "defaultText": "段落のテキストです。"
+    },
+    {
+      "icon": "🔘",
+      "name": "Button",
+      "tag": "button",
+      "type": "button",
+      "description": "ボタン",
+      "defaultText": "ボタン",
+      "defaultAttributes": {
+        "type": "button"
+      }
+    },
+    {
+      "icon": "📥",
+      "name": "Input",
+      "tag": "input",
+      "type": "input",
+      "description": "入力フィールド"
+    },
+    {
+      "icon": "📋",
+      "name": "Form",
+      "tag": "form",
+      "type": "container",
+      "description": "フォーム"
+    },
+    {
+      "icon": "🖼️",
+      "name": "Image",
+      "tag": "img",
+      "type": "container",
+      "description": "画像"
+    },
+    {
+      "icon": "🔗",
+      "name": "Link",
+      "tag": "a",
+      "type": "container",
+      "description": "リンク"
+    },
+    {
+      "icon": "📊",
+      "name": "Table",
+      "tag": "table",
+      "type": "container",
+      "description": "テーブル"
+    },
+    {
+      "icon": "📃",
+      "name": "List",
+      "tag": "ul",
+      "type": "container",
+      "description": "リスト"
+    },
+    {
+      "icon": "🎨",
+      "name": "Section",
+      "tag": "section",
+      "type": "container",
+      "description": "セクション"
+    },
+    {
+      "icon": "🏷️",
+      "name": "Label",
+      "tag": "label",
+      "type": "container",
+      "description": "ラベル"
+    }
+  ],
+  "iconMap": {
+    "div": "📦",
+    "section": "🎨",
+    "header": "🏠",
+    "footer": "📄",
+    "nav": "🧭",
+    "main": "📰",
+    "article": "📝",
+    "aside": "📌",
+    "h1": "🔤",
+    "h2": "🔤",
+    "h3": "🔤",
+    "h4": "🔤",
+    "h5": "🔤",
+    "h6": "🔤",
+    "p": "📝",
+    "span": "✏️",
+    "a": "🔗",
+    "button": "🔘",
+    "input": "📥",
+    "textarea": "📋",
+    "select": "📑",
+    "form": "📋",
+    "img": "🖼️",
+    "ul": "📃",
+    "ol": "📃",
+    "li": "•",
+    "table": "📊",
+    "tr": "↔️",
+    "td": "▢",
+    "th": "▣",
+    "default": "◼️"
+  }
+}

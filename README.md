@@ -1,29 +1,59 @@
-# Jsonia - Pure JSON Routing Interpreter
+# Jsonia - JSON-Driven Web Development Framework
 
-完全にJSONベースのルーティングインタプリタシステム。プロジェクト単位での独立実行を実現します。
+**JavaScriptコードを一切書かずに**、JSONだけで完全なWebアプリケーションを構築できる革新的なフレームワークです。
 
-## ✨ システムの特徴
+## 📖 目次
 
-- 🎯 **Pure Routing Interpreter**: 静的ルート定義を排除した完全JSON制御
-- 🎨 **jsonia-editor Mode**: WYSIWYGエディター専用モード
-- 📁 **Project Isolation**: プロジェクト完全分離実行
-- ⚡ **Zero Static Routes**: 全ルートをprojects内JSONで定義
-- 🔧 **Command Line Control**: コマンドライン引数での柔軟な起動制御
+- [主な特徴](#-主な特徴)
+- [起動方法](#-起動方法)
+- [プロジェクト構造](#-プロジェクト構造)
+- [Jsoniaの利点](#-jsoniaの利点)
+- [クイックスタート](#-クイックスタート)
+- [JSON定義](#-json定義)
+- [部品化機能](#-json部品化機能)
+- [CSS管理](#-css定義の外部ファイル分離)
+- [Behavior付きコンポーネント](#-behavior付きコンポーネント)
+- [ライセンス](#-ライセンス)
+
+---
+
+## ✨ 主な特徴
+
+### 🎯 ゼロJavaScript開発
+
+- **完全JSON定義**: HTML構造、CSS、動作、APIをすべてJSONで記述
+- **汎用ランタイム**: `jsonia-runtime.js`(784行)のみで全機能を実現
+- **プロジェクト固有コードゼロ**: アプリケーションロジックはすべてJSON定義
+
+### ⚡ コンポーネント指向
+
+- **Behavior付きコンポーネント**: React/Vue的な構造と振る舞いの統合
+- **40+種類のアクション**: DOM操作、状態管理、API通信をJSONで定義
+- **再利用可能**: タブ、モーダル、アコーディオンなど標準コンポーネント提供
+
+### � 開発効率
+
+- **ビルド不要**: インタプリタ実行で即座にプレビュー
+- **部品化機能**: `$include`ディレクティブでコンポーネント再利用
+- **プロジェクト分離**: 独立したプロジェクト管理でセキュア実行
 
 ## 🚀 起動方法
 
 ### jsonia-editorモード（デフォルト）
+
 ```bash
 # jsonia-editorフォルダのプロジェクトを実行
 node server/jsonia.js
 # または
 npm start
 ```
+
 - WYSIWYGエディター機能
 - 新プロジェクト作成・保存
 - `http://localhost:3000/` → `/editor`自動リダイレクト
 
 ### 指定プロジェクトモード
+
 ```bash
 # 特定プロジェクトのみを実行
 node server/jsonia.js projects/<project-name>
@@ -32,11 +62,13 @@ node server/jsonia.js projects/<project-name>
 node server/jsonia.js projects/blog-project
 node server/jsonia.js projects/form-project
 ```
+
 - 指定プロジェクトのルートのみ有効
 - 他プロジェクトは一切読み込まれない
 - セキュア＆高パフォーマンス
 
 ### 依存関係のインストール
+
 ```bash
 npm install
 ```
@@ -45,7 +77,7 @@ npm install
 
 各プロジェクトは完全に独立し、実行時は指定プロジェクトのみがロードされます：
 
-```
+```text
 Jsonia/
 ├── server/
 │   └── jsonia.js           # 純粋JSONルーティングインタプリタ
@@ -151,6 +183,7 @@ JsoniaClient.render('#container', config);
 ## 🏗️ JSON スキーマ
 
 ### 基本要素
+
 ```json
 {
     "tag": "div",
@@ -169,6 +202,7 @@ JsoniaClient.render('#container', config);
 ```
 
 ### 完全なページ
+
 ```json
 {
     "title": "ページタイトル",
@@ -197,151 +231,77 @@ JsoniaClient.render('#container', config);
 }
 ```
 
-## 🔗 実行モード
+## 💡 Jsoniaの利点
 
-### jsonia-editorモード（引数なし）
+### 従来のHTML開発との比較
 
-```bash
-node server/jsonia.js
-```
-
-- **プロジェクト**: `jsonia-editor/` のみロード
-- **ルート**: `/editor`, `/`, `/save`, `/load`  
-- **用途**: WYSIWYG編集環境、新規プロジェクト作成
-
-### プロジェクト分離モード
-
-```bash
-node server/jsonia.js projects/<project-name>
-```
-
-- **プロジェクト**: 指定フォルダのみロード
-- **ルート**: 当該プロジェクトの`routes.json`定義のみ
-- **用途**: 本番運用、セキュア実行
-- **例**: `node server/jsonia.js projects/blog-project`
-
-## 🎯 システムの利点
-
-### 🚀 開発生産性の向上
-
-#### 従来のHTML開発との比較
-| 従来の方法 | Jsonia | 利点 |
+| 従来の方法 | Jsonia | 効果 |
 |-----------|---------|-----|
-| HTML/CSS/JS分離 | JSON統一形式 | 🔄 **一元管理** - 1つのJSONで完全なUI定義 |
-| ビルドプロセス必須 | インタプリタ実行 | ⚡ **即座実行** - ビルド時間ゼロ |
-| 手動リロード | ライブプレビュー | 👀 **リアルタイム** - 編集と同時にプレビュー |
-| 複雑なテンプレート | JSONスキーマ | 📋 **シンプル** - 直感的な構造定義 |
+| HTML/CSS/JS分離 | JSON統一形式 | 🔄 一元管理 |
+| ビルド必須 | インタプリタ実行 | ⚡ ビルド時間ゼロ |
+| 手動リロード | 自動プレビュー | 👀 即座フィードバック |
+| React/Vue | JSON定義 | � バンドル不要 |
+| JavaScript必須 | 完全JSON | 🪶 学習コスト削減 |
 
-#### 開発スピードの劇的向上
-- **90%削減**: ビルド・リロード時間の大幅短縮
-- **即座フィードバック**: 編集→プレビューが瞬時
-- **プロトタイプ高速化**: アイデア→実装が数分で完了
-- **デバッグ簡易化**: REPL環境での対話的テスト
+### 主要メリット
 
-### 🔄 運用・保守性の利点
+#### 開発効率
 
-#### コードメンテナンス
-- **👁️ 視認性**: JSONの構造化されたデータで可読性向上
-- **🔍 検索性**: 統一形式により横断的な検索・置換が容易
-- **📊 解析可能**: JSONパースによる自動解析・バリデーション
-- **🔄 バージョン管理**: 差分が明確でGit管理が効率的
+- ⏰ 開発時間60-80%短縮
+- 🚀 プロトタイプ→製品化が超高速
+- 📋 JSONスキーマで要件定義が明確
+- 🧪 テスト容易性の向上
 
-#### 再利用性とスケーラビリティ
-- **🧩 コンポーネント化**: 一度定義したコンポーネントの全体再利用
-- **📋 テンプレート化**: パラメーター置換による動的コンテンツ生成
-- **🔗 API連携**: JSON→HTMLの自動変換でAPIレスポンス直接描画
-- **📱 レスポンシブ**: 同一JSONから多デバイス対応HTML生成
+#### 保守性
 
-### 🛡️ セキュリティ・品質向上
+- 👁️ JSON形式で構造が一目瞭然
+- � 一箇所の修正で全体に反映
+- 📊 自動解析・バリデーション可能
+- 🔄 Git差分が明確で管理しやすい
 
-#### 自動セキュリティ対策
-- **🔒 XSS防止**: 全テキスト自動エスケープでインジェクション攻撃防御
-- **✅ 入力検証**: JSONスキーマによる型安全性保証
-- **🚫 不正HTML**: 制限されたタグセットで安全なHTML生成
-- **📝 ログ追跡**: 生成プロセスの完全なトレーサビリティ
+#### セキュリティ
 
-#### コード品質保証
-- **🎯 一貫性**: 統一されたJSON形式で出力の品質均一化
-- **🔧 自動修正**: 不正なJSON構造の自動補完・修正
-- **📐 標準準拠**: W3C HTML標準への自動適合
-- **🧪 テスト容易性**: JSON入力→HTML出力の明確な関係でテスト簡素化
+- 🔒 自動XSS防止(全テキストエスケープ)
+- ✅ JSONスキーマによる型安全性
+- 🚫 制限されたタグセットで安全
+- 📝 完全なトレーサビリティ
 
-### 🌐 チーム開発・協業の利点
+#### チーム協業
 
-#### 技術的障壁の削減
-- **👥 非エンジニア対応**: HTMLを知らなくてもJSONでUI作成可能
-- **🎨 デザイナー協業**: JSONベースでデザイナーとの協業円滑化
-- **📚 学習コスト低減**: HTML/CSS/JSの複雑な組み合わせが不要
-- **🔄 分業効率化**: バックエンド開発者もフロントエンド作成可能
+- 👥 非エンジニアでもUI作成可能
+- 🎨 デザイナーとの協業が円滑
+- 📚 フルスタック知識不要
+- 🔍 コードレビューが構造的
 
-#### プロジェクト管理の効率化
-- **📋 仕様明確化**: JSONスキーマで要件定義が具体的
-- **🚀 プロトタイプ高速**: アイデア検証が数分で完了
-- **🔍 レビュー効率**: JSON形式でコードレビューが構造的
-- **📊 進捗可視化**: コンポーネント単位での開発進捗管理
+## � クイックスタート
 
-### 💡 革新的な開発体験
+### インストール
 
-#### インタプリタならではの利点
-- **🎛️ REPL環境**: コマンドラインでの対話的HTML生成
-- **📊 リアルタイム解析**: 実行時のパフォーマンス・メモリ使用量監視
-- **🔄 ホットスワップ**: サーバー再起動なしでのコンポーネント更新
-- **🎯 条件分岐**: 実行時の動的な条件によるHTML生成制御
-
-#### 従来のフレームワークを超越
-- **⚡ ゼロ設定**: 設定ファイル不要で即座に開始
-- **🪶 軽量実行**: 最小限の依存関係で高速動作
-- **🔌 プラグイン不要**: 基本機能ですべて完結
-- **🌍 環境非依存**: Node.js環境があれば動作保証
-
-### 📈 ビジネス価値
-
-#### コスト削減効果
-- **⏰ 開発時間**: 従来比60-80%の時間短縮
-- **👥 人件費**: フルスタック開発者不要で人材コスト削減
-- **🔧 保守費**: シンプル構造で保守コスト大幅削減
-- **📚 教育費**: 学習コスト削減で新人研修期間短縮
-
-#### 競争優位性
-- **🚀 市場投入**: プロトタイプ→製品化の超高速サイクル
-- **🔄 機敏性**: 要求変更への即座対応でビジネス機会逃さず
-- **📱 多チャネル**: 同一ソースから複数プラットフォーム対応
-- **🌐 グローバル**: 多言語対応テンプレートでの国際展開容易性
-
-## 🎯 Jsoniaインタプリタの利点
-
-### JSON定義によるルーティング管理
-- **📁 プロジェクト分離**: 各プロジェクトが独立したroutes.jsonを持つ
-- **🔄 動的ロード**: サーバー起動時に全プロジェクトを自動検出・登録
-- **🎯 型安全**: JSON Schemaによるルート定義の検証
-- **📊 可視化**: `/projects`エンドポイントで全ルートを一覧表示
-
-### EJSインタプリタシステム
-- **⚡ リアルタイム変換**: JSON→EJS変換の即座実行
-- **🧩 テンプレート再利用**: 共通コンポーネントの効率的活用
-- **🔗 データバインディング**: クエリパラメーターの自動テンプレート注入
-- **🛡️ セキュリティ**: 自動エスケープによるXSS防止
-
-## 🔧 開発とデプロイ
+```bash
+npm install
+```
 
 ### 開発サーバー起動
-```bash
-# Jsoniaインタプリータ開発サーバー
-npm run dev
 
-# プロダクション実行
+```bash
+# jsonia-editorモード(WYSIWYG開発環境)
 npm start
+
+# 特定プロジェクトのみ実行
+node server/jsonia.js projects/blog-project
 ```
 
 ### 新しいプロジェクト作成
+
 1. `projects/新プロジェクト名/`フォルダを作成
 2. `routes.json`でルーティングを定義
-3. テンプレートファイル（`main.json`等）を配置
+3. `main.json`でページを作成
 4. サーバー再起動で自動認識
 
 ## 🧩 JSON部品化機能
 
 ### $include ディレクティブ
+
 JSONファイルをEJSのように部品化して再利用できます：
 
 ```json
@@ -367,6 +327,7 @@ JSONファイルをEJSのように部品化して再利用できます：
 ```
 
 ### パス解決ルール
+
 - **`shared/components/xxx`**: `projects/shared/components/xxx.json`
 - **`components/xxx`**: プロジェクト内の`components/xxx.json`
 - **`/xxx`**: プロジェクトルートからの絶対パス
@@ -374,6 +335,7 @@ JSONファイルをEJSのように部品化して再利用できます：
 ### 共通コンポーネント作成例
 
 #### ヘッダー (`projects/shared/components/header.json`)
+
 ```json
 {
   "tag": "header",
@@ -401,6 +363,7 @@ JSONファイルをEJSのように部品化して再利用できます：
 ```
 
 #### 使用例
+
 ```json
 {
   "title": "マイサイト",
@@ -413,6 +376,7 @@ JSONファイルをEJSのように部品化して再利用できます：
 ```
 
 ### 部品化のメリット
+
 - 🔄 **再利用性**: 共通コンポーネントを一元管理
 - 🎨 **一貫性**: デザインの統一が容易
 - 🛠️ **保守性**: 修正箇所が1ヶ所で完結
@@ -421,6 +385,7 @@ JSONファイルをEJSのように部品化して再利用できます：
 ## 🎨 CSS定義の外部ファイル分離
 
 ### styles配列での$include
+
 スタイル定義も外部JSONファイルに分離して管理できます：
 
 ```json
@@ -436,6 +401,7 @@ JSONファイルをEJSのように部品化して再利用できます：
 ```
 
 ### 共通スタイルライブラリ
+
 基本的なユーティリティクラスを提供：
 
 ```json
@@ -449,6 +415,7 @@ JSONファイルをEJSのように部品化して再利用できます：
 ```
 
 利用可能なクラス：
+
 - **レイアウト**: `.container`, `.flex`, `.grid`, `.grid-cols-2/3/4`
 - **スペーシング**: `.mt-1/2/3/4`, `.mb-1/2/3/4`, `.p-1/2/3/4`
 - **ボタン**: `.btn`, `.btn-primary`, `.btn-success`, `.btn-danger`
@@ -456,9 +423,10 @@ JSONファイルをEJSのように部品化して再利用できます：
 - **テキスト**: `.text-center`, `.text-left`, `.text-right`
 
 ### プロジェクト専用CSS
+
 各プロジェクトで独自のCSSファイルを作成：
 
-```
+```text
 projects/
   my-project/
     css.json          # プロジェクト専用スタイル
@@ -480,10 +448,117 @@ projects/
 ```
 
 ### CSSのメリット
+
 - 📁 **分離管理**: スタイルとコンテンツを分離
 - 🔄 **再利用**: 複数ページで同じスタイルを共有
 - 🎯 **保守性**: スタイル変更が一箇所で完結
 - 📦 **モジュール性**: 用途別にスタイルを分割
+
+## ⚡ Behavior付きコンポーネント
+
+### JavaScriptゼロでインタラクティブUIを実現
+
+Jsoniaの最大の特徴は、**JavaScript一切不要**でReact/Vue的なインタラクティブコンポーネントを作成できることです。
+
+### 基本構造
+
+**静的コンポーネント** (構造のみ):
+
+```json
+{
+  "tag": "div",
+  "children": [{ "tag": "h1", "text": "タイトル" }]
+}
+```
+
+**動的コンポーネント** (構造 + Behavior):
+
+```json
+{
+  "tag": "div",
+  "children": [...],
+  "behavior": {
+    "state": { "activeTab": "tab1" },
+    "events": [
+      {
+        "target": "[data-tab]",
+        "type": "click",
+        "actions": [
+          { "type": "setState", "key": "activeTab", "value": "{{tabId}}" },
+          { "type": "dom.addClass", "element": "{{button}}", "className": "active" }
+        ]
+      }
+    ],
+    "apis": {
+      "loadData": { "url": "/api/data", "method": "GET" }
+    },
+    "initialization": [
+      { "type": "api", "name": "loadData", "storeIn": "data" }
+    ]
+  }
+}
+```
+
+### 標準提供コンポーネント
+
+| コンポーネント | ファイル | 機能 |
+|------------|---------|------|
+| タブUI | `tabs-with-behavior.json` | タブ切り替え、状態管理 |
+| アコーディオン | `accordion-with-behavior.json` | 開閉制御、複数セクション |
+| ドロップダウン | `dropdown-with-behavior.json` | メニュー開閉、項目選択 |
+| モーダル | `modal-with-behavior.json` | ダイアログ表示、背景クローズ |
+
+**使用例**:
+
+```json
+{
+  "$include": "components/tabs-with-behavior.json",
+  "defaultTab": "tab1",
+  "tabs": [
+    { "tag": "button", "text": "タブ1", "attributes": { "data-tab-button": "tab1" } }
+  ],
+  "panels": [
+    { "tag": "div", "text": "内容1", "attributes": { "data-tab-panel": "tab1" } }
+  ]
+}
+```
+
+### 40+種類のアクションタイプ
+
+**DOM操作**: select, selectAll, createElement, appendChild, setInnerHTML, setAttribute, addClass, removeClass, toggleClass
+
+**データ操作**: array.forEach, array.map, array.filter, object.set, object.get
+
+**文字列**: string.template, string.concat
+
+**フロー制御**: if, sequence
+
+**状態管理**: setState, getState
+
+**通信**: api, emit
+
+**その他**: alert, console, navigate, validate, submit
+
+### ゼロJavaScriptアーキテクチャ
+
+jsonia-editorプロジェクト自体がその証明:
+
+```text
+public/js/
+└── jsonia-runtime.js (784行 - 汎用エンジン)
+    ↑ これだけで全てが動作
+
+jsonia-editor/
+├── behaviors/editor.json    # 動作定義
+├── extensions.json          # カスタムアクション
+└── data/components.json     # データ定義
+```
+
+- プロジェクト固有のJavaScript: **0行**
+- すべてのロジック: JSON定義
+- 完全な型安全性: JSONスキーマ検証
+
+詳細は `components/README.md` を参照してください。
 
 ## 📝 ライセンス
 

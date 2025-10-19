@@ -1,79 +1,36 @@
 {
-  "components": {
-    "container": {
-      "name": "コンテナ",
-      "icon": "📦",
-      "category": "layout",
-      "template": {
-        "tag": "div",
-        "attributes": {
-          "class": "container"
-        },
-        "text": "コンテナ"
-      },
-      "description": "要素をグループ化するコンテナ"
+  "icon": "📐",
+  "name": "レイアウトコンテナ",
+  "tag": "div",
+  "type": "container",
+  "category": "layout",
+  "description": "フレックスボックスを使ったレイアウトコンテナ",
+  "template": {
+    "tag": "div",
+    "attributes": {
+      "class": "layout-container",
+      "style": "display: flex; gap: 16px; padding: 20px;"
     },
-    "grid": {
-      "name": "グリッド",
-      "icon": "⊞",
-      "category": "layout",
-      "template": {
+    "children": [
+      {
         "tag": "div",
         "attributes": {
-          "class": "grid",
-          "style": "display: grid; grid-template-columns: 1fr 1fr; gap: 16px;"
+          "class": "layout-item",
+          "style": "flex: 1; padding: 20px; background: #f8f9fa; border: 1px dashed #dee2e6; text-align: center;"
         },
-        "children": [
-          {
-            "tag": "div",
-            "attributes": {
-              "class": "grid-item",
-              "style": "padding: 20px; background: #f8f9fa; border: 1px dashed #dee2e6; text-align: center;"
-            },
-            "text": "グリッドアイテム 1"
-          },
-          {
-            "tag": "div", 
-            "attributes": {
-              "class": "grid-item",
-              "style": "padding: 20px; background: #f8f9fa; border: 1px dashed #dee2e6; text-align: center;"
-            },
-            "text": "グリッドアイテム 2"
-          }
-        ]
+        "text": "レイアウトアイテム 1"
       },
-      "description": "CSS Gridレイアウト"
-    },
-    "flex": {
-      "name": "フレックス",
-      "icon": "↔️",
-      "category": "layout",
-      "template": {
+      {
         "tag": "div",
         "attributes": {
-          "class": "flex-container",
-          "style": "display: flex; gap: 16px; align-items: center;"
+          "class": "layout-item",
+          "style": "flex: 1; padding: 20px; background: #f8f9fa; border: 1px dashed #dee2e6; text-align: center;"
         },
-        "children": [
-          {
-            "tag": "div",
-            "attributes": {
-              "class": "flex-item",
-              "style": "flex: 1; padding: 20px; background: #e9ecef; text-align: center;"
-            },
-            "text": "フレックスアイテム 1"
-          },
-          {
-            "tag": "div",
-            "attributes": {
-              "class": "flex-item", 
-              "style": "flex: 1; padding: 20px; background: #e9ecef; text-align: center;"
-            },
-            "text": "フレックスアイテム 2"
-          }
-        ]
-      },
-      "description": "CSS Flexboxレイアウト"
-    }
+        "text": "レイアウトアイテム 2"
+      }
+    ]
+  },
+  "defaultAttributes": {
+    "class": "layout-container"
   }
 }

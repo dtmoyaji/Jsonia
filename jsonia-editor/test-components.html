@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Component API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        pre {
+            background: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Component API Test</h1>
+    
+    <div class="test-section">
+        <h2>1. API エンドポイントテスト</h2>
+        <button onclick="testAPI()">API をテスト</button>
+        <pre id="api-result">まだテストしていません</pre>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. JsoniaRuntime テスト</h2>
+        <button onclick="testRuntime()">Runtime をテスト</button>
+        <pre id="runtime-result">まだテストしていません</pre>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. editor-extensions.js テスト</h2>
+        <button onclick="testExtensions()">Extensions をテスト</button>
+        <pre id="extensions-result">まだテストしていません</pre>
+    </div>
+
+    <script>
+        async function testAPI() {
+            const result = document.getElementById('api-result');
+            result.textContent = '読み込み中...';
+            
+            try {
+                const response = await fetch('/editor/api/components');
+                const data = await response.json();
+                
+                result.textContent = JSON.stringify(data, null, 2);
+                console.log('✅ API レスポンス:', data);
+                
+                if (data.success && data.components) {
+                    result.textContent += `\n\n✅ 成功! ${data.components.length} 個のコンポーネントファイルを取得`;
+                }
+            } catch (error) {
+                result.textContent = `❌ エラー: ${error.message}`;
+                console.error('❌ API エラー:', error);
+            }
+        }
+        
+        function testRuntime() {
+            const result = document.getElementById('runtime-result');
+            
+            if (typeof JsoniaRuntime === 'undefined') {
+                result.textContent = '❌ JsoniaRuntime が読み込まれていません';
+                return;
+            }
+            
+            result.textContent = '✅ JsoniaRuntime が利用可能です\n\n';
+            result.textContent += `typeof JsoniaRuntime: ${typeof JsoniaRuntime}\n`;
+            result.textContent += `window.jsoniaRuntime: ${window.jsoniaRuntime ? '存在する' : '存在しない'}`;
+            
+            console.log('✅ JsoniaRuntime:', JsoniaRuntime);
+            if (window.jsoniaRuntime) {
+                console.log('✅ window.jsoniaRuntime:', window.jsoniaRuntime);
+            }
+        }
+        
+        function testExtensions() {
+            const result = document.getElementById('extensions-result');
+            
+            if (typeof window.editorExtensions === 'undefined') {
+                result.textContent = '❌ editorExtensions が読み込まれていません';
+                return;
+            }
+            
+            result.textContent = '✅ editorExtensions が利用可能です\n\n';
+            result.textContent += `利用可能な関数:\n`;
+            result.textContent += Object.keys(window.editorExtensions).join('\n- ');
+            
+            if (typeof window.renderComponentsList === 'function') {
+                result.textContent += '\n\n✅ renderComponentsList が利用可能';
+            } else {
+                result.textContent += '\n\n❌ renderComponentsList が利用できません';
+            }
+            
+            console.log('✅ editorExtensions:', window.editorExtensions);
+        }
+    </script>
+    
+    <script src="/js/jsonia-runtime.js"></script>
+    <script src="/js/editor-extensions.js"></script>
+</body>
+</html>

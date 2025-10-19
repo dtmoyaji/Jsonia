@@ -1,0 +1,350 @@
+{
+  "title": "Jsonia Runtime デモ",
+  "meta": {
+    "charset": "UTF-8",
+    "viewport": "width=device-width, initial-scale=1.0"
+  },
+  "styles": [
+    {
+      "body": {
+        "fontFamily": "sans-serif",
+        "padding": "20px",
+        "maxWidth": "900px",
+        "margin": "0 auto",
+        "backgroundColor": "#f5f5f5"
+      },
+      ".demo-section": {
+        "backgroundColor": "white",
+        "padding": "25px",
+        "marginBottom": "20px",
+        "borderRadius": "8px",
+        "boxShadow": "0 2px 4px rgba(0,0,0,0.1)"
+      },
+      ".counter": {
+        "fontSize": "64px",
+        "textAlign": "center",
+        "margin": "20px 0",
+        "color": "#2c3e50",
+        "fontWeight": "700"
+      },
+      ".btn": {
+        "padding": "12px 24px",
+        "margin": "5px",
+        "fontSize": "16px",
+        "cursor": "pointer",
+        "border": "none",
+        "borderRadius": "6px",
+        "backgroundColor": "#3498db",
+        "color": "white",
+        "fontWeight": "600",
+        "transition": "all 0.2s"
+      },
+      ".btn:hover": {
+        "backgroundColor": "#2980b9",
+        "transform": "translateY(-2px)"
+      },
+      ".btn-success": {
+        "backgroundColor": "#27ae60"
+      },
+      ".btn-success:hover": {
+        "backgroundColor": "#229954"
+      },
+      ".btn-danger": {
+        "backgroundColor": "#e74c3c"
+      },
+      ".btn-danger:hover": {
+        "backgroundColor": "#c0392b"
+      },
+      ".user-info": {
+        "padding": "20px",
+        "marginTop": "20px",
+        "backgroundColor": "#ecf0f1",
+        "borderRadius": "6px",
+        "borderLeft": "4px solid #3498db"
+      },
+      ".form-group": {
+        "marginBottom": "20px"
+      },
+      ".form-group label": {
+        "display": "block",
+        "marginBottom": "8px",
+        "fontWeight": "600",
+        "color": "#2c3e50"
+      },
+      ".form-group input": {
+        "width": "100%",
+        "padding": "10px",
+        "fontSize": "14px",
+        "border": "2px solid #e0e0e0",
+        "borderRadius": "4px",
+        "transition": "border 0.2s"
+      },
+      ".form-group input:focus": {
+        "outline": "none",
+        "borderColor": "#3498db"
+      },
+      ".error": {
+        "color": "#e74c3c",
+        "fontSize": "13px",
+        "marginTop": "5px",
+        "display": "none"
+      },
+      ".state-display": {
+        "backgroundColor": "#2c3e50",
+        "color": "#ecf0f1",
+        "padding": "15px",
+        "borderRadius": "6px",
+        "fontFamily": "monospace",
+        "fontSize": "13px",
+        "marginTop": "20px",
+        "whiteSpace": "pre-wrap",
+        "overflow": "auto"
+      },
+      "h1": {
+        "color": "#2c3e50",
+        "marginBottom": "10px"
+      },
+      "h2": {
+        "color": "#34495e",
+        "marginBottom": "15px",
+        "fontSize": "24px"
+      },
+      ".btn-group": {
+        "display": "flex",
+        "gap": "10px",
+        "justifyContent": "center",
+        "flexWrap": "wrap"
+      }
+    }
+  ],
+  "body": [
+    {
+      "tag": "h1",
+      "text": "🚀 Jsonia Runtime Engine デモ"
+    },
+    {
+      "tag": "p",
+      "text": "このページはJSON定義から動的に生成され、JsoniaRuntimeエンジンで実行されています。"
+    },
+    {
+      "tag": "div",
+      "attributes": { "class": "demo-section" },
+      "children": [
+        {
+          "tag": "h2",
+          "text": "📊 カウンター (状態管理)"
+        },
+        {
+          "tag": "div",
+          "attributes": { "class": "counter", "id": "counter" },
+          "text": "0"
+        },
+        {
+          "tag": "div",
+          "attributes": { "class": "btn-group" },
+          "children": [
+            {
+              "tag": "button",
+              "attributes": { "class": "btn", "id": "increment" },
+              "text": "➕ +1"
+            },
+            {
+              "tag": "button",
+              "attributes": { "class": "btn", "id": "decrement" },
+              "text": "➖ -1"
+            },
+            {
+              "tag": "button",
+              "attributes": { "class": "btn", "id": "add10" },
+              "text": "🚀 +10"
+            },
+            {
+              "tag": "button",
+              "attributes": { "class": "btn btn-danger", "id": "reset" },
+              "text": "🔄 リセット"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "div",
+      "attributes": { "class": "demo-section" },
+      "children": [
+        {
+          "tag": "h2",
+          "text": "✅ フォーム (バリデーション)"
+        },
+        {
+          "tag": "form",
+          "attributes": { "id": "userForm" },
+          "children": [
+            {
+              "tag": "div",
+              "attributes": { "class": "form-group" },
+              "children": [
+                {
+                  "tag": "label",
+                  "attributes": { "for": "name" },
+                  "text": "名前 *"
+                },
+                {
+                  "tag": "input",
+                  "attributes": {
+                    "type": "text",
+                    "id": "name",
+                    "name": "name",
+                    "placeholder": "山田太郎"
+                  }
+                },
+                {
+                  "tag": "div",
+                  "attributes": { "class": "error", "id": "nameError" }
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "attributes": { "class": "form-group" },
+              "children": [
+                {
+                  "tag": "label",
+                  "attributes": { "for": "email" },
+                  "text": "メールアドレス *"
+                },
+                {
+                  "tag": "input",
+                  "attributes": {
+                    "type": "email",
+                    "id": "email",
+                    "name": "email",
+                    "placeholder": "example@example.com"
+                  }
+                },
+                {
+                  "tag": "div",
+                  "attributes": { "class": "error", "id": "emailError" }
+                }
+              ]
+            },
+            {
+              "tag": "button",
+              "attributes": { "class": "btn btn-success", "type": "submit" },
+              "text": "✅ 送信"
+            }
+          ]
+        },
+        {
+          "tag": "div",
+          "attributes": { "class": "user-info", "id": "userInfo", "style": "display: none;" }
+        }
+      ]
+    },
+    {
+      "tag": "div",
+      "attributes": { "class": "demo-section" },
+      "children": [
+        {
+          "tag": "h2",
+          "text": "🔍 現在の状態"
+        },
+        {
+          "tag": "div",
+          "attributes": { "class": "state-display", "id": "stateDisplay" },
+          "text": "{}"
+        }
+      ]
+    }
+  ],
+  "scripts": [
+    "/js/jsonia-runtime.js",
+    {
+      "state": {
+        "counter": 0,
+        "user": null
+      },
+      "computed": {
+        "isPositive": { "gt": ["{{counter}}", 0] },
+        "displayCounter": "カウント: {{counter}}"
+      },
+      "validation": {
+        "name": [
+          { "required": true, "message": "名前は必須です" },
+          { "minLength": 2, "message": "名前は2文字以上で入力してください" }
+        ],
+        "email": [
+          { "required": true, "message": "メールアドレスは必須です" },
+          { "type": "email", "message": "有効なメールアドレスを入力してください" }
+        ]
+      },
+      "events": [
+        {
+          "target": "#increment",
+          "type": "click",
+          "actions": [
+            { "type": "setState", "key": "counter", "value": { "add": ["{{counter}}", 1] } },
+            { "type": "updateDOM", "target": "#counter", "content": "{{counter}}" },
+            { "type": "console", "message": "カウンター: {{counter}}" }
+          ]
+        },
+        {
+          "target": "#decrement",
+          "type": "click",
+          "actions": [
+            { "type": "setState", "key": "counter", "value": { "subtract": ["{{counter}}", 1] } },
+            { "type": "updateDOM", "target": "#counter", "content": "{{counter}}" }
+          ]
+        },
+        {
+          "target": "#add10",
+          "type": "click",
+          "actions": [
+            { "type": "setState", "key": "counter", "value": { "add": ["{{counter}}", 10] } },
+            { "type": "updateDOM", "target": "#counter", "content": "{{counter}}" },
+            { "type": "alert", "message": "10追加しました! 現在: {{counter}}" }
+          ]
+        },
+        {
+          "target": "#reset",
+          "type": "click",
+          "actions": [
+            { "type": "setState", "key": "counter", "value": 0 },
+            { "type": "updateDOM", "target": "#counter", "content": "0" }
+          ]
+        },
+        {
+          "target": "#name",
+          "type": "blur",
+          "actions": [
+            { "type": "validate", "field": "name", "errorTarget": "#nameError" }
+          ]
+        },
+        {
+          "target": "#email",
+          "type": "blur",
+          "actions": [
+            { "type": "validate", "field": "email", "errorTarget": "#emailError" }
+          ]
+        },
+        {
+          "target": "#userForm",
+          "type": "submit",
+          "actions": [
+            {
+              "type": "submit",
+              "onValid": [
+                { "type": "console", "message": "バリデーション成功!" },
+                { "type": "updateDOM", "target": "#userInfo", "content": "<h3>✅ 登録完了!</h3><p><strong>名前:</strong> {{name}}</p><p><strong>メール:</strong> {{email}}</p>" },
+                { "type": "updateDOM", "target": "#userInfo", "attribute": "style", "content": "display: block;" },
+                { "type": "alert", "message": "ユーザー登録が完了しました!" }
+              ],
+              "onInvalid": [
+                { "type": "alert", "message": "入力内容を確認してください" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,8 +1,22 @@
 {
+  "icon": "🔘",
+  "name": "ボタン",
   "tag": "button",
-  "attributes": {
-    "class": "btn btn-primary",
-    "style": "background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 16px;"
+  "type": "button",
+  "category": "form",
+  "description": "クリック可能なボタン要素",
+  "template": {
+    "tag": "button",
+    "attributes": {
+      "class": "btn btn-primary",
+      "type": "button",
+      "style": "background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 16px;"
+    },
+    "text": "ボタン"
   },
-  "text": "{{buttonText}}"
+  "defaultText": "ボタン",
+  "defaultAttributes": {
+    "type": "button",
+    "class": "btn"
+  }
 }

@@ -1,43 +1,27 @@
 {
+  "icon": "🏠",
+  "name": "ヘッダー",
   "tag": "header",
-  "attributes": {
-    "class": "site-header",
-    "style": "background: #2c3e50; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center;"
-  },
-  "children": [
-    {
-      "tag": "h1",
-      "attributes": { "style": "margin: 0;" },
-      "text": "{{title}}"
+  "type": "container",
+  "category": "layout",
+  "description": "ページ上部のヘッダーセクション",
+  "template": {
+    "tag": "header",
+    "attributes": { 
+      "class": "header",
+      "style": "background: #2c3e50; color: white; padding: 20px;"
     },
-    {
-      "tag": "nav",
-      "children": [
-        {
-          "tag": "a",
-          "attributes": { 
-            "href": "/",
-            "style": "color: white; margin: 0 10px; text-decoration: none;"
-          },
-          "text": "ホーム"
-        },
-        {
-          "tag": "a",
-          "attributes": { 
-            "href": "/about",
-            "style": "color: white; margin: 0 10px; text-decoration: none;"
-          },
-          "text": "About"
-        },
-        {
-          "tag": "a",
-          "attributes": { 
-            "href": "/contact",
-            "style": "color: white; margin: 0 10px; text-decoration: none;"
-          },
-          "text": "お問い合わせ"
+    "children": [
+      {
+        "tag": "h1",
+        "text": "サイトタイトル",
+        "attributes": {
+          "style": "margin: 0; font-size: 24px;"
         }
-      ]
-    }
-  ]
+      }
+    ]
+  },
+  "defaultAttributes": {
+    "class": "header"
+  }
 }

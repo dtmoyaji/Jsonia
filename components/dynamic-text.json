@@ -1,0 +1,42 @@
+{
+  "icon": "🔄",
+  "name": "動的テキスト",
+  "tag": "p",
+  "type": "text",
+  "category": "ejs",
+  "description": "EJS変数を表示するテキスト要素 (例: {{variableName}})",
+  "template": {
+    "tag": "div",
+    "attributes": {
+      "class": "dynamic-content",
+      "style": "padding: 16px; border: 1px dashed #ccc; border-radius: 4px; background: #f9f9f9; margin: 8px 0;"
+    },
+    "children": [
+      {
+        "tag": "p",
+        "attributes": {
+          "style": "margin: 0 0 8px 0; color: #666; font-size: 12px; font-weight: bold;"
+        },
+        "text": "動的コンテンツ:"
+      },
+      {
+        "tag": "p",
+        "text": "{{variableName}}",
+        "attributes": {
+          "class": "dynamic-text",
+          "style": "margin: 0; color: #333; font-size: 14px;"
+        }
+      },
+      {
+        "tag": "p",
+        "attributes": {
+          "style": "margin: 8px 0 0 0; color: #999; font-size: 11px; font-style: italic;"
+        },
+        "text": "※ {{variableName}} は実行時にデータで置き換えられます"
+      }
+    ]
+  },
+  "defaultAttributes": {
+    "class": "dynamic-text"
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "icon": "🔽",
+  "name": "ドロップダウン",
+  "tag": "div",
+  "type": "container",
+  "category": "interactive",
+  "description": "選択可能なドロップダウンメニュー",
+  "template": {
+    "tag": "div",
+    "attributes": { 
+      "class": "dropdown",
+      "style": "position: relative; display: inline-block;"
+    },
+    "children": [
+      {
+        "tag": "button",
+        "attributes": {
+          "class": "dropdown-toggle",
+          "data-dropdown-toggle": "true",
+          "style": "padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;"
+        },
+        "text": "選択してください"
+      },
+      {
+        "tag": "div",
+        "attributes": {
+          "class": "dropdown-menu hidden",
+          "data-dropdown-menu": "true",
+          "style": "position: absolute; top: 100%; left: 0; background: white; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); min-width: 160px; z-index: 1000;"
+        },
+        "children": [
+          {
+            "tag": "div",
+            "attributes": {
+              "class": "dropdown-item",
+              "data-dropdown-item": "true",
+              "data-value": "option1",
+              "style": "padding: 8px 16px; cursor: pointer; border-bottom: 1px solid #f0f0f0;"
+            },
+            "text": "オプション 1"
+          },
+          {
+            "tag": "div",
+            "attributes": {
+              "class": "dropdown-item",
+              "data-dropdown-item": "true",
+              "data-value": "option2",
+              "style": "padding: 8px 16px; cursor: pointer; border-bottom: 1px solid #f0f0f0;"
+            },
+            "text": "オプション 2"
+          },
+          {
+            "tag": "div",
+            "attributes": {
+              "class": "dropdown-item",
+              "data-dropdown-item": "true",
+              "data-value": "option3",
+              "style": "padding: 8px 16px; cursor: pointer;"
+            },
+            "text": "オプション 3"
+          }
+        ]
+      }
+    ]
+  },
+  "defaultAttributes": {
+    "class": "dropdown"
+  },
+  "behavior": {
+    "state": {
+      "isOpen": false,
+      "selectedItem": null
+    },
+    "events": [
+      {
+        "target": "[data-dropdown-toggle]",
+        "type": "click",
+        "actions": [
+          {
+            "type": "sequence",
+            "actions": [
+              {
+                "type": "setState",
+                "key": "isOpen",
+                "value": "{{!state.isOpen}}"
+              },
+              {
+                "type": "dom.select",
+                "selector": "[data-dropdown-menu]",
+                "storeIn": "menu"
+              },
+              {
+                "type": "if",
+                "condition": "{{state.isOpen}}",
+                "then": [
+                  {
+                    "type": "dom.removeClass",
+                    "element": "{{menu}}",
+                    "className": "hidden"
+                  }
+                ],
+                "else": [
+                  {
+                    "type": "dom.addClass",
+                    "element": "{{menu}}",
+                    "className": "hidden"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "target": "[data-dropdown-item]",
+        "type": "click",
+        "actions": [
+          {
+            "type": "sequence",
+            "actions": [
+              {
+                "type": "dom.select",
+                "selector": "[data-dropdown-item]",
+                "storeIn": "item"
+              },
+              {
+                "type": "dom.getAttribute",
+                "element": "{{item}}",
+                "attribute": "data-value",
+                "storeIn": "value"
+              },
+              {
+                "type": "setState",
+                "key": "selectedItem",
+                "value": "{{value}}"
+              },
+              {
+                "type": "setState",
+                "key": "isOpen",
+                "value": false
+              },
+              {
+                "type": "dom.select",
+                "selector": "[data-dropdown-menu]",
+                "storeIn": "menu"
+              },
+              {
+                "type": "dom.addClass",
+                "element": "{{menu}}",
+                "className": "hidden"
+              },
+              {
+                "type": "emit",
+                "event": "itemSelected",
+                "data": { "value": "{{value}}" }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

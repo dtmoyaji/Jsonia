@@ -1,0 +1,89 @@
+{
+  "state": {
+    "componentsData": [],
+    "iconMap": {},
+    "extensions": null,
+    "selectedElement": null,
+    "selectedTab": "structure",
+    "config": null,
+    "history": [],
+    "historyIndex": -1,
+    "draggedComponent": null
+  },
+  "computed": {},
+  "apis": {
+    "loadComponents": { "url": "/editor/api/components", "method": "GET" },
+    "loadBuiltinComponents": { "url": "/editor/data/components.json", "method": "GET" },
+    "loadExtensions": { "url": "/editor/extensions.json", "method": "GET" },
+    "loadConfig": { "url": "/editor/config.json", "method": "GET" }
+  },
+  "initialization": [
+    { "type": "console", "message": "🎨 Jsonia Editor 初期化中..." },
+    { "type": "console", "message": "🔍 window.renderComponentsList存在確認", "data": { "exists": "window.renderComponentsList !== undefined", "type": "typeof window.renderComponentsList" } },
+    { "type": "api", "name": "loadComponents", "storeIn": "sharedComponentsResponse" },
+    { "type": "api", "name": "loadBuiltinComponents", "storeIn": "builtinComponentsResponse" },
+    { "type": "console", "message": "📦 共有コンポーネント読み込み完了" },
+    { "type": "setState", "key": "sharedComponents", "value": "{{sharedComponentsResponse.components}}" },
+    { "type": "setState", "key": "componentsData", "value": "{{builtinComponentsResponse.components}}" },
+    { "type": "setState", "key": "iconMap", "value": "{{builtinComponentsResponse.iconMap}}" },
+    { "type": "api", "name": "loadExtensions", "storeIn": "extensionsResponse" },
+    { "type": "setState", "key": "extensions", "value": "{{extensionsResponse.data}}" },
+    { "type": "api", "name": "loadConfig", "storeIn": "configResponse" },
+    { "type": "setState", "key": "config", "value": "{{configResponse.data}}" },
+    { "type": "console", "message": "✅ 全データ読み込み完了" },
+    { "type": "function", "name": "renderComponentsList" },
+    { "type": "function", "name": "updateStructureTree" },
+    { "type": "console", "message": "✅ Jsonia Editor 初期化完了" }
+  ],
+  "events": [
+    {
+      "target": ".editor-tab",
+      "type": "click",
+      "actions": [
+        { "type": "function", "name": "switchTab", "params": {} }
+      ]
+    },
+    {
+      "target": ".accordion-header",
+      "type": "click",
+      "actions": [
+        { "type": "function", "name": "toggleAccordion", "params": {} }
+      ]
+    },
+    {
+      "target": "[data-action]",
+      "type": "click",
+      "actions": [
+        { "type": "function", "name": "handleAction", "params": {} }
+      ]
+    },
+    {
+      "target": ".component-item",
+      "type": "dragstart",
+      "actions": [
+        { "type": "function", "name": "handleDragStart", "params": {} }
+      ]
+    },
+    {
+      "target": ".component-item",
+      "type": "dragend",
+      "actions": [
+        { "type": "function", "name": "handleDragEnd", "params": {} }
+      ]
+    },
+    {
+      "target": "#drop-zone",
+      "type": "dragover",
+      "actions": [
+        { "type": "function", "name": "handleDragOver", "params": {} }
+      ]
+    },
+    {
+      "target": "#drop-zone",
+      "type": "drop",
+      "actions": [
+        { "type": "function", "name": "handleDrop", "params": {} }
+      ]
+    }
+  ]
+}

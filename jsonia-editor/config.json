@@ -102,7 +102,164 @@
       "apply-json": {
         "type": "editor",
         "method": "applyJsonChanges"
+      },
+      "add-event": {
+        "type": "behavior",
+        "method": "addEventHandler"
+      },
+      "add-state": {
+        "type": "behavior",
+        "method": "addStateVariable"
+      },
+      "add-validation": {
+        "type": "behavior",
+        "method": "addValidation"
+      },
+      "show-behavior-panel": {
+        "type": "panel",
+        "target": "behavior"
       }
+    },
+    "tabs": {
+      "structure": {
+        "label": "📦 構造",
+        "icon": "📦",
+        "panels": ["components", "canvas", "properties"]
+      },
+      "styles": {
+        "label": "🎨 スタイル",
+        "icon": "🎨",
+        "panels": ["css-editor", "canvas", "properties"]
+      },
+      "behavior": {
+        "label": "⚡ 動作",
+        "icon": "⚡",
+        "panels": ["events", "canvas", "state"]
+      },
+      "data": {
+        "label": "💾 データ",
+        "icon": "💾",
+        "panels": ["api-editor", "canvas", "validation"]
+      }
+    },
+    "behaviorEditor": {
+      "eventTypes": [
+        "click",
+        "dblclick",
+        "mouseenter",
+        "mouseleave",
+        "keydown",
+        "keyup",
+        "change",
+        "input",
+        "submit",
+        "focus",
+        "blur",
+        "load"
+      ],
+      "actionTypes": [
+        {
+          "type": "alert",
+          "label": "アラート表示",
+          "fields": [
+            { "name": "message", "label": "メッセージ", "type": "text" }
+          ]
+        },
+        {
+          "type": "console",
+          "label": "コンソール出力",
+          "fields": [
+            { "name": "message", "label": "メッセージ", "type": "text" }
+          ]
+        },
+        {
+          "type": "setState",
+          "label": "状態を更新",
+          "fields": [
+            { "name": "updates", "label": "更新内容(JSON)", "type": "textarea" }
+          ]
+        },
+        {
+          "type": "updateDOM",
+          "label": "DOM更新",
+          "fields": [
+            { "name": "selector", "label": "セレクター", "type": "text" },
+            { "name": "content", "label": "内容", "type": "text" }
+          ]
+        },
+        {
+          "type": "addClass",
+          "label": "クラス追加",
+          "fields": [
+            { "name": "selector", "label": "セレクター", "type": "text" },
+            { "name": "class", "label": "クラス名", "type": "text" }
+          ]
+        },
+        {
+          "type": "removeClass",
+          "label": "クラス削除",
+          "fields": [
+            { "name": "selector", "label": "セレクター", "type": "text" },
+            { "name": "class", "label": "クラス名", "type": "text" }
+          ]
+        },
+        {
+          "type": "toggleClass",
+          "label": "クラス切替",
+          "fields": [
+            { "name": "selector", "label": "セレクター", "type": "text" },
+            { "name": "class", "label": "クラス名", "type": "text" }
+          ]
+        },
+        {
+          "type": "navigate",
+          "label": "ページ遷移",
+          "fields": [
+            { "name": "url", "label": "URL", "type": "text" }
+          ]
+        },
+        {
+          "type": "api",
+          "label": "API呼び出し",
+          "fields": [
+            { "name": "api", "label": "API名", "type": "text" },
+            { "name": "params", "label": "パラメータ(JSON)", "type": "textarea" }
+          ]
+        }
+      ],
+      "validationRules": [
+        {
+          "rule": "required",
+          "label": "必須",
+          "type": "checkbox"
+        },
+        {
+          "rule": "type",
+          "label": "タイプ",
+          "type": "select",
+          "options": ["email", "url", "number", "string"]
+        },
+        {
+          "rule": "minLength",
+          "label": "最小文字数",
+          "type": "number"
+        },
+        {
+          "rule": "maxLength",
+          "label": "最大文字数",
+          "type": "number"
+        },
+        {
+          "rule": "pattern",
+          "label": "正規表現パターン",
+          "type": "text"
+        },
+        {
+          "rule": "message",
+          "label": "エラーメッセージ",
+          "type": "text"
+        }
+      ]
     },
     "eventHandlers": {
       "actionClick": {

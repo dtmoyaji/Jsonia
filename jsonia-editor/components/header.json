@@ -1,0 +1,48 @@
+{
+  "tag": "header",
+  "attributes": { "class": "header" },
+  "children": [
+    {
+      "tag": "h1",
+      "text": "🎨 Jsonia WYSIWYG Editor"
+    },
+    {
+      "tag": "div",
+      "attributes": { "class": "header-actions" },
+      "children": [
+        {
+          "tag": "button",
+          "text": "📁 プロジェクト",
+          "attributes": {
+            "class": "btn",
+            "onclick": "window.location.href='/manager'"
+          }
+        },
+        {
+          "tag": "button",
+          "text": "👁️ プレビュー",
+          "attributes": {
+            "class": "btn",
+            "data-action": "preview"
+          }
+        },
+        {
+          "tag": "button",
+          "text": "📋 JSON出力",
+          "attributes": {
+            "class": "btn btn-warning",
+            "data-action": "export-json"
+          }
+        },
+        {
+          "tag": "button",
+          "text": "💾 保存",
+          "attributes": {
+            "class": "btn btn-success",
+            "data-action": "save"
+          }
+        }
+      ]
+    }
+  ]
+}
