@@ -18,6 +18,11 @@
       "handler": "loadComponentLibrary"
     },
     {
+      "method": "GET",
+      "path": "/editor/api/editor-components",
+      "handler": "loadEditorComponents"
+    },
+    {
       "method": "POST",
       "path": "/editor/api/save",
       "handler": "saveProject",

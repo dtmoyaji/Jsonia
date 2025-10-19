@@ -1,9 +1,13 @@
 {
-  "tag": "footer",
-  "attributes": { "class": "footer" },
-  "children": [
+  "extends": "component",
+  "name": "editor-footer",
+  "template": {
+    "tag": "footer",
+    "attributes": { "class": "footer" },
+    "children": [
     {
       "tag": "div",
+      "attributes": { "data-slot": "children" },
       "children": [
         {
           "tag": "span",
@@ -16,5 +20,6 @@
       "tag": "div",
       "text": "Jsonia WYSIWYG Editor v1.0"
     }
-  ]
+    ]
+  }
 }

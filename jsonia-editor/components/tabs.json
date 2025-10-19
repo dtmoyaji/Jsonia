@@ -1,7 +1,10 @@
 {
-  "tag": "div",
-  "attributes": { "class": "editor-tabs" },
-  "children": [
+  "extends": "component",
+  "name": "editor-tabs",
+  "template": {
+    "tag": "div",
+    "attributes": { "class": "editor-tabs" },
+    "children": [
     {
       "tag": "button",
       "text": "📦 構造",
@@ -34,5 +37,17 @@
         "data-tab": "data"
       }
     }
-  ]
+    ]
+  },
+  "behavior": {
+    "actions": {
+      "switchTab": {
+        "type": "sequence",
+        "steps": [
+          { "type": "console", "message": "📑 タブ切り替え" },
+          { "type": "setState", "key": "selectedTab", "value": "{{event.currentTarget.getAttribute('data-tab')}}" }
+        ]
+      }
+    }
+  }
 }

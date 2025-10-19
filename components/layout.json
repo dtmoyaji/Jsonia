@@ -1,4 +1,5 @@
 {
+  "extends": "component",
   "icon": "📐",
   "name": "レイアウトコンテナ",
   "tag": "div",
@@ -9,6 +10,7 @@
     "tag": "div",
     "attributes": {
       "class": "layout-container",
+      "data-slot": "children",
       "style": "display: flex; gap: 16px; padding: 20px;"
     },
     "children": [

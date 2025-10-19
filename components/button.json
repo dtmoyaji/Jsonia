@@ -1,4 +1,5 @@
 {
+  "extends": "component",
   "icon": "🔘",
   "name": "ボタン",
   "tag": "button",

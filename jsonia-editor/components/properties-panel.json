@@ -1,7 +1,10 @@
 {
-  "tag": "aside",
-  "attributes": { "class": "properties-panel", "data-panel": "structure" },
-  "children": [
+  "extends": "component",
+  "name": "properties-panel",
+  "template": {
+    "tag": "aside",
+    "attributes": { "class": "properties-panel", "data-panel": "structure" },
+    "children": [
     {
       "tag": "div",
       "attributes": { "class": "panel-header" },
@@ -11,9 +14,11 @@
       "tag": "div",
       "attributes": {
         "class": "properties-content",
-        "id": "properties-content"
+        "id": "properties-content",
+        "data-slot": "children"
       },
       "text": "要素を選択してプロパティを編集"
     }
-  ]
+    ]
+  }
 }

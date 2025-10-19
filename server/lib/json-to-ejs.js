@@ -23,6 +23,11 @@ class JsonToEJS {
             return '';
         }
 
+        // extends ディレクティブの処理（コンポーネント継承）
+        if (config.extends) {
+            return this.handleExtends(config, options);
+        }
+
         // $include ディレクティブの処理（部品化）
         if (config.$include) {
             return this.handleInclude(config.$include, options);
@@ -490,6 +495,147 @@ class JsonToEJS {
             console.error(`Error processing $include: ${includePath}`, error.message);
             return `<!-- $include error: ${includePath} - ${error.message} -->`;
         }
+    }
+
+    /**
+     * extends ディレクティブの処理（コンポーネント継承）
+     * @param {Object} config - extends設定を含むオブジェクト
+     * @param {Object} options - レンダリングオプション
+     * @returns {string} - レンダリング結果
+     */
+    static handleExtends(config, options = {}) {
+        if (typeof require === 'undefined') {
+            console.warn('extends is only available in Node.js environment');
+            return `<!-- extends: ${config.extends} (not available in browser) -->`;
+        }
+
+        try {
+            const fs = require('fs');
+            const path = require('path');
+            
+            console.log('🔄 extends処理開始:', config.extends);
+            
+            // 共有コンポーネントのパスを解決
+            const componentName = config.extends;
+            const componentsDir = path.join(process.cwd(), 'components');
+            const componentPath = path.join(componentsDir, `${componentName}.json`);
+            
+            console.log('📂 コンポーネントパス:', componentPath);
+            
+            if (!fs.existsSync(componentPath)) {
+                console.warn(`⚠️ Component not found: ${componentPath}`);
+                return `<!-- extends: ${componentName} (component not found) -->`;
+            }
+
+            const componentContent = fs.readFileSync(componentPath, 'utf8');
+            const baseComponent = JSON.parse(componentContent);
+            
+            console.log('✅ ベースコンポーネント読み込み成功:', baseComponent.name || componentName);
+            
+            // component.jsonは抽象基底クラスなので、extendsをスキップしてconfigをそのまま返す
+            if (componentName === 'component') {
+                console.log('⏭️  component.jsonは基底クラスなので、継承のみでテンプレートマージはスキップ');
+                // extendsプロパティを削除してから再レンダリング（無限ループ防止）
+                const configWithoutExtends = { ...config };
+                delete configWithoutExtends.extends;
+                
+                // configにtemplateがある場合はそれを使う
+                if (configWithoutExtends.template) {
+                    return this.render(configWithoutExtends.template, options);
+                }
+                // templateがない場合はconfig自体をレンダリング（tagプロパティがあることを期待）
+                return this.render(configWithoutExtends, options);
+            }
+            
+            // テンプレートをディープコピー
+            let mergedTemplate = JSON.parse(JSON.stringify(baseComponent.template || baseComponent));
+            
+            // accordion-with-behaviorの場合は .accordion-item だけを抽出
+            if (mergedTemplate.attributes && mergedTemplate.attributes.class === 'accordion' && 
+                mergedTemplate.children && mergedTemplate.children[0]) {
+                console.log('🔧 accordion構造を検出、accordion-itemを抽出');
+                mergedTemplate = mergedTemplate.children[0]; // .accordion-item を取得
+            }
+            
+            console.log('📋 マージ前テンプレート:', JSON.stringify(mergedTemplate.attributes));
+            
+            // オーバーライド処理
+            if (config.attributes) {
+                mergedTemplate.attributes = {
+                    ...mergedTemplate.attributes,
+                    ...config.attributes
+                };
+            }
+            
+            // attributesから accordion-id を取得
+            const accordionId = config.attributes && config.attributes['data-accordion-id'];
+            
+            // header部分のオーバーライド
+            if (config.header || accordionId) {
+                const headerElement = this.findElementByAttribute(mergedTemplate, 'data-accordion-header');
+                if (headerElement) {
+                    // accordion-id を設定
+                    if (accordionId) {
+                        headerElement.attributes['data-accordion-id'] = accordionId;
+                    }
+                    // テキストを設定
+                    if (config.header && config.header.text) {
+                        const textSpan = headerElement.children.find(c => 
+                            !c.attributes || !c.attributes.class || !c.attributes.class.includes('accordion-icon')
+                        );
+                        if (textSpan) {
+                            textSpan.text = config.header.text;
+                        }
+                    }
+                }
+            }
+            
+            // content部分のオーバーライド
+            if (config.content || accordionId) {
+                const contentElement = this.findElementByAttribute(mergedTemplate, 'data-accordion-content');
+                if (contentElement) {
+                    // accordion-id でコンテンツとヘッダーを紐付け
+                    const contentId = config.content && config.content.id ? config.content.id : accordionId;
+                    if (contentId) {
+                        contentElement.attributes.id = contentId;
+                        contentElement.attributes['data-accordion-content'] = accordionId || contentId;
+                    }
+                    // 子要素を設定
+                    if (config.content && config.content.children) {
+                        contentElement.children = config.content.children;
+                    }
+                }
+            }
+            
+            // マージされたテンプレートをレンダリング
+            console.log('✅ マージ完了、レンダリング開始');
+            console.log('📋 最終テンプレート:', JSON.stringify(mergedTemplate, null, 2));
+            return this.render(mergedTemplate, options);
+
+        } catch (error) {
+            console.error(`❌ Error processing extends: ${config.extends}`, error.message);
+            console.error(error.stack);
+            return `<!-- extends error: ${config.extends} - ${error.message} -->`;
+        }
+    }
+
+    /**
+     * テンプレート内から指定された属性を持つ要素を再帰的に探す
+     * @param {Object} template - テンプレートオブジェクト
+     * @param {string} attrName - 検索する属性名
+     * @returns {Object|null} - 見つかった要素またはnull
+     */
+    static findElementByAttribute(template, attrName) {
+        if (template.attributes && template.attributes[attrName]) {
+            return template;
+        }
+        if (template.children && Array.isArray(template.children)) {
+            for (const child of template.children) {
+                const found = this.findElementByAttribute(child, attrName);
+                if (found) return found;
+            }
+        }
+        return null;
     }
 
     /**

@@ -1,4 +1,5 @@
 {
+  "extends": "component",
   "icon": "🔽",
   "name": "ドロップダウン",
   "tag": "div",
@@ -26,6 +27,7 @@
         "attributes": {
           "class": "dropdown-menu hidden",
           "data-dropdown-menu": "true",
+          "data-slot": "children",
           "style": "position: absolute; top: 100%; left: 0; background: white; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); min-width: 160px; z-index: 1000;"
         },
         "children": [
@@ -67,9 +69,26 @@
     "class": "dropdown"
   },
   "behavior": {
-    "state": {
-      "isOpen": false,
-      "selectedItem": null
+    "methods": {
+      "toggle": {
+        "description": "ドロップダウンメニューの表示/非表示をトグル",
+        "params": ["dropdownId"],
+        "steps": [
+          { "type": "dom.select", "selector": "[data-dropdown-menu]", "output": "menu" },
+          { "type": "if", "condition": "{{menu}}", "then": [
+            { "type": "dom.toggleClass", "target": "{{menu}}", "className": "hidden" }
+          ]}
+        ]
+      },
+      "selectItem": {
+        "description": "ドロップダウンのアイテムを選択",
+        "params": ["value"],
+        "steps": [
+          { "type": "setState", "key": "selectedItem", "value": "{{value}}" },
+          { "type": "component.method", "method": "toggle", "params": {} },
+          { "type": "console", "message": "✅ アイテム選択: {{value}}" }
+        ]
+      }
     },
     "events": [
       {
@@ -77,37 +96,9 @@
         "type": "click",
         "actions": [
           {
-            "type": "sequence",
-            "actions": [
-              {
-                "type": "setState",
-                "key": "isOpen",
-                "value": "{{!state.isOpen}}"
-              },
-              {
-                "type": "dom.select",
-                "selector": "[data-dropdown-menu]",
-                "storeIn": "menu"
-              },
-              {
-                "type": "if",
-                "condition": "{{state.isOpen}}",
-                "then": [
-                  {
-                    "type": "dom.removeClass",
-                    "element": "{{menu}}",
-                    "className": "hidden"
-                  }
-                ],
-                "else": [
-                  {
-                    "type": "dom.addClass",
-                    "element": "{{menu}}",
-                    "className": "hidden"
-                  }
-                ]
-              }
-            ]
+            "type": "component.method",
+            "method": "toggle",
+            "params": {}
           }
         ]
       },
@@ -116,45 +107,15 @@
         "type": "click",
         "actions": [
           {
-            "type": "sequence",
-            "actions": [
-              {
-                "type": "dom.select",
-                "selector": "[data-dropdown-item]",
-                "storeIn": "item"
-              },
-              {
-                "type": "dom.getAttribute",
-                "element": "{{item}}",
-                "attribute": "data-value",
-                "storeIn": "value"
-              },
-              {
-                "type": "setState",
-                "key": "selectedItem",
-                "value": "{{value}}"
-              },
-              {
-                "type": "setState",
-                "key": "isOpen",
-                "value": false
-              },
-              {
-                "type": "dom.select",
-                "selector": "[data-dropdown-menu]",
-                "storeIn": "menu"
-              },
-              {
-                "type": "dom.addClass",
-                "element": "{{menu}}",
-                "className": "hidden"
-              },
-              {
-                "type": "emit",
-                "event": "itemSelected",
-                "data": { "value": "{{value}}" }
-              }
-            ]
+            "type": "util.getAttribute",
+            "target": "{{event.currentTarget}}",
+            "name": "data-value",
+            "output": "value"
+          },
+          {
+            "type": "component.method",
+            "method": "selectItem",
+            "params": { "value": "{{value}}" }
           }
         ]
       }

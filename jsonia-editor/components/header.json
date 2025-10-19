@@ -1,14 +1,17 @@
 {
-  "tag": "header",
-  "attributes": { "class": "header" },
-  "children": [
+  "extends": "component",
+  "name": "editor-header",
+  "template": {
+    "tag": "header",
+    "attributes": { "class": "header" },
+    "children": [
     {
       "tag": "h1",
       "text": "🎨 Jsonia WYSIWYG Editor"
     },
     {
       "tag": "div",
-      "attributes": { "class": "header-actions" },
+      "attributes": { "class": "header-actions", "data-slot": "children" },
       "children": [
         {
           "tag": "button",
@@ -44,5 +47,26 @@
         }
       ]
     }
-  ]
+    ]
+  },
+  "behavior": {
+    "actions": {
+      "handleAction": {
+        "type": "sequence",
+        "steps": [
+          { "type": "console", "message": "🎬 アクション実行: {{event.currentTarget.getAttribute('data-action')}}" },
+          { "type": "setState", "key": "currentAction", "value": "{{event.currentTarget.getAttribute('data-action')}}" },
+          { "type": "if", "condition": "{{currentAction}} === 'preview'", "then": [
+            { "type": "alert", "message": "プレビュー機能は準備中です" }
+          ]},
+          { "type": "if", "condition": "{{currentAction}} === 'export-json'", "then": [
+            { "type": "alert", "message": "JSON エクスポート機能は準備中です" }
+          ]},
+          { "type": "if", "condition": "{{currentAction}} === 'save'", "then": [
+            { "type": "alert", "message": "保存機能は準備中です" }
+          ]}
+        ]
+      }
+    }
+  }
 }

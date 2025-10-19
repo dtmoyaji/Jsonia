@@ -1,42 +1,140 @@
 {
-  "tag": "main",
-  "attributes": { "class": "canvas-area" },
-  "children": [
-    {
-      "tag": "div",
-      "attributes": { "class": "canvas-toolbar" },
-      "children": [
-        {
-          "tag": "button",
-          "text": "↶ 元に戻す",
-          "attributes": {
-            "class": "btn",
-            "data-action": "undo"
-          }
-        },
-        {
-          "tag": "button",
-          "text": "↷ やり直し",
-          "attributes": {
-            "class": "btn",
-            "data-action": "redo"
-          }
-        }
-      ]
-    },
-    {
-      "tag": "div",
-      "attributes": { "class": "canvas-content" },
-      "children": [
-        {
-          "tag": "div",
-          "attributes": {
-            "id": "drop-zone",
-            "class": "drop-zone"
+  "extends": "component",
+  "name": "editor-canvas",
+  "template": {
+    "tag": "main",
+    "attributes": { "class": "canvas-area" },
+    "children": [
+      {
+        "tag": "div",
+        "attributes": { "class": "canvas-toolbar" },
+        "children": [
+          {
+            "tag": "button",
+            "text": "↶ 元に戻す",
+            "attributes": {
+              "class": "btn",
+              "data-action": "undo"
+            }
           },
-          "text": "🎨 コンポーネントをここにドラッグ&ドロップしてください"
-        }
-      ]
+          {
+            "tag": "button",
+            "text": "↷ やり直し",
+            "attributes": {
+              "class": "btn",
+              "data-action": "redo"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "attributes": { "class": "canvas-content" },
+        "children": [
+          {
+            "tag": "div",
+            "attributes": {
+              "id": "drop-zone",
+              "class": "drop-zone"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "behavior": {
+    "actions": {
+      "handleDragOver": {
+        "type": "sequence",
+        "steps": []
+      },
+      "handleDrop": {
+        "type": "sequence",
+        "steps": [
+          { "type": "console", "message": "✅ ドロップ検知" },
+          { "type": "if", "condition": "{{currentDropZone}}", "then": [
+            { "type": "console", "message": "⏭️  内部ドロップゾーンが処理するためスキップ" }
+          ], "else": [
+            { "type": "drag.getData", "output": "dragData" },
+            { "type": "if", "condition": "!{{draggedComponent}}", "then": [
+              { "type": "console", "message": "❌ ドラッグ中のコンポーネントがありません" }
+            ], "else": [
+              { "type": "dom.select", "selector": "#drop-zone", "output": "dropZone" },
+              { "type": "if", "condition": "!{{dropZone}}", "then": [
+                { "type": "console", "message": "❌ drop-zoneが見つかりません" }
+              ], "else": [
+                { "type": "util.timestamp", "output": "componentId" },
+                { "type": "template.renderFromJSON", "template": "{{draggedComponent.data}}", "output": "componentElement" },
+                { "type": "dom.createElement", "tag": "div", "output": "wrapper" },
+                { "type": "dom.setAttribute", "target": "{{wrapper}}", "name": "class", "value": "canvas-component" },
+                { "type": "dom.setAttribute", "target": "{{wrapper}}", "name": "data-component-id", "value": "{{componentId}}" },
+                { "type": "dom.setAttribute", "target": "{{wrapper}}", "name": "data-component-type", "value": "{{draggedComponent.type}}" },
+                { "type": "dom.createElement", "tag": "button", "output": "deleteBtn" },
+                { "type": "dom.setInnerHTML", "target": "{{deleteBtn}}", "value": "🗑️ 削除" },
+                { "type": "dom.setAttribute", "target": "{{deleteBtn}}", "name": "class", "value": "delete-component-btn" },
+                { "type": "dom.addEventListener", "target": "{{deleteBtn}}", "event": "click", "actions": [
+                  { "type": "function", "name": "handleDeleteComponent" }
+                ]},
+                { "type": "dom.appendChild", "parent": "{{wrapper}}", "child": "{{deleteBtn}}" },
+                { "type": "dom.appendChild", "parent": "{{wrapper}}", "child": "{{componentElement}}" },
+                { "type": "dom.appendChild", "parent": "{{dropZone}}", "child": "{{wrapper}}" },
+                { "type": "console", "message": "🔄 構造ツリー更新中..." },
+                { "type": "function", "name": "updateStructureTree" },
+                { "type": "console", "message": "✅ コンポーネント追加完了" }
+              ]}
+            ]},
+            { "type": "setState", "key": "draggedComponent", "value": null }
+          ]}
+        ]
+      },
+      "handleInnerDrop": {
+        "type": "sequence",
+        "steps": [
+          { "type": "console", "message": "✅ 内部ドロップ検知" },
+          { "type": "if", "condition": "!{{draggedComponent}}", "then": [
+            { "type": "console", "message": "❌ ドラッグ中のコンポーネントがありません" }
+          ], "else": [
+            { "type": "util.timestamp", "output": "componentId" },
+            { "type": "template.renderFromJSON", "template": "{{draggedComponent.data}}", "output": "componentElement" },
+            { "type": "dom.createElement", "tag": "div", "output": "wrapper" },
+            { "type": "dom.setAttribute", "target": "{{wrapper}}", "name": "class", "value": "canvas-component nested-component" },
+            { "type": "dom.setAttribute", "target": "{{wrapper}}", "name": "data-component-id", "value": "{{componentId}}" },
+            { "type": "dom.setAttribute", "target": "{{wrapper}}", "name": "data-component-type", "value": "{{draggedComponent.type}}" },
+            { "type": "dom.setAttribute", "target": "{{wrapper}}", "name": "style", "value": "margin: 8px 0; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; background: #fafafa;" },
+            { "type": "dom.createElement", "tag": "button", "output": "deleteBtn" },
+            { "type": "dom.setInnerHTML", "target": "{{deleteBtn}}", "value": "🗑️" },
+            { "type": "dom.setAttribute", "target": "{{deleteBtn}}", "name": "class", "value": "delete-component-btn" },
+            { "type": "dom.setAttribute", "target": "{{deleteBtn}}", "name": "style", "value": "font-size: 14px;" },
+            { "type": "dom.addEventListener", "target": "{{deleteBtn}}", "event": "click", "actions": [
+              { "type": "function", "name": "handleDeleteComponent" }
+            ]},
+            { "type": "dom.appendChild", "parent": "{{wrapper}}", "child": "{{deleteBtn}}" },
+            { "type": "dom.appendChild", "parent": "{{wrapper}}", "child": "{{componentElement}}" },
+            { "type": "dom.removeInnerDropZone", "parent": "{{currentDropZone}}" },
+            { "type": "dom.appendChild", "parent": "{{currentDropZone}}", "child": "{{wrapper}}" },
+            { "type": "function", "name": "updateStructureTree" },
+            { "type": "console", "message": "✅ 内部コンポーネント追加完了" }
+          ]},
+          { "type": "setState", "key": "currentDropZone", "value": null },
+          { "type": "setState", "key": "draggedComponent", "value": null }
+        ]
+      },
+      "handleDeleteComponent": {
+        "type": "sequence",
+        "steps": [
+          { "type": "dom.stopPropagation" },
+          { "type": "console", "message": "🗑️ 削除ボタンクリック" },
+          { "type": "util.closest", "target": "{{event.currentTarget}}", "selector": ".canvas-component", "output": "componentToDelete" },
+          { "type": "console", "message": "🔍 削除対象: {{componentToDelete}}" },
+          { "type": "if", "condition": "{{componentToDelete}}", "then": [
+            { "type": "dom.remove", "target": "{{componentToDelete}}" },
+            { "type": "console", "message": "✅ コンポーネント削除完了" },
+            { "type": "function", "name": "updateStructureTree" }
+          ], "else": [
+            { "type": "console", "message": "❌ 削除対象のコンポーネントが見つかりません" }
+          ]}
+        ]
+      }
     }
-  ]
+  }
 }

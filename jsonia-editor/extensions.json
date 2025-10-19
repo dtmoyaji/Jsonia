@@ -1,49 +1,5 @@
 {
-  "description": "エディタ拡張アクション定義 - カスタムアクションをJSON形式で定義",
-  "actions": {
-    "renderComponents": {
-      "type": "function",
-      "name": "renderComponentsList"
-    },
-    "initBehaviorEditor": {
-      "type": "sequence",
-      "steps": [
-        { "type": "console", "message": "🎨 BehaviorEditor初期化中..." },
-        { "type": "setState", "key": "behaviorEditorState", "value": { "events": {}, "state": {}, "validation": {}, "apis": {} } },
-        { "type": "console", "message": "✅ BehaviorEditor初期化完了" }
-      ]
-    },
-    "switchBehaviorTab": {
-      "type": "sequence",
-      "steps": [
-        {
-          "type": "dom.selectAll",
-          "selector": ".behavior-tab",
-          "output": "tabs"
-        },
-        {
-          "type": "dom.selectAll",
-          "selector": ".behavior-section",
-          "output": "sections"
-        },
-        {
-          "type": "array.forEach",
-          "array": "{{tabs}}",
-          "item": "tab",
-          "do": [
-            { "type": "dom.removeClass", "target": "{{tab}}", "className": "active" }
-          ]
-        },
-        {
-          "type": "array.forEach",
-          "array": "{{sections}}",
-          "item": "section",
-          "do": [
-            { "type": "dom.removeClass", "target": "{{section}}", "className": "active" }
-          ]
-        }
-      ]
-    }
-  },
-  "note": "このファイルは将来的にビジュアルエディタで編集可能になる予定"
+  "description": "エディタ拡張アクション定義 - 各コンポーネントに移動済み",
+  "actions": {},
+  "note": "全てのアクションは各コンポーネントのbehavior.actionsに移動しました:\n- sidebar.json: toggleAccordion, renderComponentsList, updateStructureTree, handleDragStart, handleDragEnd\n- canvas.json: handleDragOver, handleDrop, handleInnerDrop, handleDeleteComponent\n- tabs.json: switchTab\n- header.json: handleAction\n- behavior-panel.json: initBehaviorEditor, switchBehaviorTab"
 }

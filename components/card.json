@@ -1,4 +1,5 @@
 {
+  "extends": "component",
   "icon": "🃏",
   "name": "カード",
   "tag": "div",
@@ -23,6 +24,7 @@
       {
         "tag": "div",
         "attributes": {
+          "data-slot": "children",
           "style": "padding: 16px;"
         },
         "children": [

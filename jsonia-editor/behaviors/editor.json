@@ -8,81 +8,95 @@
     "config": null,
     "history": [],
     "historyIndex": -1,
-    "draggedComponent": null
+    "draggedComponent": null,
+    "dragStartActions": [
+      { "type": "function", "name": "handleDragStart" }
+    ],
+    "innerDropActions": [
+      { "type": "function", "name": "handleInnerDrop" }
+    ]
   },
   "computed": {},
   "apis": {
     "loadComponents": { "url": "/editor/api/components", "method": "GET" },
     "loadBuiltinComponents": { "url": "/editor/data/components.json", "method": "GET" },
+    "loadEditorComponents": { "url": "/editor/api/editor-components", "method": "GET" },
     "loadExtensions": { "url": "/editor/extensions.json", "method": "GET" },
     "loadConfig": { "url": "/editor/config.json", "method": "GET" }
   },
   "initialization": [
-    { "type": "console", "message": "🎨 Jsonia Editor 初期化中..." },
-    { "type": "console", "message": "🔍 window.renderComponentsList存在確認", "data": { "exists": "window.renderComponentsList !== undefined", "type": "typeof window.renderComponentsList" } },
     { "type": "api", "name": "loadComponents", "storeIn": "sharedComponentsResponse" },
     { "type": "api", "name": "loadBuiltinComponents", "storeIn": "builtinComponentsResponse" },
-    { "type": "console", "message": "📦 共有コンポーネント読み込み完了" },
     { "type": "setState", "key": "sharedComponents", "value": "{{sharedComponentsResponse.components}}" },
     { "type": "setState", "key": "componentsData", "value": "{{builtinComponentsResponse.components}}" },
     { "type": "setState", "key": "iconMap", "value": "{{builtinComponentsResponse.iconMap}}" },
+    { "type": "registerComponentMethods", "components": "{{sharedComponents}}" },
+    { "type": "api", "name": "loadEditorComponents", "storeIn": "editorComponentsResponse" },
+    { "type": "setState", "key": "editorComponents", "value": "{{editorComponentsResponse.components}}" },
+    { "type": "registerComponentActions", "components": "{{editorComponents}}" },
     { "type": "api", "name": "loadExtensions", "storeIn": "extensionsResponse" },
-    { "type": "setState", "key": "extensions", "value": "{{extensionsResponse.data}}" },
+    { "type": "setState", "key": "extensions", "value": "{{extensionsResponse}}" },
+    { "type": "registerExtensions" },
     { "type": "api", "name": "loadConfig", "storeIn": "configResponse" },
-    { "type": "setState", "key": "config", "value": "{{configResponse.data}}" },
-    { "type": "console", "message": "✅ 全データ読み込み完了" },
+    { "type": "setState", "key": "config", "value": "{{configResponse}}" },
     { "type": "function", "name": "renderComponentsList" },
-    { "type": "function", "name": "updateStructureTree" },
-    { "type": "console", "message": "✅ Jsonia Editor 初期化完了" }
+    { "type": "function", "name": "updateStructureTree" }
   ],
   "events": [
     {
       "target": ".editor-tab",
       "type": "click",
       "actions": [
-        { "type": "function", "name": "switchTab", "params": {} }
+        { "type": "function", "name": "switchTab" }
       ]
     },
     {
       "target": ".accordion-header",
       "type": "click",
       "actions": [
-        { "type": "function", "name": "toggleAccordion", "params": {} }
+        { "type": "function", "name": "toggleAccordion" }
       ]
     },
     {
       "target": "[data-action]",
       "type": "click",
       "actions": [
-        { "type": "function", "name": "handleAction", "params": {} }
+        { "type": "function", "name": "handleAction" }
       ]
     },
     {
       "target": ".component-item",
       "type": "dragstart",
       "actions": [
-        { "type": "function", "name": "handleDragStart", "params": {} }
+        { "type": "function", "name": "handleDragStart" }
       ]
     },
     {
       "target": ".component-item",
       "type": "dragend",
       "actions": [
-        { "type": "function", "name": "handleDragEnd", "params": {} }
+        { "type": "function", "name": "handleDragEnd" }
       ]
     },
     {
       "target": "#drop-zone",
       "type": "dragover",
       "actions": [
-        { "type": "function", "name": "handleDragOver", "params": {} }
+        { "type": "function", "name": "handleDragOver" }
       ]
     },
     {
       "target": "#drop-zone",
       "type": "drop",
       "actions": [
-        { "type": "function", "name": "handleDrop", "params": {} }
+        { "type": "function", "name": "handleDrop" }
+      ]
+    },
+    {
+      "target": ".delete-component-btn",
+      "type": "click",
+      "actions": [
+        { "type": "function", "name": "handleDeleteComponent" }
       ]
     }
   ]

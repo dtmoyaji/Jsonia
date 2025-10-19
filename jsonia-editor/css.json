@@ -139,12 +139,19 @@
         "maxHeight": "400px",
         "overflowY": "auto",
         "transition": "max-height 0.3s ease, opacity 0.3s ease",
-        "opacity": "1"
+        "opacity": "1",
+        "padding": "16px"
     },
     ".accordion-content.collapsed": {
         "maxHeight": "0",
         "opacity": "0",
         "overflow": "hidden"
+    },
+    "#drop-zone .accordion-content.collapsed": {
+        "maxHeight": "none",
+        "opacity": "1",
+        "display": "block",
+        "minHeight": "60px"
     },
     ".structure-tree": {
         "padding": "10px"
@@ -263,8 +270,8 @@
         "position": "relative"
     },
     ".drop-zone:empty::before": {
-        "content": "'コンポーネントをドロップしてページを作成'",
-        "fontSize": "14px",
+        "content": "'🎨 コンポーネントをここにドラッグ&ドロップしてください'",
+        "fontSize": "16px",
         "color": "#bdbdbd",
         "textAlign": "center",
         "display": "block",
@@ -334,11 +341,12 @@
     ".inner-drop-zone": {
         "minHeight": "40px",
         "padding": "5px",
-        "border": "2px dashed transparent",
+        "border": "2px dashed #9b59b6",
         "borderRadius": "4px",
         "margin": "5px 0",
         "transition": "all 0.2s ease",
-        "position": "relative"
+        "position": "relative",
+        "background": "rgba(155, 89, 182, 0.05)"
     },
     ".inner-drop-zone:empty::before": {
         "content": "'子要素をドロップ'",
@@ -346,13 +354,37 @@
         "textAlign": "center",
         "color": "#9b59b6",
         "fontSize": "12px",
-        "opacity": "0.4",
+        "opacity": "0.6",
         "fontStyle": "italic",
         "padding": "10px"
     },
     ".inner-drop-zone.drag-over": {
-        "background": "rgba(155, 89, 182, 0.08)",
-        "borderColor": "#9b59b6"
+        "background": "rgba(155, 89, 182, 0.15)",
+        "borderColor": "#9b59b6",
+        "borderStyle": "solid"
+    },
+    ".slot-drop-zone": {
+        "position": "relative",
+        "minHeight": "30px",
+        "transition": "all 0.2s ease"
+    },
+    ".slot-drop-zone:empty::before": {
+        "content": "'📍 スロット: ここに要素をドロップ'",
+        "display": "block",
+        "textAlign": "center",
+        "color": "#e74c3c",
+        "fontSize": "11px",
+        "opacity": "0.5",
+        "fontStyle": "italic",
+        "padding": "8px",
+        "border": "1px dashed rgba(231, 76, 60, 0.3)",
+        "borderRadius": "4px",
+        "background": "rgba(231, 76, 60, 0.03)"
+    },
+    ".slot-drop-zone.drag-over-slot": {
+        "background": "rgba(231, 76, 60, 0.1)",
+        "outline": "2px dashed #e74c3c",
+        "outlineOffset": "2px"
     },
     ".properties-panel": {
         "background": "white",

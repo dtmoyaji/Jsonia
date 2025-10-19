@@ -1,4 +1,5 @@
 {
+  "extends": "component",
   "icon": "📝",
   "name": "段落",
   "tag": "p",

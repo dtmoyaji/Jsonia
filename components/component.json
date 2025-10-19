@@ -1,0 +1,599 @@
+{
+  "name": "component",
+  "description": "全てのコンポーネントの基底クラス - 共通の振る舞いとメソッドを定義",
+  "template": {
+    "tag": "div",
+    "attributes": {
+      "class": "component"
+    }
+  },
+  "behavior": {
+    "methods": {
+      "getAttribute": {
+        "description": "要素から属性値を取得",
+        "params": ["elementId", "attributeName"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "#{{elementId}}",
+            "output": "element"
+          },
+          {
+            "type": "if",
+            "condition": "{{element}}",
+            "then": [
+              {
+                "type": "util.getAttribute",
+                "target": "{{element}}",
+                "name": "{{attributeName}}",
+                "output": "attributeValue"
+              }
+            ]
+          }
+        ]
+      },
+      "setAttribute": {
+        "description": "要素に属性値を設定",
+        "params": ["elementId", "attributeName", "attributeValue"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "#{{elementId}}",
+            "output": "element"
+          },
+          {
+            "type": "if",
+            "condition": "{{element}}",
+            "then": [
+              {
+                "type": "dom.setAttribute",
+                "target": "{{element}}",
+                "name": "{{attributeName}}",
+                "value": "{{attributeValue}}"
+              }
+            ]
+          }
+        ]
+      },
+      "addClass": {
+        "description": "要素にクラスを追加",
+        "params": ["elementId", "className"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "#{{elementId}}",
+            "output": "element"
+          },
+          {
+            "type": "if",
+            "condition": "{{element}}",
+            "then": [
+              {
+                "type": "dom.addClass",
+                "target": "{{element}}",
+                "className": "{{className}}"
+              }
+            ]
+          }
+        ]
+      },
+      "removeClass": {
+        "description": "要素からクラスを削除",
+        "params": ["elementId", "className"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "#{{elementId}}",
+            "output": "element"
+          },
+          {
+            "type": "if",
+            "condition": "{{element}}",
+            "then": [
+              {
+                "type": "dom.removeClass",
+                "target": "{{element}}",
+                "className": "{{className}}"
+              }
+            ]
+          }
+        ]
+      },
+      "toggleClass": {
+        "description": "要素のクラスをトグル",
+        "params": ["elementId", "className"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "#{{elementId}}",
+            "output": "element"
+          },
+          {
+            "type": "if",
+            "condition": "{{element}}",
+            "then": [
+              {
+                "type": "dom.toggleClass",
+                "target": "{{element}}",
+                "className": "{{className}}"
+              }
+            ]
+          }
+        ]
+      },
+      "show": {
+        "description": "要素を表示",
+        "params": ["elementId"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "#{{elementId}}",
+            "output": "element"
+          },
+          {
+            "type": "if",
+            "condition": "{{element}}",
+            "then": [
+              {
+                "type": "dom.removeClass",
+                "target": "{{element}}",
+                "className": "hidden"
+              }
+            ]
+          }
+        ]
+      },
+      "hide": {
+        "description": "要素を非表示",
+        "params": ["elementId"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "#{{elementId}}",
+            "output": "element"
+          },
+          {
+            "type": "if",
+            "condition": "{{element}}",
+            "then": [
+              {
+                "type": "dom.addClass",
+                "target": "{{element}}",
+                "className": "hidden"
+              }
+            ]
+          }
+        ]
+      },
+      "setText": {
+        "description": "要素のテキストを設定",
+        "params": ["elementId", "text"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "#{{elementId}}",
+            "output": "element"
+          },
+          {
+            "type": "if",
+            "condition": "{{element}}",
+            "then": [
+              {
+                "type": "dom.setTextContent",
+                "target": "{{element}}",
+                "content": "{{text}}"
+              }
+            ]
+          }
+        ]
+      },
+      "setHTML": {
+        "description": "要素のHTMLを設定",
+        "params": ["elementId", "html"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "#{{elementId}}",
+            "output": "element"
+          },
+          {
+            "type": "if",
+            "condition": "{{element}}",
+            "then": [
+              {
+                "type": "dom.setInnerHTML",
+                "target": "{{element}}",
+                "value": "{{html}}"
+              }
+            ]
+          }
+        ]
+      },
+      "on": {
+        "description": "要素にイベントリスナーを追加",
+        "params": ["elementId", "eventType", "actionName"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "#{{elementId}}",
+            "output": "element"
+          },
+          {
+            "type": "if",
+            "condition": "{{element}}",
+            "then": [
+              {
+                "type": "dom.addEventListener",
+                "target": "{{element}}",
+                "eventType": "{{eventType}}",
+                "action": "{{actionName}}"
+              }
+            ]
+          }
+        ]
+      },
+      "emit": {
+        "description": "カスタムイベントを発火",
+        "params": ["elementId", "eventName", "eventData"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "#{{elementId}}",
+            "output": "element"
+          },
+          {
+            "type": "if",
+            "condition": "{{element}}",
+            "then": [
+              {
+                "type": "util.createCustomEvent",
+                "eventName": "{{eventName}}",
+                "detail": "{{eventData}}",
+                "output": "customEvent"
+              },
+              {
+                "type": "util.dispatchEvent",
+                "target": "{{element}}",
+                "event": "{{customEvent}}"
+              }
+            ]
+          }
+        ]
+      },
+      "query": {
+        "description": "セレクタで要素を検索",
+        "params": ["selector"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "{{selector}}",
+            "output": "foundElement"
+          }
+        ]
+      },
+      "queryAll": {
+        "description": "セレクタで複数の要素を検索",
+        "params": ["selector"],
+        "steps": [
+          {
+            "type": "dom.selectAll",
+            "selector": "{{selector}}",
+            "output": "foundElements"
+          }
+        ]
+      },
+      "appendChild": {
+        "description": "コンテナに子要素を追加",
+        "params": ["containerId", "childElement"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "#{{containerId}}",
+            "output": "container"
+          },
+          {
+            "type": "if",
+            "condition": "{{container}}",
+            "then": [
+              {
+                "type": "dom.appendChild",
+                "parent": "{{container}}",
+                "child": "{{childElement}}"
+              },
+              {
+                "type": "console",
+                "message": "✅ 子要素を追加: {{containerId}}"
+              }
+            ],
+            "else": [
+              {
+                "type": "console",
+                "message": "❌ コンテナが見つかりません: {{containerId}}"
+              }
+            ]
+          }
+        ]
+      },
+      "removeChild": {
+        "description": "コンテナから子要素を削除",
+        "params": ["containerId", "childElement"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "#{{containerId}}",
+            "output": "container"
+          },
+          {
+            "type": "if",
+            "condition": "{{container}}",
+            "then": [
+              {
+                "type": "dom.removeChild",
+                "parent": "{{container}}",
+                "child": "{{childElement}}"
+              },
+              {
+                "type": "console",
+                "message": "✅ 子要素を削除: {{containerId}}"
+              }
+            ],
+            "else": [
+              {
+                "type": "console",
+                "message": "❌ コンテナが見つかりません: {{containerId}}"
+              }
+            ]
+          }
+        ]
+      },
+      "clearChildren": {
+        "description": "コンテナの全ての子要素をクリア",
+        "params": ["containerId"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "#{{containerId}}",
+            "output": "container"
+          },
+          {
+            "type": "if",
+            "condition": "{{container}}",
+            "then": [
+              {
+                "type": "dom.setInnerHTML",
+                "target": "{{container}}",
+                "value": ""
+              },
+              {
+                "type": "console",
+                "message": "✅ 子要素をクリア: {{containerId}}"
+              }
+            ],
+            "else": [
+              {
+                "type": "console",
+                "message": "❌ コンテナが見つかりません: {{containerId}}"
+              }
+            ]
+          }
+        ]
+      },
+      "setChildren": {
+        "description": "コンテナの子要素を一括設定",
+        "params": ["containerId", "children"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "#{{containerId}}",
+            "output": "container"
+          },
+          {
+            "type": "if",
+            "condition": "{{container}}",
+            "then": [
+              {
+                "type": "dom.setInnerHTML",
+                "target": "{{container}}",
+                "value": ""
+              },
+              {
+                "type": "array.forEach",
+                "array": "{{children}}",
+                "item": "child",
+                "do": [
+                  {
+                    "type": "dom.appendChild",
+                    "parent": "{{container}}",
+                    "child": "{{child}}"
+                  }
+                ]
+              },
+              {
+                "type": "console",
+                "message": "✅ 子要素を一括設定: {{containerId}}"
+              }
+            ],
+            "else": [
+              {
+                "type": "console",
+                "message": "❌ コンテナが見つかりません: {{containerId}}"
+              }
+            ]
+          }
+        ]
+      },
+      "open": {
+        "description": "要素を表示（hidden削除、isOpenステート管理）",
+        "params": ["elementId"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "#{{elementId}}",
+            "output": "element"
+          },
+          {
+            "type": "if",
+            "condition": "{{element}}",
+            "then": [
+              {
+                "type": "dom.removeClass",
+                "target": "{{element}}",
+                "className": "hidden"
+              },
+              {
+                "type": "setState",
+                "key": "{{elementId}}_isOpen",
+                "value": true
+              },
+              {
+                "type": "console",
+                "message": "✅ 要素を開く: {{elementId}}"
+              }
+            ]
+          }
+        ]
+      },
+      "close": {
+        "description": "要素を非表示（hidden追加、isOpenステート管理）",
+        "params": ["elementId"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "#{{elementId}}",
+            "output": "element"
+          },
+          {
+            "type": "if",
+            "condition": "{{element}}",
+            "then": [
+              {
+                "type": "dom.addClass",
+                "target": "{{element}}",
+                "className": "hidden"
+              },
+              {
+                "type": "setState",
+                "key": "{{elementId}}_isOpen",
+                "value": false
+              },
+              {
+                "type": "console",
+                "message": "✅ 要素を閉じる: {{elementId}}"
+              }
+            ]
+          }
+        ]
+      },
+      "toggle": {
+        "description": "要素の表示/非表示をトグル",
+        "params": ["elementId"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "#{{elementId}}",
+            "output": "element"
+          },
+          {
+            "type": "if",
+            "condition": "{{element}}",
+            "then": [
+              {
+                "type": "dom.toggleClass",
+                "target": "{{element}}",
+                "className": "hidden"
+              },
+              {
+                "type": "if",
+                "condition": "{{element.classList.contains('hidden')}}",
+                "then": [
+                  {
+                    "type": "setState",
+                    "key": "{{elementId}}_isOpen",
+                    "value": false
+                  }
+                ],
+                "else": [
+                  {
+                    "type": "setState",
+                    "key": "{{elementId}}_isOpen",
+                    "value": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "getDataAttribute": {
+        "description": "data-*属性の値を取得",
+        "params": ["elementId", "dataKey"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "#{{elementId}}",
+            "output": "element"
+          },
+          {
+            "type": "if",
+            "condition": "{{element}}",
+            "then": [
+              {
+                "type": "util.getAttribute",
+                "target": "{{element}}",
+                "name": "data-{{dataKey}}",
+                "output": "dataValue"
+              }
+            ]
+          }
+        ]
+      },
+      "setDataAttribute": {
+        "description": "data-*属性に値を設定",
+        "params": ["elementId", "dataKey", "value"],
+        "steps": [
+          {
+            "type": "dom.select",
+            "selector": "#{{elementId}}",
+            "output": "element"
+          },
+          {
+            "type": "if",
+            "condition": "{{element}}",
+            "then": [
+              {
+                "type": "dom.setAttribute",
+                "target": "{{element}}",
+                "name": "data-{{dataKey}}",
+                "value": "{{value}}"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "actions": {
+      "log": {
+        "description": "コンソールにログ出力",
+        "type": "sequence",
+        "steps": [
+          {
+            "type": "console",
+            "message": "{{message}}"
+          }
+        ]
+      }
+    },
+    "lifecycle": {
+      "onCreate": [],
+      "onMount": [],
+      "onUpdate": [],
+      "onDestroy": []
+    }
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "author": "Jsonia Framework",
+    "created": "2025-10-20",
+    "tags": ["base", "core", "component"]
+  }
+}

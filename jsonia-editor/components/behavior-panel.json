@@ -1,7 +1,10 @@
 {
-  "tag": "aside",
-  "attributes": { "class": "behavior-panel", "data-panel": "behavior", "style": "display: none;" },
-  "children": [
+  "extends": "component",
+  "name": "behavior-panel",
+  "template": {
+    "tag": "aside",
+    "attributes": { "class": "behavior-panel", "data-panel": "behavior", "style": "display: none;" },
+    "children": [
     {
       "tag": "div",
       "attributes": { "class": "panel-header" },
@@ -39,21 +42,65 @@
       "children": [
         {
           "tag": "div",
-          "attributes": { "id": "events-panel", "class": "behavior-section active" }
+          "attributes": { "id": "events-panel", "class": "behavior-section active", "data-slot": "events" }
         },
         {
           "tag": "div",
-          "attributes": { "id": "state-panel", "class": "behavior-section" }
+          "attributes": { "id": "state-panel", "class": "behavior-section", "data-slot": "state" }
         },
         {
           "tag": "div",
-          "attributes": { "id": "validation-panel", "class": "behavior-section" }
+          "attributes": { "id": "validation-panel", "class": "behavior-section", "data-slot": "validation" }
         },
         {
           "tag": "div",
-          "attributes": { "id": "apis-panel", "class": "behavior-section" }
+          "attributes": { "id": "apis-panel", "class": "behavior-section", "data-slot": "apis" }
         }
       ]
     }
-  ]
+    ]
+  },
+  "behavior": {
+    "actions": {
+      "initBehaviorEditor": {
+        "type": "sequence",
+        "steps": [
+          { "type": "console", "message": "🎨 BehaviorEditor初期化中..." },
+          { "type": "setState", "key": "behaviorEditorState", "value": { "events": {}, "state": {}, "validation": {}, "apis": {} } },
+          { "type": "console", "message": "✅ BehaviorEditor初期化完了" }
+        ]
+      },
+      "switchBehaviorTab": {
+        "type": "sequence",
+        "steps": [
+          {
+            "type": "dom.selectAll",
+            "selector": ".behavior-tab",
+            "output": "tabs"
+          },
+          {
+            "type": "dom.selectAll",
+            "selector": ".behavior-section",
+            "output": "sections"
+          },
+          {
+            "type": "array.forEach",
+            "array": "{{tabs}}",
+            "item": "tab",
+            "do": [
+              { "type": "dom.removeClass", "target": "{{tab}}", "className": "active" }
+            ]
+          },
+          {
+            "type": "array.forEach",
+            "array": "{{sections}}",
+            "item": "section",
+            "do": [
+              { "type": "dom.removeClass", "target": "{{section}}", "className": "active" }
+            ]
+          }
+        ]
+      }
+    }
+  }
 }

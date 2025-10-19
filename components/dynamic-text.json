@@ -1,4 +1,5 @@
 {
+  "extends": "component",
   "icon": "🔄",
   "name": "動的テキスト",
   "tag": "p",

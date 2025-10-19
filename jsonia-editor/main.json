@@ -26,9 +26,9 @@
   ],
   "scripts": [
     "/js/jsonia-runtime.js",
-    "/js/editor-extensions.js",
+    "/js/jsonia-runtime-actions.js",
     {
-      "content": "console.log('🔄 behaviors/editor.jsonを読み込み中...'); fetch('/editor/behaviors/editor.json').then(r => { console.log('📡 Fetch完了:', r.status); return r.json(); }).then(behaviorDef => { console.log('✅ JSON解析完了:', behaviorDef); window.jsoniaRuntime = new JsoniaRuntime(); window.jsoniaRuntime.init(behaviorDef); console.log('✅ JsoniaRuntime初期化完了'); }).catch(err => console.error('❌ 読み込みエラー:', err));"
+      "content": "console.log('🔄 behaviors/editor.jsonを読み込み中...'); fetch('/editor/behaviors/editor.json').then(r => { console.log('📡 Fetch完了:', r.status); return r.json(); }).then(behaviorDef => { console.log('✅ JSON解析完了:', behaviorDef); window.jsoniaRuntime = new JsoniaRuntime(); window.jsoniaRuntime.init(behaviorDef); console.log('✅ JsoniaRuntime初期化完了 - 完全JSON駆動エディタ 🎉'); }).catch(err => console.error('❌ 読み込みエラー:', err));"
     }
   ]
 }

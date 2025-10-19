@@ -433,6 +433,9 @@ function handleProjectRoute(projectPath, route, req, res) {
             case 'loadComponentLibrary':
                 handleLoadComponentLibrary(req, res);
                 break;
+            case 'loadEditorComponents':
+                handleLoadEditorComponents(req, res);
+                break;
             default:
                 res.status(404).json({ error: `Handler not found: ${route.handler}` });
         }
@@ -522,8 +525,9 @@ function handleLoadComponentLibrary(req, res) {
         }
         
         // componentsフォルダ内のすべてのJSONファイルを読み込む
+        // component.jsonは基底クラスなので除外
         const files = fs.readdirSync(componentsDir)
-            .filter(file => file.endsWith('.json'));
+            .filter(file => file.endsWith('.json') && file !== 'component.json');
         
         const components = [];
         
@@ -555,6 +559,57 @@ function handleLoadComponentLibrary(req, res) {
         
     } catch (error) {
         console.error('❌ Error loading component library:', error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+// エディターコンポーネント読み込み処理
+function handleLoadEditorComponents(req, res) {
+    console.log('📡 /editor/api/editor-components APIが呼ばれました');
+    try {
+        const componentsDir = path.join(__dirname, '..', 'jsonia-editor', 'components');
+        
+        if (!fs.existsSync(componentsDir)) {
+            return res.status(404).json({ 
+                error: 'Editor components directory not found',
+                path: componentsDir 
+            });
+        }
+        
+        // jsonia-editor/componentsフォルダ内のすべてのJSONファイルを読み込む
+        const files = fs.readdirSync(componentsDir)
+            .filter(file => file.endsWith('.json'));
+        
+        const components = [];
+        
+        for (const file of files) {
+            try {
+                const filePath = path.join(componentsDir, file);
+                const content = fs.readFileSync(filePath, 'utf8');
+                const data = JSON.parse(content);
+                
+                // コンポーネント名を追加
+                components.push({
+                    filename: file,
+                    name: file.replace('.json', ''),
+                    ...data
+                });
+                
+            } catch (err) {
+                console.warn(`⚠️  Failed to load editor component file: ${file}`, err.message);
+            }
+        }
+        
+        console.log(`✅ Loaded ${components.length} editor component files from /jsonia-editor/components`);
+        
+        res.json({
+            success: true,
+            componentsDir,
+            components
+        });
+        
+    } catch (error) {
+        console.error('❌ Error loading editor components:', error);
         res.status(500).json({ error: error.message });
     }
 }

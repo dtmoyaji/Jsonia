@@ -11,7 +11,10 @@ class JsoniaRuntime {
         this.validators = {};
         this.config = config;
         
-        console.log('✅ JsoniaRuntime初期化');
+        // アクションハンドラーを初期化
+        if (this.initializeActionHandlers) {
+            this.initializeActionHandlers();
+        }
     }
 
     /**
@@ -48,26 +51,45 @@ class JsoniaRuntime {
             this.initEvents(definition.events);
         }
 
-        console.log('✅ JsoniaRuntime初期化完了', {
-            state: Object.keys(this.state).length,
-            computed: Object.keys(this.computed).length,
-            apis: Object.keys(this.apis).length,
-            events: this.events.length,
-            validators: Object.keys(this.validators).length
-        });
+        // メソッドの登録
+        if (definition.methods) {
+            this.initMethods(definition.methods);
+        }
+
+        console.log('✅ JsoniaRuntime初期化完了');
 
         // 初期化アクションの実行
         if (definition.initialization) {
-            console.log('🔄 初期化アクション開始:', definition.initialization.length, '個のアクション');
+            // まず拡張アクションを事前登録（extensionsがstateにあれば）
+            if (definition.state && definition.state.extensions) {
+                this.registerExtensionsFromDefinition(definition.state.extensions);
+            }
+            
             this.executeActions(definition.initialization).then(() => {
-                console.log('✅ 初期化アクション完了');
-                // extensions登録
+                console.log('✅ Jsonia Editor 起動完了');
+                // 動的に読み込まれたextensionsも登録
                 this.registerExtensionsFromState();
             }).catch(error => {
-                console.error('❌ 初期化アクションエラー:', error);
+                console.error('❌ 初期化エラー:', error);
             });
         } else {
             console.warn('⚠️ initialization配列が定義されていません');
+        }
+    }
+
+    /**
+     * 定義から直接extensionsを登録
+     */
+    registerExtensionsFromDefinition(extensions) {
+        if (extensions && extensions.actions) {
+            for (const [name, actionDef] of Object.entries(extensions.actions)) {
+                this.registerAction(name, async (params) => {
+                    // paramsには{event}が入っているので、event.eventで取り出す
+                    const event = params && params.event;
+                    await this.executeAction(actionDef, event);
+                });
+                // console.log(`✅ 拡張アクション事前登録: ${name}`);
+            }
         }
     }
 
@@ -78,10 +100,17 @@ class JsoniaRuntime {
         const extensions = this.getState('extensions');
         if (extensions && extensions.actions) {
             for (const [name, actionDef] of Object.entries(extensions.actions)) {
-                this.registerAction(name, async (params, event) => {
+                // 既に登録済みの場合はスキップ
+                if (this[name]) {
+                    console.log(`⏭️  既に登録済み: ${name}`);
+                    continue;
+                }
+                this.registerAction(name, async (params) => {
+                    // paramsには{event}が入っているので、event.eventで取り出す
+                    const event = params && params.event;
                     await this.executeAction(actionDef, event);
                 });
-                console.log(`✅ 拡張アクション登録: ${name}`);
+                // console.log(`✅ 拡張アクション登録: ${name}`);
             }
         }
     }
@@ -91,7 +120,7 @@ class JsoniaRuntime {
      */
     initState(stateDefinition) {
         this.state = { ...stateDefinition };
-        console.log('📊 State初期化:', this.state);
+        // console.log('📊 State初期化:', this.state);
         this.updateStateDisplay();
     }
 
@@ -112,10 +141,10 @@ class JsoniaRuntime {
         if (typeof key === 'object') {
             // オブジェクトで複数同時設定
             Object.assign(this.state, key);
-            console.log('📝 State更新(複数):', key);
+            // console.log('📝 State更新(複数):', key);
         } else {
             this.state[key] = value;
-            console.log('📝 State更新:', key, '=', value);
+            // console.log('📝 State更新:', key, '=', value);
         }
         
         // Computedプロパティを再計算
@@ -163,6 +192,26 @@ class JsoniaRuntime {
      */
     evaluateExpression(expr) {
         if (typeof expr === 'string') {
+            // 否定演算子を処理: !{{variable}}
+            const negationMatch = expr.match(/^!\{\{([\w.]+)\}\}$/);
+            if (negationMatch) {
+                const path = negationMatch[1];
+                const keys = path.split('.');
+                let value = this.getState(keys[0]);
+                
+                // ネストされたプロパティを解決
+                for (let i = 1; i < keys.length; i++) {
+                    if (value && typeof value === 'object') {
+                        value = value[keys[i]];
+                    } else {
+                        value = undefined;
+                        break;
+                    }
+                }
+                
+                return !value;
+            }
+            
             // テンプレート変数を展開: {{key}} または {{key.nested.property}}
             // 文字列全体がテンプレート変数の場合は、値をそのまま返す
             const fullMatch = expr.match(/^\{\{([\w.]+)\}\}$/);
@@ -303,10 +352,10 @@ class JsoniaRuntime {
                 }
 
                 try {
-                    console.log(`🌐 API呼び出し: ${name}`, url, options);
+                    // console.log(`🌐 API呼び出し: ${name}`, url, options);
                     const response = await fetch(url, options);
                     const data = await response.json();
-                    console.log(`✅ API成功: ${name}`, data);
+                    // console.log(`✅ API成功: ${name}`, data);
                     return { success: true, data };
                 } catch (error) {
                     console.error(`❌ API失敗: ${name}`, error);
@@ -314,7 +363,7 @@ class JsoniaRuntime {
                 }
             };
         }
-        console.log('🌐 APIs初期化:', Object.keys(this.apis));
+        // console.log('🌐 APIs初期化:', Object.keys(this.apis));
     }
 
     /**
@@ -432,13 +481,69 @@ class JsoniaRuntime {
             
             elements.forEach(element => {
                 element.addEventListener(event.type, (e) => {
-                    console.log(`⚡ Event: ${event.type} on ${event.target}`);
+                    // dragoverとdropイベントではデフォルト動作を防止
+                    if (event.type === 'dragover' || event.type === 'drop') {
+                        e.preventDefault();
+                    }
+                    // デバッグログ: dragover, dragstart, dragend 以外のみ表示
+                    if (!['dragover', 'dragstart', 'dragend'].includes(event.type)) {
+                        console.log(`⚡ Event: ${event.type} on ${event.target}`);
+                    }
                     this.executeActions(event.actions, e);
                 });
             });
         }
 
-        console.log('⚡ Events登録:', this.events.length);
+        // console.log('⚡ Events登録:', this.events.length);
+    }
+
+    /**
+     * メソッドの初期化
+     */
+    initMethods(methodsDefinition) {
+        if (!this.methods) {
+            this.methods = {};
+        }
+
+        for (const [methodName, methodDef] of Object.entries(methodsDefinition)) {
+            this.methods[methodName] = methodDef;
+            console.log(`📦 メソッド登録: ${methodName}`);
+        }
+    }
+
+    /**
+     * 登録されたメソッドを呼び出す
+     */
+    async callMethod(methodName, params = {}) {
+        const methodDef = this.methods && this.methods[methodName];
+        
+        if (!methodDef) {
+            console.error(`❌ メソッドが見つかりません: ${methodName}`);
+            return;
+        }
+
+        // パラメータをstateに一時的に設定
+        const tempState = {};
+        if (methodDef.params && Array.isArray(methodDef.params)) {
+            methodDef.params.forEach(paramName => {
+                if (params[paramName] !== undefined) {
+                    tempState[paramName] = params[paramName];
+                    this.setState(paramName, params[paramName]);
+                }
+            });
+        }
+
+        console.log(`🎯 メソッド実行: ${methodName}`, params);
+
+        // メソッドのstepsを実行
+        if (methodDef.steps) {
+            await this.executeActions(methodDef.steps);
+        }
+
+        // 一時的なstateをクリーンアップ
+        Object.keys(tempState).forEach(key => {
+            this.setState(key, undefined);
+        });
     }
 
     /**
@@ -458,7 +563,8 @@ class JsoniaRuntime {
      * 単一アクションの実行
      */
     async executeAction(action, event = null) {
-        console.log('🔧 Action:', action.type, action);
+        // デバッグログ: 必要に応じてコメント解除
+        // console.log('🔧 Action:', action.type, action);
 
         switch (action.type) {
             case 'alert':
@@ -559,7 +665,11 @@ class JsoniaRuntime {
                 break;
 
             case 'console':
-                console.log(this.resolveTemplate(action.message));
+                if (action.value !== undefined) {
+                    console.log(this.resolveValue(action.value));
+                } else {
+                    console.log(this.resolveTemplate(action.message));
+                }
                 break;
 
             case 'if':
@@ -587,196 +697,6 @@ class JsoniaRuntime {
                 document.dispatchEvent(customEvent);
                 break;
 
-            // DOM操作アクション
-            case 'dom.select':
-                const selected = document.querySelector(this.resolveTemplate(action.selector));
-                if (action.output) {
-                    this.setState(action.output, selected);
-                }
-                return selected;
-
-            case 'dom.selectAll':
-                const selectedAll = Array.from(document.querySelectorAll(this.resolveTemplate(action.selector)));
-                if (action.output) {
-                    this.setState(action.output, selectedAll);
-                }
-                return selectedAll;
-
-            case 'dom.createElement':
-                const newElement = document.createElement(action.tag || 'div');
-                if (action.output) {
-                    this.setState(action.output, newElement);
-                }
-                return newElement;
-
-            case 'dom.setInnerHTML':
-                const htmlTarget = this.resolveValue(action.target);
-                if (htmlTarget) {
-                    htmlTarget.innerHTML = this.resolveTemplate(action.value);
-                }
-                break;
-
-            case 'dom.setTextContent':
-                const textTarget = this.resolveValue(action.target);
-                if (textTarget) {
-                    textTarget.textContent = this.resolveTemplate(action.value);
-                }
-                break;
-
-            case 'dom.setAttribute':
-                const attrTarget = this.resolveValue(action.target);
-                if (attrTarget) {
-                    attrTarget.setAttribute(action.name, this.resolveTemplate(action.value));
-                }
-                break;
-
-            case 'dom.addClass':
-                const addClassTarget = this.resolveValue(action.target);
-                if (addClassTarget) {
-                    addClassTarget.classList.add(action.className);
-                }
-                break;
-
-            case 'dom.removeClass':
-                const removeClassTarget = this.resolveValue(action.target);
-                if (removeClassTarget) {
-                    removeClassTarget.classList.remove(action.className);
-                }
-                break;
-
-            case 'dom.toggleClass':
-                const toggleClassTarget = this.resolveValue(action.target);
-                if (toggleClassTarget) {
-                    toggleClassTarget.classList.toggle(action.className);
-                }
-                break;
-
-            case 'dom.appendChild':
-                const parent = this.resolveValue(action.parent);
-                const child = this.resolveValue(action.child);
-                if (parent && child) {
-                    parent.appendChild(child);
-                }
-                break;
-
-            case 'dom.removeChild':
-                const removeParent = this.resolveValue(action.parent);
-                const removeChild = this.resolveValue(action.child);
-                if (removeParent && removeChild) {
-                    removeParent.removeChild(removeChild);
-                }
-                break;
-
-            case 'dom.addEventListener':
-                const eventTarget = this.resolveValue(action.target);
-                if (eventTarget && action.event && action.actions) {
-                    eventTarget.addEventListener(action.event, (e) => {
-                        this.executeActions(action.actions, e);
-                    });
-                }
-                break;
-
-            // 配列操作アクション
-            case 'array.forEach':
-                const forEachArray = this.resolveValue(action.array);
-                if (Array.isArray(forEachArray) && action.do) {
-                    for (let i = 0; i < forEachArray.length; i++) {
-                        const item = forEachArray[i];
-                        // 一時的に変数を保存
-                        const oldValue = this.getState(action.item);
-                        const oldIndex = this.getState(action.index || 'index');
-                        
-                        this.setState(action.item, item);
-                        if (action.index) {
-                            this.setState(action.index, i);
-                        }
-                        
-                        await this.executeActions(action.do, event);
-                        
-                        // 元に戻す
-                        if (oldValue !== undefined) this.setState(action.item, oldValue);
-                        if (oldIndex !== undefined) this.setState(action.index || 'index', oldIndex);
-                    }
-                }
-                break;
-
-            case 'array.map':
-                const mapArray = this.resolveValue(action.array);
-                if (Array.isArray(mapArray)) {
-                    const result = [];
-                    for (let i = 0; i < mapArray.length; i++) {
-                        const item = mapArray[i];
-                        const oldValue = this.getState(action.item);
-                        this.setState(action.item, item);
-                        
-                        await this.executeActions(action.do, event);
-                        const mappedValue = this.getState(action.output);
-                        result.push(mappedValue);
-                        
-                        if (oldValue !== undefined) this.setState(action.item, oldValue);
-                    }
-                    if (action.storeIn) {
-                        this.setState(action.storeIn, result);
-                    }
-                    return result;
-                }
-                break;
-
-            case 'array.filter':
-                const filterArray = this.resolveValue(action.array);
-                if (Array.isArray(filterArray)) {
-                    const result = [];
-                    for (const item of filterArray) {
-                        const oldValue = this.getState(action.item);
-                        this.setState(action.item, item);
-                        
-                        const condition = this.evaluateExpression(action.condition);
-                        if (condition) {
-                            result.push(item);
-                        }
-                        
-                        if (oldValue !== undefined) this.setState(action.item, oldValue);
-                    }
-                    if (action.storeIn) {
-                        this.setState(action.storeIn, result);
-                    }
-                    return result;
-                }
-                break;
-
-            // オブジェクト操作
-            case 'object.set':
-                const obj = this.resolveValue(action.object) || {};
-                obj[action.key] = this.resolveValue(action.value);
-                if (action.storeIn) {
-                    this.setState(action.storeIn, obj);
-                }
-                break;
-
-            case 'object.get':
-                const getObj = this.resolveValue(action.object);
-                const value = getObj ? getObj[action.key] : undefined;
-                if (action.storeIn) {
-                    this.setState(action.storeIn, value);
-                }
-                return value;
-
-            // 文字列操作
-            case 'string.template':
-                const templated = this.resolveTemplate(action.template);
-                if (action.storeIn) {
-                    this.setState(action.storeIn, templated);
-                }
-                return templated;
-
-            case 'string.concat':
-                const parts = action.parts.map(p => this.resolveTemplate(p));
-                const concatenated = parts.join(action.separator || '');
-                if (action.storeIn) {
-                    this.setState(action.storeIn, concatenated);
-                }
-                return concatenated;
-
             // シーケンス実行
             case 'sequence':
                 if (action.steps && Array.isArray(action.steps)) {
@@ -786,8 +706,19 @@ class JsoniaRuntime {
                 }
                 break;
 
+            // 拡張アクション登録
+            case 'registerExtensions':
+                this.registerExtensionsFromState();
+                break;
+
+            // DOM操作、配列、オブジェクト、テンプレート、ドラッグなどはjsonia-runtime-actions.jsで定義
             default:
-                console.warn('⚠️ 未対応のアクション:', action.type);
+                // 登録済みアクションハンドラーを呼び出す
+                if (this.actionHandlers && this.actionHandlers[action.type]) {
+                    await this.actionHandlers[action.type].call(this, action, event);
+                } else {
+                    console.warn('⚠️ 未対応のアクション:', action.type);
+                }
         }
     }
 
@@ -796,10 +727,23 @@ class JsoniaRuntime {
      */
     resolveValue(value) {
         if (typeof value === 'string') {
-            // {{variable}}形式の場合はstateから取得
+            // {{variable}}形式の場合はstateから取得（ネストされたプロパティにも対応）
             const match = value.match(/^\{\{(.+)\}\}$/);
             if (match) {
-                return this.getState(match[1]);
+                const path = match[1];
+                const keys = path.split('.');
+                let result = this.getState(keys[0]);
+                
+                // ネストされたプロパティを解決
+                for (let i = 1; i < keys.length; i++) {
+                    if (result && typeof result === 'object') {
+                        result = result[keys[i]];
+                    } else {
+                        return undefined;
+                    }
+                }
+                
+                return result;
             }
             // それ以外はセレクタとして扱う
             return document.querySelector(value);
@@ -812,7 +756,7 @@ class JsoniaRuntime {
      */
     registerAction(name, handler) {
         this[name] = handler;
-        console.log(`✅ カスタムアクション登録: ${name}`);
+        // console.log(`✅ カスタムアクション登録: ${name}`);
     }
 
     /**
@@ -839,7 +783,12 @@ class JsoniaRuntime {
         console.log('Validators:', Object.keys(this.validators));
         console.groupEnd();
     }
+    
+    // ヘルパーメソッド (renderComponentFromJSON, buildTreeHTML, createComponentCategory, createComponentItem) は
+    // jsonia-runtime-actions.js で定義され、addJsoniaRuntimeHelpers() で追加されます
 }
 
 // グローバルに公開
-window.JsoniaRuntime = JsoniaRuntime;
+if (typeof window !== 'undefined') {
+    window.JsoniaRuntime = JsoniaRuntime;
+}
