@@ -5,110 +5,117 @@
 ## 📖 目次
 
 - [主な特徴](#-主な特徴)
-- [起動方法](#-起動方法)
-- [プロジェクト構造](#-プロジェクト構造)
-- [Jsoniaの利点](#-jsoniaの利点)
-- [クイックスタート](#-クイックスタート)
-- [JSON定義](#-json定義)
-- [部品化機能](#-json部品化機能)
-- [CSS管理](#-css定義の外部ファイル分離)
-- [Behavior付きコンポーネント](#-behavior付きコンポーネント)
-- [ライセンス](#-ライセンス)
+````markdown
+# Jsonia - JSON-Driven Web Development Framework
+
+Build full web applications using only JSON — no project-specific JavaScript required.
+
+## 📖 Table of Contents
+
+- [Key Features](#-key-features)
+- [Getting Started](#-getting-started)
+- [Project Structure](#-project-structure)
+- [Benefits of Jsonia](#-benefits-of-jsonia)
+- [Quickstart](#-quickstart)
+- [JSON Definitions](#-json-definitions)
+- [Componentization](#-componentization)
+- [CSS Management](#-css-management)
+- [Behavioral Components](#-behavioral-components)
+- [License](#-license)
 
 ---
 
-## ✨ 主な特徴
+## ✨ Key Features
 
-### 🎯 ゼロJavaScript開発
+### 🎯 Zero JavaScript Development
 
-- **完全JSON定義**: HTML構造、CSS、動作、APIをすべてJSONで記述
-- **汎用ランタイム**: `jsonia-runtime.js`(784行)のみで全機能を実現
-- **プロジェクト固有コードゼロ**: アプリケーションロジックはすべてJSON定義
+- **Pure JSON definitions**: Describe HTML structure, CSS, behavior and APIs entirely in JSON
+- **Split runtime**: Core engine runs in `jsonia-runtime.js`, with action implementations moved to `jsonia-runtime-actions.js` for clearer separation of concerns and easier extension
+- **No project-specific JS**: Application logic lives entirely in JSON files
 
-### ⚡ コンポーネント指向
+### ⚡ Component-Oriented
 
-- **Behavior付きコンポーネント**: React/Vue的な構造と振る舞いの統合
-- **40+種類のアクション**: DOM操作、状態管理、API通信をJSONで定義
-- **再利用可能**: タブ、モーダル、アコーディオンなど標準コンポーネント提供
+- **Behavioral components**: Combine structure and behavior similar to React/Vue components
+- **40+ action types**: Define DOM operations, state management and API calls in JSON
+- **Reusable building blocks**: Tabs, modals, accordions and other standard components included
 
-### � 開発効率
+### Development Efficiency
 
-- **ビルド不要**: インタプリタ実行で即座にプレビュー
-- **部品化機能**: `$include`ディレクティブでコンポーネント再利用
-- **プロジェクト分離**: 独立したプロジェクト管理でセキュア実行
+- **No build step**: Interpreter execution enables instant preview
+- **Componentization**: Reuse components with the `$include` directive
+- **Project isolation**: Run projects independently for security and performance
 
-## 🚀 起動方法
+## 🚀 Getting Started
 
-### jsonia-editorモード（デフォルト）
+### jsonia-editor mode (default)
 
 ```bash
-# jsonia-editorフォルダのプロジェクトを実行
+# Run the jsonia-editor project
 node server/jsonia.js
-# または
+# or
 npm start
 ```
 
-- WYSIWYGエディター機能
-- 新プロジェクト作成・保存
-- `http://localhost:3000/` → `/editor`自動リダイレクト
+- Provides a WYSIWYG editor
+- Create and save new projects from the editor
+- `http://localhost:3000/` redirects to `/editor`
 
-### 指定プロジェクトモード
+### Run a specific project
 
 ```bash
-# 特定プロジェクトのみを実行
+# Run only a specific project
 node server/jsonia.js projects/<project-name>
 
-# 例：
+# Examples:
 node server/jsonia.js projects/blog-project
 node server/jsonia.js projects/form-project
 ```
 
-- 指定プロジェクトのルートのみ有効
-- 他プロジェクトは一切読み込まれない
-- セキュア＆高パフォーマンス
+- Only the specified project's routes and assets are loaded
+- Other projects are not loaded into memory (better security & performance)
 
-### 依存関係のインストール
+### Install dependencies
 
 ```bash
 npm install
 ```
 
-## 📚 プロジェクト構造
+## 📚 Project Structure
 
-各プロジェクトは完全に独立し、実行時は指定プロジェクトのみがロードされます：
+Each project is isolated. At runtime only the chosen project is loaded:
 
 ```text
 Jsonia/
 ├── server/
-│   └── jsonia.js           # 純粋JSONルーティングインタプリタ
-├── jsonia-editor/          # WYSIWYG編集環境
-│   ├── routes.json         # エディター専用ルート
-│   └── *.ejs              # エディター用テンプレート
-├── projects/               # プロジェクト分離フォルダ
+│   └── jsonia.js           # JSON-driven routing interpreter
+├── jsonia-editor/          # WYSIWYG editing environment
+│   ├── routes.json         # Editor routes
+│   └── *.ejs               # Editor templates
+├── projects/               # Project folders
 │   ├── blog-project/
-│   │   ├── routes.json     # ブログルート定義
-│   │   └── *.ejs          # ブログ用テンプレート
+│   │   ├── routes.json     # Blog route definitions
+│   │   └── *.ejs           # Blog templates
 │   ├── form-project/
-│   │   ├── routes.json     # フォームルート定義
-│   │   └── *.ejs          # フォーム用テンプレート
+│   │   ├── routes.json     # Form project routes
+│   │   └── *.ejs           # Form templates
 │   └── <your-project>/
-│       ├── routes.json     # カスタムルート
-│       └── *.ejs          # カスタムテンプレート
+│       ├── routes.json     # Custom routes
+│       └── *.ejs           # Custom templates
 ├── public/
 │   └── js/
-│       └── jsonia-client.js # クライアントライブラリ
+│       └── jsonia-client.js # Client library
 └── package.json
 ```
 
-### 🔐 プロジェクト分離の仕組み
+### Project isolation model
 
-- **jsonia-editorモード**: `jsonia-editor/`のみロード
-- **プロジェクトモード**: 指定した`projects/<name>/`のみロード  
-- **他プロジェクト**: 一切メモリに読み込まれない（セキュリティ＆パフォーマンス）
+- **jsonia-editor mode**: only `jsonia-editor/` is loaded
+- **project mode**: only the specified `projects/<name>/` is loaded
+- **Other projects**: never loaded into memory (security & performance)
 
-## 🔧 JSON ルーティング定義
+## 🔧 JSON Routing Definitions
 
-### routes.json の例
+### Example `routes.json`
 
 ```json
 {
@@ -119,12 +126,12 @@ Jsonia/
       "handler": "renderTemplate",
       "template": "main.json",
       "data": {
-        "title": "ブログページ",
-        "content": "ブログコンテンツ"
+        "title": "Blog Page",
+        "content": "Blog content"
       }
     },
     {
-      "method": "POST", 
+      "method": "POST",
       "path": "/api/blog",
       "handler": "processData",
       "template": "api-response.json"
@@ -133,10 +140,10 @@ Jsonia/
 }
 ```
 
-### EJSテンプレート生成
+### EJS template generation (server-side)
 
 ```javascript
-// サーバーサイドでのEJS変換
+// Convert JSON to an EJS fragment on the server
 const JsonToEJS = require('./server/lib/json-to-ejs');
 
 const config = {
@@ -148,17 +155,17 @@ const config = {
             text: '<%= title %>'
         },
         {
-            tag: 'p', 
+            tag: 'p',
             text: '<%= content %>'
         }
     ]
 };
 
 const ejsTemplate = JsonToEJS.render(config);
-// 出力: <div class="container"><h1><%= title %></h1><p><%= content %></p></div>
+// Output: <div class="container"><h1><%= title %></h1><p><%= content %></p></div>
 ```
 
-### クライアントサイドHTML生成
+### Client-side HTML rendering
 
 ```javascript
 const config = {
@@ -167,22 +174,22 @@ const config = {
     children: [
         {
             tag: 'h3',
-            text: 'タイトル'
+            text: 'Title'
         },
         {
             tag: 'p',
-            text: 'コンテンツ'
+            text: 'Content'
         }
     ]
 };
 
-// DOM要素に描画
+// Render into a DOM element
 JsoniaClient.render('#container', config);
 ```
 
-## 🏗️ JSON スキーマ
+## 🏗️ JSON Schema
 
-### 基本要素
+### Basic element
 
 ```json
 {
@@ -191,21 +198,21 @@ JsoniaClient.render('#container', config);
         "class": "container",
         "id": "main"
     },
-    "text": "テキスト内容",
+    "text": "Some text",
     "children": [
         {
             "tag": "p",
-            "text": "子要素"
+            "text": "Child element"
         }
     ]
 }
 ```
 
-### 完全なページ
+### Full page example
 
 ```json
 {
-    "title": "ページタイトル",
+    "title": "Page Title",
     "meta": {
         "charset": "UTF-8",
         "viewport": "width=device-width, initial-scale=1.0"
@@ -219,7 +226,7 @@ JsoniaClient.render('#container', config);
     "body": [
         {
             "tag": "h1",
-            "text": "メインコンテンツ"
+            "text": "Main content"
         }
     ],
     "scripts": [
@@ -231,78 +238,78 @@ JsoniaClient.render('#container', config);
 }
 ```
 
-## 💡 Jsoniaの利点
+## 💡 Benefits of Jsonia
 
-### 従来のHTML開発との比較
+### Comparison with traditional HTML development
 
-| 従来の方法 | Jsonia | 効果 |
-|-----------|---------|-----|
-| HTML/CSS/JS分離 | JSON統一形式 | 🔄 一元管理 |
-| ビルド必須 | インタプリタ実行 | ⚡ ビルド時間ゼロ |
-| 手動リロード | 自動プレビュー | 👀 即座フィードバック |
-| React/Vue | JSON定義 | � バンドル不要 |
-| JavaScript必須 | 完全JSON | 🪶 学習コスト削減 |
+| Traditional | Jsonia | Effect |
+|------------|--------|--------|
+| Separate HTML/CSS/JS | Unified JSON format | 🔄 Single source of truth |
+| Build required | Interpreter execution | ⚡ Zero build time |
+| Manual reload | Automatic preview | 👀 Immediate feedback |
+| React/Vue bundle | JSON definitions | 📦 No bundler required |
+| JavaScript required | Pure JSON | 🪶 Lower learning curve |
 
-### 主要メリット
+### Key advantages
 
-#### 開発効率
+#### Development speed
 
-- ⏰ 開発時間60-80%短縮
-- 🚀 プロトタイプ→製品化が超高速
-- 📋 JSONスキーマで要件定義が明確
-- 🧪 テスト容易性の向上
+- ⏰ Reduce development time by ~60–80%
+- 🚀 Very fast prototyping to production
+- 📋 Clear requirements using JSON schemas
+- 🧪 Easier testing and validation
 
-#### 保守性
+#### Maintainability
 
-- 👁️ JSON形式で構造が一目瞭然
-- � 一箇所の修正で全体に反映
-- 📊 自動解析・バリデーション可能
-- 🔄 Git差分が明確で管理しやすい
+- 👁️ Clear structure expressed in JSON
+- 🔁 Single change can propagate across pages
+- 📊 Enables automated analysis and validation
+- 🔄 Git diffs are easy to review
 
-#### セキュリティ
+#### Security
 
-- 🔒 自動XSS防止(全テキストエスケープ)
-- ✅ JSONスキーマによる型安全性
-- 🚫 制限されたタグセットで安全
-- 📝 完全なトレーサビリティ
+- 🔒 Automatic XSS protection (text is escaped)
+- ✅ Type-safety via JSON schema
+- 🚫 Restricted tag set for safety
+- 📝 Full traceability
 
-#### チーム協業
+#### Team collaboration
 
-- 👥 非エンジニアでもUI作成可能
-- 🎨 デザイナーとの協業が円滑
-- 📚 フルスタック知識不要
-- 🔍 コードレビューが構造的
+- 👥 Non-engineers can author UI
+- 🎨 Designers can contribute directly
+- 📚 No deep full-stack knowledge required
+- 🔍 Structured code reviews
 
-## � クイックスタート
+## ⚡ Quickstart
 
-### インストール
+### Install
 
 ```bash
 npm install
 ```
 
-### 開発サーバー起動
+### Start development server
 
 ```bash
-# jsonia-editorモード(WYSIWYG開発環境)
+# jsonia-editor mode (WYSIWYG editor)
 npm start
 
-# 特定プロジェクトのみ実行
+# Run a single project only
 node server/jsonia.js projects/blog-project
 ```
 
-### 新しいプロジェクト作成
+### Create a new project
 
-1. `projects/新プロジェクト名/`フォルダを作成
-2. `routes.json`でルーティングを定義
-3. `main.json`でページを作成
-4. サーバー再起動で自動認識
+1. Create a folder `projects/<new-project-name>/`
+2. Define routes in `routes.json`
+3. Create page definitions in `main.json`
+4. Restart the server and the project will be detected automatically
 
-## 🧩 JSON部品化機能
+## 🧩 Componentization with JSON
 
-### $include ディレクティブ
+### $include directive
 
-JSONファイルをEJSのように部品化して再利用できます：
+You can reuse JSON fragments like EJS includes:
 
 ```json
 {
@@ -315,7 +322,7 @@ JSONファイルをEJSのように部品化して再利用できます：
       "children": [
         {
           "tag": "h1",
-          "text": "コンテンツ"
+          "text": "Content"
         }
       ]
     },
@@ -326,15 +333,13 @@ JSONファイルをEJSのように部品化して再利用できます：
 }
 ```
 
-### パス解決ルール
+### Path resolution rules
 
-- **`shared/components/xxx`**: `projects/shared/components/xxx.json`
-- **`components/xxx`**: プロジェクト内の`components/xxx.json`
-- **`/xxx`**: プロジェクトルートからの絶対パス
+- **`shared/components/xxx`** resolves to `projects/shared/components/xxx.json`
+- **`components/xxx`** resolves to the project's `components/xxx.json`
+- **`/xxx`** is an absolute path from the project root
 
-### 共通コンポーネント作成例
-
-#### ヘッダー (`projects/shared/components/header.json`)
+### Example shared header (`projects/shared/components/header.json`)
 
 ```json
 {
@@ -354,7 +359,7 @@ JSONファイルをEJSのように部品化して再利用できます：
         {
           "tag": "a",
           "attributes": { "href": "/" },
-          "text": "ホーム"
+          "text": "Home"
         }
       ]
     }
@@ -362,11 +367,11 @@ JSONファイルをEJSのように部品化して再利用できます：
 }
 ```
 
-#### 使用例
+#### Usage example
 
 ```json
 {
-  "title": "マイサイト",
+  "title": "My Site",
   "body": [
     {
       "$include": "shared/components/header"
@@ -375,18 +380,18 @@ JSONファイルをEJSのように部品化して再利用できます：
 }
 ```
 
-### 部品化のメリット
+### Componentization benefits
 
-- 🔄 **再利用性**: 共通コンポーネントを一元管理
-- 🎨 **一貫性**: デザインの統一が容易
-- 🛠️ **保守性**: 修正箇所が1ヶ所で完結
-- 📦 **モジュール化**: 複雑なUIを小さな部品に分解
+- 🔄 Reusability: centralize shared components
+- 🎨 Consistency: keep UI design consistent
+- 🛠️ Maintainability: change once, update everywhere
+- 📦 Modularity: split complex UIs into small parts
 
-## 🎨 CSS定義の外部ファイル分離
+## 🎨 CSS as external JSON files
 
-### styles配列での$include
+### $include in the `styles` array
 
-スタイル定義も外部JSONファイルに分離して管理できます：
+Styles can also be managed as external JSON files:
 
 ```json
 {
@@ -400,9 +405,9 @@ JSONファイルをEJSのように部品化して再利用できます：
 }
 ```
 
-### 共通スタイルライブラリ
+### Shared style library
 
-基本的なユーティリティクラスを提供：
+Provide a basic utility class set:
 
 ```json
 {
@@ -414,22 +419,22 @@ JSONファイルをEJSのように部品化して再利用できます：
 }
 ```
 
-利用可能なクラス：
+Available classes:
 
-- **レイアウト**: `.container`, `.flex`, `.grid`, `.grid-cols-2/3/4`
-- **スペーシング**: `.mt-1/2/3/4`, `.mb-1/2/3/4`, `.p-1/2/3/4`
-- **ボタン**: `.btn`, `.btn-primary`, `.btn-success`, `.btn-danger`
-- **カード**: `.card`, `.card-header`
-- **テキスト**: `.text-center`, `.text-left`, `.text-right`
+- Layout: `.container`, `.flex`, `.grid`, `.grid-cols-2/3/4`
+- Spacing: `.mt-1/2/3/4`, `.mb-1/2/3/4`, `.p-1/2/3/4`
+- Buttons: `.btn`, `.btn-primary`, `.btn-success`, `.btn-danger`
+- Cards: `.card`, `.card-header`
+- Text: `.text-center`, `.text-left`, `.text-right`
 
-### プロジェクト専用CSS
+### Project-specific CSS
 
-各プロジェクトで独自のCSSファイルを作成：
+Place project-specific styles under each project:
 
 ```text
 projects/
   my-project/
-    css.json          # プロジェクト専用スタイル
+    css.json          # project styles
     main.json
     routes.json
 ```
@@ -447,31 +452,31 @@ projects/
 }
 ```
 
-### CSSのメリット
+### CSS benefits
 
-- 📁 **分離管理**: スタイルとコンテンツを分離
-- 🔄 **再利用**: 複数ページで同じスタイルを共有
-- 🎯 **保守性**: スタイル変更が一箇所で完結
-- 📦 **モジュール性**: 用途別にスタイルを分割
+- 📁 Separation: keep styles separate from content
+- 🔄 Reuse: share styles across pages
+- 🎯 Maintainability: change styles in one place
+- 📦 Modularity: split styles by purpose
 
-## ⚡ Behavior付きコンポーネント
+## ⚡ Behavioral components
 
-### JavaScriptゼロでインタラクティブUIを実現
+### Interactive UI without JavaScript
 
-Jsoniaの最大の特徴は、**JavaScript一切不要**でReact/Vue的なインタラクティブコンポーネントを作成できることです。
+The core value of Jsonia is that you can build interactive components similar to React/Vue without writing any JavaScript.
 
-### 基本構造
+### Basic structures
 
-**静的コンポーネント** (構造のみ):
+Static component (structure only):
 
 ```json
 {
   "tag": "div",
-  "children": [{ "tag": "h1", "text": "タイトル" }]
+  "children": [{ "tag": "h1", "text": "Title" }]
 }
 ```
 
-**動的コンポーネント** (構造 + Behavior):
+Dynamic component (structure + behavior):
 
 ```json
 {
@@ -499,67 +504,69 @@ Jsoniaの最大の特徴は、**JavaScript一切不要**でReact/Vue的なイン
 }
 ```
 
-### 標準提供コンポーネント
+### Built-in components
 
-| コンポーネント | ファイル | 機能 |
-|------------|---------|------|
-| タブUI | `tabs-with-behavior.json` | タブ切り替え、状態管理 |
-| アコーディオン | `accordion-with-behavior.json` | 開閉制御、複数セクション |
-| ドロップダウン | `dropdown-with-behavior.json` | メニュー開閉、項目選択 |
-| モーダル | `modal-with-behavior.json` | ダイアログ表示、背景クローズ |
+| Component | File | Function |
+|-----------|------|----------|
+| Tabs UI | `tabs-with-behavior.json` | Tab switching and state management |
+| Accordion | `accordion-with-behavior.json` | Open/close control, multiple sections |
+| Dropdown | `dropdown-with-behavior.json` | Menu open/close and item selection |
+| Modal | `modal-with-behavior.json` | Dialog display with backdrop close |
 
-**使用例**:
+Example usage:
 
 ```json
 {
   "$include": "components/tabs-with-behavior.json",
   "defaultTab": "tab1",
   "tabs": [
-    { "tag": "button", "text": "タブ1", "attributes": { "data-tab-button": "tab1" } }
+    { "tag": "button", "text": "Tab 1", "attributes": { "data-tab-button": "tab1" } }
   ],
   "panels": [
-    { "tag": "div", "text": "内容1", "attributes": { "data-tab-panel": "tab1" } }
+    { "tag": "div", "text": "Content 1", "attributes": { "data-tab-panel": "tab1" } }
   ]
 }
 ```
 
-### 40+種類のアクションタイプ
+### 40+ action types
 
-**DOM操作**: select, selectAll, createElement, appendChild, setInnerHTML, setAttribute, addClass, removeClass, toggleClass
+DOM operations: select, selectAll, createElement, appendChild, setInnerHTML, setAttribute, addClass, removeClass, toggleClass
 
-**データ操作**: array.forEach, array.map, array.filter, object.set, object.get
+Data operations: array.forEach, array.map, array.filter, object.set, object.get
 
-**文字列**: string.template, string.concat
+String: string.template, string.concat
 
-**フロー制御**: if, sequence
+Flow: if, sequence
 
-**状態管理**: setState, getState
+State: setState, getState
 
-**通信**: api, emit
+Network: api, emit
 
-**その他**: alert, console, navigate, validate, submit
+Other: alert, console, navigate, validate, submit
 
-### ゼロJavaScriptアーキテクチャ
+### Zero-JavaScript architecture
 
-jsonia-editorプロジェクト自体がその証明:
+The `jsonia-editor` project itself demonstrates the approach:
 
 ```text
 public/js/
-└── jsonia-runtime.js (784行 - 汎用エンジン)
-    ↑ これだけで全てが動作
+└── jsonia-runtime.js (core runtime) and jsonia-runtime-actions.js (action library)
+  ↑ core engine + separate action implementations for modularity and easier maintenance
 
 jsonia-editor/
-├── behaviors/editor.json    # 動作定義
-├── extensions.json          # カスタムアクション
-└── data/components.json     # データ定義
+├── behaviors/editor.json    # behavior definitions
+├── extensions.json          # custom actions
+└── data/components.json     # component data
 ```
 
-- プロジェクト固有のJavaScript: **0行**
-- すべてのロジック: JSON定義
-- 完全な型安全性: JSONスキーマ検証
+- Project-specific JavaScript: **0 lines**
+- All logic: JSON definitions
+- Type safety: JSON schema validation
 
-詳細は `components/README.md` を参照してください。
+See `components/README.md` for details.
 
-## 📝 ライセンス
+## 📝 License
 
 MIT License
+
+````
