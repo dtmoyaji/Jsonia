@@ -17,8 +17,19 @@
   },
   ".accordion-content": {
     "padding": "12px 16px",
-    "transition": "max-height 0.3s ease",
-    "overflow": "hidden"
+    "transition": "max-height 0.3s ease, padding 0.2s ease, opacity 0.2s ease",
+    "overflow": "hidden",
+    "maxHeight": "800px",
+    "opacity": "1"
+  },
+  ".accordion-content.collapsed": {
+    "maxHeight": "0",
+    "padding": "0 16px",
+    "opacity": "0"
+  },
+  ".accordion-icon.rotated": {
+    "transform": "rotate(180deg)",
+    "transition": "transform 0.2s ease"
   },
   ".accordion-header.expanded .accordion-icon": {
     "transform": "rotate(180deg)"
