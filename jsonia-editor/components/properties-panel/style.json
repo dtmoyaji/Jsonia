@@ -1,0 +1,35 @@
+{
+  ".properties-panel": {
+    "background": "white",
+    "borderLeft": "1px solid #ddd",
+    "display": "flex",
+    "flexDirection": "column"
+  },
+  ".properties-content": {
+    "flex": "1",
+    "overflowY": "auto",
+    "padding": "15px"
+  },
+  ".property-group": {
+    "marginBottom": "20px"
+  },
+  ".property-label": {
+    "display": "block",
+    "marginBottom": "5px",
+    "fontWeight": "600",
+    "color": "#2c3e50",
+    "fontSize": "12px",
+    "textTransform": "uppercase"
+  },
+  ".property-input": {
+    "width": "100%",
+    "padding": "8px 10px",
+    "border": "1px solid #ddd",
+    "borderRadius": "4px",
+    "fontSize": "14px"
+  },
+  ".property-input:focus": {
+    "outline": "none",
+    "borderColor": "#3498db"
+  }
+}

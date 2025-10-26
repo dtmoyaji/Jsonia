@@ -1,0 +1,63 @@
+{
+  ".project-grid": {
+    "display": "grid",
+    "gridTemplateColumns": "repeat(auto-fill, minmax(280px, 1fr))",
+    "gap": "20px",
+    "marginTop": "20px"
+  },
+  ".project-card": {
+    "border": "1px solid #ddd",
+    "borderRadius": "8px",
+    "padding": "20px",
+    "background": "white",
+    "transition": "all 0.2s",
+    "boxShadow": "0 2px 5px rgba(0,0,0,0.05)"
+  },
+  ".project-card:hover": {
+    "boxShadow": "0 4px 15px rgba(0,0,0,0.1)",
+    "transform": "translateY(-2px)"
+  },
+  ".project-card h3": {
+    "margin": "0 0 10px 0",
+    "color": "#2c3e50",
+    "display": "flex",
+    "alignItems": "center",
+    "gap": "8px"
+  },
+  ".project-card p": {
+    "margin": "0 0 15px 0",
+    "color": "#7f8c8d",
+    "fontSize": "14px",
+    "lineHeight": "1.4"
+  },
+  ".project-meta": {
+    "fontSize": "12px",
+    "color": "#95a5a6",
+    "marginBottom": "15px"
+  },
+  ".project-actions": {
+    "display": "flex",
+    "gap": "8px",
+    "flexWrap": "wrap"
+  },
+  ".project-actions .btn": {
+    "padding": "6px 12px",
+    "fontSize": "12px"
+  },
+  ".status-badge": {
+    "display": "inline-block",
+    "padding": "2px 8px",
+    "borderRadius": "12px",
+    "fontSize": "11px",
+    "fontWeight": "600",
+    "textTransform": "uppercase"
+  },
+  ".status-active": {
+    "background": "#d5f4e6",
+    "color": "#27ae60"
+  },
+  ".status-draft": {
+    "background": "#fef9e7",
+    "color": "#f39c12"
+  }
+}

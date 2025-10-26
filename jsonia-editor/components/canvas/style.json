@@ -66,4 +66,127 @@
     "borderRadius": "8px",
     "zIndex": "20"
   }
+
+  ,".drop-zone:empty::before": {
+    "content": "'🎨 コンポーネントをここにドラッグ&ドロップしてください'",
+    "fontSize": "16px",
+    "color": "#bdbdbd",
+    "textAlign": "center",
+    "display": "block",
+    "padding": "200px 20px"
+  },
+  ".drop-zone.drag-over": {
+    "borderColor": "#3498db",
+    "background": "rgba(52, 152, 219, 0.03)"
+  },
+  "#drop-zone": {
+    "flex": "1 1 auto",
+    "minHeight": "400px",
+    "background": "#fff"
+  },
+  ".canvas-component": {
+    "position": "relative",
+    "outline": "2px solid transparent",
+    "transition": "outline 0.2s ease"
+  },
+  ".canvas-component:hover": {
+    "outline": "2px solid #3498db"
+  },
+  ".canvas-component::before": {
+    "content": "''",
+    "position": "absolute",
+    "top": "0",
+    "left": "0",
+    "right": "0",
+    "bottom": "0",
+    "background": "rgba(52, 152, 219, 0.05)",
+    "opacity": "0",
+    "transition": "opacity 0.2s",
+    "pointerEvents": "none",
+    "zIndex": "1"
+  },
+  ".canvas-component:hover::before": {
+    "opacity": "1"
+  },
+  ".delete-component-btn": {
+    "position": "absolute",
+    "top": "5px",
+    "right": "5px",
+    "background": "rgba(231, 76, 60, 0.9)",
+    "color": "white",
+    "border": "none",
+    "borderRadius": "4px",
+    "cursor": "pointer",
+    "padding": "4px 8px",
+    "fontSize": "12px",
+    "fontWeight": "600",
+    "transition": "all 0.2s",
+    "zIndex": "100",
+    "opacity": "0",
+    "backdropFilter": "blur(4px)"
+  },
+  ".canvas-component:hover .delete-component-btn": {
+    "opacity": "1"
+  },
+  ".delete-component-btn:hover": {
+    "background": "rgba(192, 57, 43, 0.95)",
+    "transform": "scale(1.05)"
+  },
+  ".delete-component-btn:active": {
+    "transform": "scale(0.95)"
+  },
+  ".nested-component": {
+    "margin": "5px 0"
+  },
+  ".nested-component:hover": {
+    "outline": "2px solid #9b59b6"
+  },
+  ".inner-drop-zone": {
+    "minHeight": "40px",
+    "padding": "5px",
+    "border": "2px dashed #9b59b6",
+    "borderRadius": "4px",
+    "margin": "5px 0",
+    "transition": "all 0.2s ease",
+    "position": "relative",
+    "background": "rgba(155, 89, 182, 0.05)"
+  },
+  ".inner-drop-zone:empty::before": {
+    "content": "'子要素をドロップ'",
+    "display": "block",
+    "textAlign": "center",
+    "color": "#9b59b6",
+    "fontSize": "12px",
+    "opacity": "0.6",
+    "fontStyle": "italic",
+    "padding": "10px"
+  },
+  ".inner-drop-zone.drag-over": {
+    "background": "rgba(155, 89, 182, 0.15)",
+    "borderColor": "#9b59b6",
+    "borderStyle": "solid"
+  },
+  ".slot-drop-zone": {
+    "position": "relative",
+    "minHeight": "30px",
+    "transition": "all 0.2s ease"
+  },
+  ".slot-drop-zone:empty::before": {
+    "content": "'📍 スロット: ここに要素をドロップ'",
+    "display": "block",
+    "textAlign": "center",
+    "color": "#e74c3c",
+    "fontSize": "11px",
+    "opacity": "0.5",
+    "fontStyle": "italic",
+    "padding": "8px",
+    "border": "1px dashed rgba(231, 76, 60, 0.3)",
+    "borderRadius": "4px",
+    "background": "rgba(231, 76, 60, 0.03)"
+  },
+  ".slot-drop-zone.drag-over-slot": {
+    "background": "rgba(231, 76, 60, 0.1)",
+    "outline": "2px dashed #e74c3c",
+    "outlineOffset": "2px"
+  }
 }
