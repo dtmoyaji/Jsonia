@@ -192,14 +192,14 @@
                   "condition": "{{event.currentTarget.classList.contains('expanded')}}",
                   "then": [
                     {
-                      "type": "dom.removeClass",
+                      "type": "dom.addClass",
                       "target": "{{icon}}",
                       "className": "rotated"
                     }
                   ],
                   "else": [
                     {
-                      "type": "dom.addClass",
+                      "type": "dom.removeClass",
                       "target": "{{icon}}",
                       "className": "rotated"
                     }
