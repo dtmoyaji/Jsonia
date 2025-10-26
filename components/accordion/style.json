@@ -18,14 +18,16 @@
   ".accordion-content": {
     "padding": "12px 16px",
     "transition": "max-height 0.3s ease, padding 0.2s ease, opacity 0.2s ease",
-    "overflow": "hidden",
-    "maxHeight": "800px",
+    "overflowY": "auto",
+    "boxSizing": "border-box",
+    "maxHeight": "320px",
     "opacity": "1"
   },
   ".accordion-content.collapsed": {
     "maxHeight": "0",
     "padding": "0 16px",
-    "opacity": "0"
+    "opacity": "0",
+    "overflowY": "hidden"
   },
   ".accordion-icon.rotated": {
     "transform": "rotate(180deg)",
