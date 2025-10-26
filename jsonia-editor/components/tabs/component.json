@@ -1,6 +1,6 @@
 {
   "extends": "component",
-  "name": "editor-tabs",
+  "name": "tabs",
   "template": {
     "tag": "div",
     "attributes": { "class": "editor-tabs" },

@@ -49,9 +49,9 @@ main.jsonで`$include`ディレクティブを使用してコンポーネント�
     {
       "tag": "div",
       "children": [
-        { "$include": "components/header.json" },
-        { "$include": "components/tabs.json" },
-        { "$include": "components/sidebar.json" }
+  { "$include": "components/header/component.json" },
+  { "$include": "components/tabs/component.json" },
+  { "$include": "components/sidebar/component.json" }
       ]
     }
   ]

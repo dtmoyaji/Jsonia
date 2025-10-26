@@ -327,11 +327,11 @@ You can reuse JSON fragments like EJS includes:
 
 ### Path resolution rules
 
-- **`shared/components/xxx`** resolves to `projects/shared/components/xxx.json`
-- **`components/xxx`** resolves to the project's `components/xxx.json`
+- **`shared/components/xxx`** resolves to `projects/shared/components/xxx/component.json`
+- **`components/xxx`** resolves to the project's `components/xxx/component.json`
 - **`/xxx`** is an absolute path from the project root
 
-### Example shared header (`projects/shared/components/header.json`)
+### Example shared header (`projects/shared/components/header/component.json`)
 
 ```json
 {
@@ -500,16 +500,16 @@ Dynamic component (structure + behavior):
 
 | Component | File | Function |
 |-----------|------|----------|
-| Tabs UI | `tabs-with-behavior.json` | Tab switching and state management |
-| Accordion | `accordion-with-behavior.json` | Open/close control, multiple sections |
-| Dropdown | `dropdown-with-behavior.json` | Menu open/close and item selection |
-| Modal | `modal-with-behavior.json` | Dialog display with backdrop close |
+| Tabs UI | `tabs-with-behavior/component.json` | Tab switching and state management |
+| Accordion | `accordion-with-behavior/component.json` | Open/close control, multiple sections |
+| Dropdown | `dropdown-with-behavior/component.json` | Menu open/close and item selection |
+| Modal | `modal-with-behavior/component.json` | Dialog display with backdrop close |
 
 Example usage:
 
 ```json
 {
-  "$include": "components/tabs-with-behavior.json",
+  "$include": "components/tabs-with-behavior/component.json",
   "defaultTab": "tab1",
   "tabs": [
     { "tag": "button", "text": "Tab 1", "attributes": { "data-tab-button": "tab1" } }

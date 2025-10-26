@@ -1,6 +1,6 @@
 {
   "extends": "component",
-  "name": "editor-footer",
+  "name": "footer",
   "template": {
     "tag": "footer",
     "attributes": { "class": "footer" },

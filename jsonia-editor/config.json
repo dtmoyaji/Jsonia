@@ -28,12 +28,10 @@
     },
     "componentLibrary": {
       "loadFromFiles": [
-        "/components/layout.json",
-        "/components/text.json",
-        "/components/form.json",
-        "/components/media.json",
-        "/components/custom.json",
-        "/components/ejs.json"
+        "/components/layout/component.json",
+        "/components/text/component.json",
+        "/components/form/component.json",
+        "/components/media/component.json"
       ]
     },
     "actions": {

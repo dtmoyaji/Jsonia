@@ -1,6 +1,6 @@
 {
   "extends": "component",
-  "name": "editor-header",
+  "name": "header",
   "template": {
     "tag": "header",
     "attributes": { "class": "header" },

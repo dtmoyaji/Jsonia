@@ -12,7 +12,7 @@
 **使い方**:
 ```json
 {
-  "$include": "components/tabs-with-behavior.json",
+  "$include": "components/tabs-with-behavior/component.json",
   "defaultTab": "tab1",
   "tabs": [
     {"tag": "button", "text": "タブ1", "attributes": {"data-tab-button": "tab1", "class": "active"}},
@@ -38,7 +38,7 @@
 **使い方**:
 ```json
 {
-  "$include": "components/accordion-with-behavior.json",
+  "$include": "components/accordion-with-behavior/component.json",
   "sections": [
     {
       "tag": "div",
@@ -64,7 +64,7 @@
 **使い方**:
 ```json
 {
-  "$include": "components/dropdown-with-behavior.json",
+  "$include": "components/dropdown-with-behavior/component.json",
   "label": "選択してください",
   "items": [
     {"tag": "div", "text": "項目1", "attributes": {"data-dropdown-item": "true", "data-value": "item1"}},
@@ -86,7 +86,7 @@
 **使い方**:
 ```json
 {
-  "$include": "components/modal-with-behavior.json",
+  "$include": "components/modal-with-behavior/component.json",
   "modalId": "myModal",
   "title": "確認",
   "content": [
@@ -144,7 +144,7 @@
 ### パターン3: $include + パラメータ(再利用)
 ```json
 {
-  "$include": "components/tabs-with-behavior.json",
+  "$include": "components/tabs-with-behavior/component.json",
   "defaultTab": "tab1",
   "tabs": [...]
 }

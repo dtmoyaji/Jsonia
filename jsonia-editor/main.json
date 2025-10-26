@@ -15,15 +15,31 @@
   "body": [
     {
       "tag": "div",
-      "attributes": { "class": "editor-container" },
+      "attributes": {
+        "class": "editor-container"
+      },
       "children": [
-        { "$include": "components/header.json" },
-        { "$include": "components/tabs.json" },
-        { "$include": "components/sidebar.json" },
-        { "$include": "components/canvas.json" },
-        { "$include": "components/behavior-panel.json" },
-        { "$include": "components/properties-panel.json" },
-        { "$include": "components/footer.json" }
+        {
+          "$include": "components/header/component.json"
+        },
+        {
+          "$include": "components/tabs/component.json"
+        },
+        {
+          "$include": "components/sidebar/component.json"
+        },
+        {
+          "$include": "components/canvas/component.json"
+        },
+        {
+          "$include": "components/behavior-panel/component.json"
+        },
+        {
+          "$include": "components/properties-panel/component.json"
+        },
+        {
+          "$include": "components/footer/component.json"
+        }
       ]
     }
   ],

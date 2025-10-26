@@ -98,7 +98,7 @@ function resolveIncludePath(includePath, options = {}) {
 /**
  * Return candidate absolute paths for a named shared component.
  * The search order is:
- *  - <repoRoot>/components/<name>.json
+ *  - <repoRoot>/components/<name>/component.json
  *  - <repoRoot>/components/<name>/component.json
  *  - fallback using workspace root for similar paths
  * @param {string} componentName

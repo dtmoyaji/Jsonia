@@ -1,6 +1,6 @@
 {
   "extends": "component",
-  "name": "editor-canvas",
+  "name": "canvas",
   "template": {
     "tag": "main",
     "attributes": { "class": "canvas-area" },

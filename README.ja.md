@@ -328,13 +328,13 @@ JSONファイルをEJSのように部品化して再利用できます：
 
 ### パス解決ルール
 
-- **`shared/components/xxx`**: `projects/shared/components/xxx.json`
-- **`components/xxx`**: プロジェクト内の`components/xxx.json`
+- **`shared/components/xxx`**: `projects/shared/components/xxx/component.json`
+- **`components/xxx`**: プロジェクト内の`components/xxx/component.json`
 - **`/xxx`**: プロジェクトルートからの絶対パス
 
 ### 共通コンポーネント作成例
 
-#### ヘッダー (`projects/shared/components/header.json`)
+#### ヘッダー (`projects/shared/components/header/component.json`)
 
 ```json
 {
@@ -503,16 +503,16 @@ Jsoniaの最大の特徴は、**JavaScript一切不要**でReact/Vue的なイン
 
 | コンポーネント | ファイル | 機能 |
 |------------|---------|------|
-| タブUI | `tabs-with-behavior.json` | タブ切り替え、状態管理 |
-| アコーディオン | `accordion-with-behavior.json` | 開閉制御、複数セクション |
-| ドロップダウン | `dropdown-with-behavior.json` | メニュー開閉、項目選択 |
-| モーダル | `modal-with-behavior.json` | ダイアログ表示、背景クローズ |
+| タブUI | `tabs-with-behavior/component.json` | タブ切り替え、状態管理 |
+| アコーディオン | `accordion-with-behavior/component.json` | 開閉制御、複数セクション |
+| ドロップダウン | `dropdown-with-behavior/component.json` | メニュー開閉、項目選択 |
+| モーダル | `modal-with-behavior/component.json` | ダイアログ表示、背景クローズ |
 
 **使用例**:
 
 ```json
 {
-  "$include": "components/tabs-with-behavior.json",
+  "$include": "components/tabs-with-behavior/component.json",
   "defaultTab": "tab1",
   "tabs": [
     { "tag": "button", "text": "タブ1", "attributes": { "data-tab-button": "tab1" } }
