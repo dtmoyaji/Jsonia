@@ -54,9 +54,15 @@ async function registerComponentActions(action, event) {
             const componentName = component.name || component.type || 'unknown';
             for (const [actionName, actionDef] of Object.entries(component.behavior.actions)) {
                 this.registerAction(actionName, async (params) => {
-                    //console.log(`🎯 コンポーネントアクション実行: ${actionName} (from ${componentName})`);
-                    const event = params && params.event;
-                    await this.executeAction(actionDef, event);
+                    // Detailed debug: log when a component action is invoked and what the event target is
+                    try {
+                        const event = params && params.event;
+                        console.log(`🎯 コンポーネントアクション実行: ${actionName} (from ${componentName})`, { eventSnapshot: !!event, currentTarget: event && event.currentTarget ? event.currentTarget : null });
+                        await this.executeAction(actionDef, event);
+                    } catch (err) {
+                        console.error('❌ error executing component action', actionName, err);
+                        throw err;
+                    }
                 });
                 registeredCount++;
                 console.log(`📦 コンポーネントアクション登録: ${actionName} (from ${componentName})`);
