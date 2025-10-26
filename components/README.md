@@ -6,13 +6,13 @@
 
 ## Behavior付きコンポーネント
 
-### 1. tabs-with-behavior.json
+### 1. tabs.json
 **目的**: タブUI(構造 + タブ切り替え動作)
 
 **使い方**:
 ```json
 {
-  "$include": "components/tabs-with-behavior/component.json",
+  "$include": "components/tabs/component.json",
   "defaultTab": "tab1",
   "tabs": [
     {"tag": "button", "text": "タブ1", "attributes": {"data-tab-button": "tab1", "class": "active"}},
@@ -32,13 +32,13 @@
 
 ---
 
-### 2. accordion-with-behavior.json
+### 2. accordion.json
 **目的**: アコーディオンUI(構造 + 開閉動作)
 
 **使い方**:
 ```json
 {
-  "$include": "components/accordion-with-behavior/component.json",
+  "$include": "components/accordion/component.json",
   "sections": [
     {
       "tag": "div",
@@ -58,13 +58,13 @@
 
 ---
 
-### 3. dropdown-with-behavior.json
+### 3. dropdown.json
 **目的**: ドロップダウンメニュー(構造 + 選択動作)
 
 **使い方**:
 ```json
 {
-  "$include": "components/dropdown-with-behavior/component.json",
+  "$include": "components/dropdown/component.json",
   "label": "選択してください",
   "items": [
     {"tag": "div", "text": "項目1", "attributes": {"data-dropdown-item": "true", "data-value": "item1"}},
@@ -80,13 +80,13 @@
 
 ---
 
-### 4. modal-with-behavior.json
+### 4. modal.json
 **目的**: モーダルダイアログ(構造 + 開閉動作)
 
 **使い方**:
 ```json
 {
-  "$include": "components/modal-with-behavior/component.json",
+  "$include": "components/modal/component.json",
   "modalId": "myModal",
   "title": "確認",
   "content": [
@@ -144,7 +144,7 @@
 ### パターン3: $include + パラメータ(再利用)
 ```json
 {
-  "$include": "components/tabs-with-behavior/component.json",
+  "$include": "components/tabs/component.json",
   "defaultTab": "tab1",
   "tabs": [...]
 }

@@ -1,0 +1,23 @@
+{
+  "name": "editor",
+  "icon": "🧩",
+  "type": "editor",
+  "description": "WYSIWYG エディタ本体（ヘッダ、サイドバー、キャンバス等を内包）",
+  "template": {
+    "tag": "div",
+    "attributes": {
+      "class": "editor-container"
+    },
+    "children": [
+      { "$include": "components/header/component.json" },
+      { "$include": "components/tabs/component.json" },
+      { "$include": "components/sidebar/component.json" },
+      { "$include": "components/canvas/component.json" },
+      { "$include": "components/behavior-panel/component.json" },
+      { "$include": "components/properties-panel/component.json" },
+      { "$include": "components/footer/component.json" }
+    ]
+  },
+  "behaviorFile": "behavior.json",
+  "styleFile": "style.json"
+}

@@ -3,14 +3,19 @@
   "name": "sidebar",
   "template": {
     "tag": "aside",
-    "attributes": { "class": "left-sidebar", "data-panel": "structure" },
+    "attributes": {
+      "class": "left-sidebar",
+      "data-panel": "structure"
+    },
     "children": [
       {
         "tag": "div",
-        "attributes": { "class": "accordion" },
+        "attributes": {
+          "class": "accordion"
+        },
         "children": [
           {
-            "extends": "accordion-with-behavior",
+            "extends": "accordion",
             "attributes": {
               "data-accordion-id": "structure-tree"
             },
@@ -22,7 +27,9 @@
               "children": [
                 {
                   "tag": "div",
-                  "attributes": { "class": "tree-empty" },
+                  "attributes": {
+                    "class": "tree-empty"
+                  },
                   "text": "要素を追加すると構造が表示されます"
                 }
               ]
@@ -32,10 +39,12 @@
       },
       {
         "tag": "div",
-        "attributes": { "class": "accordion" },
+        "attributes": {
+          "class": "accordion"
+        },
         "children": [
           {
-            "extends": "accordion-with-behavior",
+            "extends": "accordion",
             "attributes": {
               "data-accordion-id": "components"
             },
@@ -55,39 +64,69 @@
       "toggleAccordion": {
         "type": "sequence",
         "steps": [
-          { "type": "console", "message": "🔄 toggleAccordion開始" },
+          {
+            "type": "console",
+            "message": "🔄 toggleAccordion開始"
+          },
           {
             "type": "util.getAttribute",
             "target": "{{event.currentTarget}}",
             "name": "data-accordion-id",
             "output": "accordionId"
           },
-          { "type": "console", "message": "🆔 accordion-id: {{accordionId}}" },
+          {
+            "type": "console",
+            "message": "🆔 accordion-id: {{accordionId}}"
+          },
           {
             "type": "dom.select",
             "selector": "[data-accordion-content='{{accordionId}}']",
             "output": "content"
           },
-          { "type": "console", "message": "📦 content: {{content}}" },
+          {
+            "type": "console",
+            "message": "📦 content: {{content}}"
+          },
           {
             "type": "util.querySelector",
             "parent": "{{event.currentTarget}}",
             "selector": ".accordion-icon",
             "output": "icon"
           },
-          { "type": "console", "message": "🔽 icon: {{icon}}" },
+          {
+            "type": "console",
+            "message": "🔽 icon: {{icon}}"
+          },
           {
             "type": "if",
             "condition": "{{content}}",
             "then": [
-              { "type": "console", "message": "🔍 トグル実行" },
+              {
+                "type": "console",
+                "message": "🔍 トグル実行"
+              },
               {
                 "type": "sequence",
                 "steps": [
-                  { "type": "console", "message": "� トグル実行" },
-                  { "type": "dom.toggleClass", "target": "[data-accordion-content='{{accordionId}}']", "className": "collapsed" },
-                  { "type": "dom.toggleClass", "target": "[data-accordion-id='{{accordionId}}']", "className": "expanded" },
-                  { "type": "dom.toggleClass", "target": "[data-accordion-id='{{accordionId}}'] .accordion-icon", "className": "rotated" }
+                  {
+                    "type": "console",
+                    "message": "� トグル実行"
+                  },
+                  {
+                    "type": "dom.toggleClass",
+                    "target": "[data-accordion-content='{{accordionId}}']",
+                    "className": "collapsed"
+                  },
+                  {
+                    "type": "dom.toggleClass",
+                    "target": "[data-accordion-id='{{accordionId}}']",
+                    "className": "expanded"
+                  },
+                  {
+                    "type": "dom.toggleClass",
+                    "target": "[data-accordion-id='{{accordionId}}'] .accordion-icon",
+                    "className": "rotated"
+                  }
                 ]
               }
             ]
@@ -110,95 +149,245 @@
               }
             ]
           },
-          { "type": "console", "message": "✅ toggleAccordion完了" }
+          {
+            "type": "console",
+            "message": "✅ toggleAccordion完了"
+          }
         ]
       },
       "renderComponentsList": {
         "type": "sequence",
         "steps": [
-          { "type": "dom.select", "selector": "#components-list", "output": "container" },
-          { "type": "if", "condition": "!{{container}}", "then": [
-            { "type": "console", "message": "❌ components-list要素が見つかりません" }
-          ], "else": [
-            { "type": "dom.setInnerHTML", "target": "{{container}}", "value": "" },
-            {
-              "type": "if",
-              "condition": "{{componentsData}} && {{componentsData}}.length > 0",
-              "then": [
-                { 
-                  "type": "component.renderList",
-                  "components": "{{componentsData}}",
-                  "iconMap": "{{iconMap}}",
-                  "categoryName": "基本コンポーネント",
-                  "isShared": false,
-                  "output": "builtinSection"
-                },
-                { "type": "dom.appendChild", "parent": "{{container}}", "child": "{{builtinSection}}" }
-              ]
-            },
-            {
-              "type": "if",
-              "condition": "{{sharedComponents}} && {{sharedComponents}}.length > 0",
-              "then": [
-                {
-                  "type": "component.renderList",
-                  "components": "{{sharedComponents}}",
-                  "iconMap": "{{iconMap}}",
-                  "categoryName": "📚 共有コンポーネント",
-                  "isShared": true,
-                  "output": "sharedSection"
-                },
-                { "type": "dom.appendChild", "parent": "{{container}}", "child": "{{sharedSection}}" }
-              ]
-            }
-          ]}
+          {
+            "type": "dom.select",
+            "selector": "#components-list",
+            "output": "container"
+          },
+          {
+            "type": "if",
+            "condition": "!{{container}}",
+            "then": [
+              {
+                "type": "console",
+                "message": "❌ components-list要素が見つかりません"
+              }
+            ],
+            "else": [
+              {
+                "type": "dom.setInnerHTML",
+                "target": "{{container}}",
+                "value": ""
+              },
+              {
+                "type": "if",
+                "condition": "{{componentsData}} && {{componentsData}}.length > 0",
+                "then": [
+                  {
+                    "type": "component.renderList",
+                    "components": "{{componentsData}}",
+                    "iconMap": "{{iconMap}}",
+                    "categoryName": "基本コンポーネント",
+                    "isShared": false,
+                    "output": "builtinSection"
+                  },
+                  {
+                    "type": "dom.appendChild",
+                    "parent": "{{container}}",
+                    "child": "{{builtinSection}}"
+                  }
+                ]
+              },
+              {
+                "type": "if",
+                "condition": "{{sharedComponents}} && {{sharedComponents}}.length > 0",
+                "then": [
+                  {
+                    "type": "component.renderList",
+                    "components": "{{sharedComponents}}",
+                    "iconMap": "{{iconMap}}",
+                    "categoryName": "📚 共有コンポーネント",
+                    "isShared": true,
+                    "output": "sharedSection"
+                  },
+                  {
+                    "type": "dom.appendChild",
+                    "parent": "{{container}}",
+                    "child": "{{sharedSection}}"
+                  }
+                ]
+              }
+            ]
+          }
         ]
       },
       "updateStructureTree": {
         "type": "sequence",
         "steps": [
-          { "type": "dom.select", "selector": "#structure-tree", "output": "container" },
-          { "type": "dom.select", "selector": "#drop-zone", "output": "dropZone" },
-          { "type": "if", "condition": "!{{container}}", "then": [
-            { "type": "console", "message": "❌ structure-tree要素が見つかりません" }
-          ]},
-          { "type": "if", "condition": "!{{dropZone}}", "then": [
-            { "type": "dom.setInnerHTML", "target": "{{container}}", "value": "<div style=\"padding: 10px; color: #999;\">キャンバスが見つかりません</div>" }
-          ], "else": [
-            { "type": "dom.selectAll", "selector": "#drop-zone .canvas-component", "output": "components" },
-            { "type": "array.length", "array": "{{components}}", "output": "componentCount" },
-            { "type": "console", "message": "🔍 コンポーネント数: {{componentCount}}" },
-            { "type": "if", "condition": { "eq": ["{{componentCount}}", 0] }, "then": [
-              { "type": "console", "message": "⚠️ コンポーネントが0個です" },
-              { "type": "dom.setInnerHTML", "target": "{{container}}", "value": "<div style=\"padding: 10px; color: #999;\">コンポーネントがありません</div>" }
-            ], "else": [
-              { "type": "console", "message": "✅ ツリー構築開始" },
-              { "type": "dom.buildTree", "root": "{{dropZone}}", "level": 0, "output": "treeHTML" },
-              { "type": "console", "message": "✅ ツリーHTML生成完了" },
-              { "type": "dom.setInnerHTML", "target": "{{container}}", "value": "{{treeHTML}}" },
-              { "type": "console", "message": "✅ 構造ツリー更新完了" }
-            ]}
-          ]}
+          {
+            "type": "dom.select",
+            "selector": "#structure-tree",
+            "output": "container"
+          },
+          {
+            "type": "dom.select",
+            "selector": "#drop-zone",
+            "output": "dropZone"
+          },
+          {
+            "type": "if",
+            "condition": "!{{container}}",
+            "then": [
+              {
+                "type": "console",
+                "message": "❌ structure-tree要素が見つかりません"
+              }
+            ]
+          },
+          {
+            "type": "if",
+            "condition": "!{{dropZone}}",
+            "then": [
+              {
+                "type": "dom.setInnerHTML",
+                "target": "{{container}}",
+                "value": "<div style=\"padding: 10px; color: #999;\">キャンバスが見つかりません</div>"
+              }
+            ],
+            "else": [
+              {
+                "type": "dom.selectAll",
+                "selector": "#drop-zone .canvas-component",
+                "output": "components"
+              },
+              {
+                "type": "array.length",
+                "array": "{{components}}",
+                "output": "componentCount"
+              },
+              {
+                "type": "console",
+                "message": "🔍 コンポーネント数: {{componentCount}}"
+              },
+              {
+                "type": "if",
+                "condition": {
+                  "eq": [
+                    "{{componentCount}}",
+                    0
+                  ]
+                },
+                "then": [
+                  {
+                    "type": "console",
+                    "message": "⚠️ コンポーネントが0個です"
+                  },
+                  {
+                    "type": "dom.setInnerHTML",
+                    "target": "{{container}}",
+                    "value": "<div style=\"padding: 10px; color: #999;\">コンポーネントがありません</div>"
+                  }
+                ],
+                "else": [
+                  {
+                    "type": "console",
+                    "message": "✅ ツリー構築開始"
+                  },
+                  {
+                    "type": "dom.buildTree",
+                    "root": "{{dropZone}}",
+                    "level": 0,
+                    "output": "treeHTML"
+                  },
+                  {
+                    "type": "console",
+                    "message": "✅ ツリーHTML生成完了"
+                  },
+                  {
+                    "type": "dom.setInnerHTML",
+                    "target": "{{container}}",
+                    "value": "{{treeHTML}}"
+                  },
+                  {
+                    "type": "console",
+                    "message": "✅ 構造ツリー更新完了"
+                  }
+                ]
+              }
+            ]
+          }
         ]
       },
       "handleDragStart": {
         "type": "sequence",
         "steps": [
-          { "type": "util.getAttribute", "target": "{{event.currentTarget}}", "name": "data-component-type", "output": "componentType" },
-          { "type": "util.getAttribute", "target": "{{event.currentTarget}}", "name": "data-component", "output": "componentJSON" },
-          { "type": "util.parseJSON", "json": "{{componentJSON}}", "output": "componentData" },
-          { "type": "setState", "key": "draggedComponentType", "value": "{{componentType}}" },
-          { "type": "setState", "key": "draggedComponentData", "value": "{{componentData}}" },
-          { "type": "object.set", "object": {}, "key": "type", "value": "{{draggedComponentType}}", "storeIn": "draggedComponent" },
-          { "type": "object.set", "object": "{{draggedComponent}}", "key": "data", "value": "{{draggedComponentData}}", "storeIn": "draggedComponent" },
-          { "type": "drag.setData", "data": "{{draggedComponent}}", "effectAllowed": "copy" },
-          { "type": "dom.addClass", "target": "{{event.currentTarget}}", "className": "dragging" }
+          {
+            "type": "util.getAttribute",
+            "target": "{{event.currentTarget}}",
+            "name": "data-component-type",
+            "output": "componentType"
+          },
+          {
+            "type": "util.getAttribute",
+            "target": "{{event.currentTarget}}",
+            "name": "data-component",
+            "output": "componentJSON"
+          },
+          {
+            "type": "util.parseJSON",
+            "json": "{{componentJSON}}",
+            "output": "componentData"
+          },
+          {
+            "type": "setState",
+            "key": "draggedComponentType",
+            "value": "{{componentType}}"
+          },
+          {
+            "type": "setState",
+            "key": "draggedComponentData",
+            "value": "{{componentData}}"
+          },
+          {
+            "type": "object.set",
+            "object": {},
+            "key": "type",
+            "value": "{{draggedComponentType}}",
+            "storeIn": "draggedComponent"
+          },
+          {
+            "type": "object.set",
+            "object": "{{draggedComponent}}",
+            "key": "data",
+            "value": "{{draggedComponentData}}",
+            "storeIn": "draggedComponent"
+          },
+          {
+            "type": "object.set",
+            "object": "{{draggedComponent}}",
+            "key": "name",
+            "value": "{{componentData.name}}",
+            "storeIn": "draggedComponent"
+          },
+          {
+            "type": "drag.setData",
+            "data": "{{draggedComponent}}",
+            "effectAllowed": "copy"
+          },
+          {
+            "type": "dom.addClass",
+            "target": "{{event.currentTarget}}",
+            "className": "dragging"
+          }
         ]
       },
       "handleDragEnd": {
         "type": "sequence",
         "steps": [
-          { "type": "dom.removeClass", "target": "{{event.currentTarget}}", "className": "dragging" }
+          {
+            "type": "dom.removeClass",
+            "target": "{{event.currentTarget}}",
+            "className": "dragging"
+          }
         ]
       }
     }

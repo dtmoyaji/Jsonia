@@ -189,14 +189,20 @@ async function dragSetData(action, event) {
     if (event && event.dataTransfer) {
         const dragData = this.resolveValue(action.data);
         event.dataTransfer.effectAllowed = action.effectAllowed || 'copy';
-        event.dataTransfer.setData('application/json', JSON.stringify(dragData));
+        try {
+            const payload = JSON.stringify(dragData);
+            // payload written to dataTransfer
+            event.dataTransfer.setData('application/json', payload);
+        } catch (e) {
+            console.warn('dragSetData: failed to serialize drag data', e, dragData);
+        }
     }
 }
 
 async function dragGetData(action, event) {
     if (event && event.dataTransfer) {
         const dragData = event.dataTransfer.getData('application/json');
-        const parsedData = dragData ? JSON.parse(dragData) : null;
+    const parsedData = dragData ? JSON.parse(dragData) : null;
         if (action.output) this.setState(action.output, parsedData);
         return parsedData;
     }

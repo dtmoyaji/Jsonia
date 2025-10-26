@@ -444,6 +444,11 @@ projects/
 }
 ```
 
+Note: the editor UI styles used by the built-in WYSIWYG editor have been merged into
+`jsonia-editor/components/editor/style.json`. The `css.json` pattern shown above
+is still valid for individual projects (place project-specific styles in
+`projects/<your-project>/css.json`), but `jsonia-editor/css.json` is no longer used.
+
 ### CSS benefits
 
 - 📁 Separation: keep styles separate from content
@@ -500,16 +505,16 @@ Dynamic component (structure + behavior):
 
 | Component | File | Function |
 |-----------|------|----------|
-| Tabs UI | `tabs-with-behavior/component.json` | Tab switching and state management |
-| Accordion | `accordion-with-behavior/component.json` | Open/close control, multiple sections |
-| Dropdown | `dropdown-with-behavior/component.json` | Menu open/close and item selection |
-| Modal | `modal-with-behavior/component.json` | Dialog display with backdrop close |
+| Tabs UI | `tabs/component.json` | Tab switching and state management |
+| Accordion | `accordion/component.json` | Open/close control, multiple sections |
+| Dropdown | `dropdown/component.json` | Menu open/close and item selection |
+| Modal | `modal/component.json` | Dialog display with backdrop close |
 
 Example usage:
 
 ```json
 {
-  "$include": "components/tabs-with-behavior/component.json",
+  "$include": "components/tabs/component.json",
   "defaultTab": "tab1",
   "tabs": [
     { "tag": "button", "text": "Tab 1", "attributes": { "data-tab-button": "tab1" } }
@@ -546,9 +551,9 @@ public/js/
   ↑ core engine + separate action implementations for modularity and easier maintenance
 
 jsonia-editor/
-├── behaviors/editor.json    # behavior definitions
-├── extensions.json          # custom actions
-└── data/components.json     # component data
+├── components/editor/behavior.json    # behavior definitions (moved into editor component)
+├── extensions.json                     # custom actions
+└── data/components.json                # component data
 ```
 
 - Project-specific JavaScript: **0 lines**

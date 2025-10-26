@@ -138,8 +138,6 @@ module.exports = function(app) {
                         if (e.isDirectory()) {
                             walk(full);
                         } else if (e.isFile() && e.name.endsWith('.json')) {
-                            // skip root base component.json
-                            if (path.resolve(full) === path.resolve(path.join(componentsDir, 'component.json'))) continue;
                             found.push(full);
                         }
                     }
@@ -155,6 +153,13 @@ module.exports = function(app) {
                         // カテゴリは componentsDir からの相対パスの最初のディレクトリ名を使う
                         const rel = path.relative(componentsDir, filePath).replace(/\\/g, '/');
                         const parts = rel.split('/');
+                        const baseName = path.basename(rel);
+
+                        // skip meta files that are not components (e.g. style.json, behavior.json)
+                        // These files hold styles or behaviors for a component and should not be listed as standalone shared components.
+                        if (baseName === 'style.json' || baseName === 'behavior.json') {
+                            continue;
+                        }
                         const category = parts.length > 1 ? parts[0] : path.basename(rel, '.json');
 
                         components.push({
@@ -185,38 +190,80 @@ module.exports = function(app) {
             console.log('📡 /editor/api/editor-components APIが呼ばれました');
             try {
                 const componentsDir = path.join(__dirname, '..', 'jsonia-editor', 'components');
-                
+
                 if (!fs.existsSync(componentsDir)) {
                     return res.status(404).json({ 
                         error: 'Editor components directory not found',
                         path: componentsDir 
                     });
                 }
-                
-                const files = fs.readdirSync(componentsDir)
-                    .filter(file => file.endsWith('.json'));
-                
-                const components = [];
-                
-                for (const file of files) {
-                    try {
-                        const filePath = path.join(componentsDir, file);
-                        const content = fs.readFileSync(filePath, 'utf8');
-                        const data = JSON.parse(content);
-                        
-                        components.push({
-                            filename: file,
-                            name: file.replace('.json', ''),
-                            ...data
-                        });
-                        
-                    } catch (err) {
-                        console.warn(`⚠️  Failed to load editor component file: ${file}`, err.message);
+
+                // Recursively walk editor components and prefer per-component folders with component.json
+                const found = [];
+                function walk(dir) {
+                    const entries = fs.readdirSync(dir, { withFileTypes: true });
+                    for (const e of entries) {
+                        const full = path.join(dir, e.name);
+                        if (e.isDirectory()) {
+                            walk(full);
+                        } else if (e.isFile() && e.name.endsWith('.json')) {
+                            found.push(full);
+                        }
                     }
                 }
-                
-                console.log(`✅ Loaded ${components.length} editor component files from /jsonia-editor/components`);
-                
+                walk(componentsDir);
+
+                const components = [];
+                for (const filePath of found) {
+                    try {
+                        const content = fs.readFileSync(filePath, 'utf8');
+                        const data = JSON.parse(content);
+
+                        const rel = path.relative(componentsDir, filePath).replace(/\\/g, '/');
+                        // skip per-component style/behavior files (they are loaded separately)
+                        const baseName = path.basename(rel);
+                        if (baseName === 'style.json' || baseName === 'behavior.json') continue;
+
+                        // determine name: if path is "xxx/component.json" use xxx, else use filename without .json
+                        const parts = rel.split('/');
+                        const name = (parts.length > 1 && parts[parts.length - 1].toLowerCase() === 'component.json') ? parts[0] : path.basename(rel, '.json');
+
+                        // If this is a folder component (component.json), try to load sibling behavior.json and style.json
+                        if (parts.length > 1 && parts[parts.length - 1].toLowerCase() === 'component.json') {
+                            const compDir = path.dirname(filePath);
+                            const behaviorPath = path.join(compDir, 'behavior.json');
+                            const stylePath = path.join(compDir, 'style.json');
+                            try {
+                                if (fs.existsSync(behaviorPath)) {
+                                    const b = fs.readFileSync(behaviorPath, 'utf8');
+                                    data.behavior = JSON.parse(b);
+                                }
+                            } catch (e) {
+                                console.warn(`⚠️ Failed to load behavior.json for ${rel}:`, e.message);
+                            }
+                            try {
+                                if (fs.existsSync(stylePath)) {
+                                    const s = fs.readFileSync(stylePath, 'utf8');
+                                    data.style = JSON.parse(s);
+                                }
+                            } catch (e) {
+                                console.warn(`⚠️ Failed to load style.json for ${rel}:`, e.message);
+                            }
+                        }
+
+                        components.push({
+                            filename: rel,
+                            name,
+                            ...data
+                        });
+
+                    } catch (err) {
+                        console.warn(`⚠️  Failed to load editor component file: ${filePath}`, err.message);
+                    }
+                }
+
+                console.log(`✅ Loaded ${components.length} editor component files from /jsonia-editor/components (recursive)`);
+
                 res.json({
                     success: true,
                     componentsDir,

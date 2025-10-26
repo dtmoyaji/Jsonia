@@ -22,7 +22,8 @@
     "loadBuiltinComponents": { "url": "/editor/data/components.json", "method": "GET" },
     "loadEditorComponents": { "url": "/editor/api/editor-components", "method": "GET" },
     "loadExtensions": { "url": "/editor/extensions.json", "method": "GET" },
-    "loadConfig": { "url": "/editor/config.json", "method": "GET" }
+    "loadConfig": { "url": "/editor/config.json", "method": "GET" },
+    "loadAccordionStyle": { "url": "/editor/components/accordion/style.json", "method": "GET" }
   },
   "initialization": [
     { "type": "api", "name": "loadComponents", "storeIn": "sharedComponentsResponse" },
@@ -34,11 +35,14 @@
     { "type": "api", "name": "loadEditorComponents", "storeIn": "editorComponentsResponse" },
     { "type": "setState", "key": "editorComponents", "value": "{{editorComponentsResponse.components}}" },
     { "type": "registerComponentActions", "components": "{{editorComponents}}" },
+    { "type": "function", "name": "injectEditorComponentsStyles" },
     { "type": "api", "name": "loadExtensions", "storeIn": "extensionsResponse" },
     { "type": "setState", "key": "extensions", "value": "{{extensionsResponse}}" },
     { "type": "registerExtensions" },
     { "type": "api", "name": "loadConfig", "storeIn": "configResponse" },
     { "type": "setState", "key": "config", "value": "{{configResponse}}" },
+    { "type": "api", "name": "loadAccordionStyle", "storeIn": "accordionStyleResponse" },
+    { "type": "function", "name": "injectAccordionStyle" },
     { "type": "function", "name": "renderComponentsList" },
     { "type": "function", "name": "updateStructureTree" }
   ],

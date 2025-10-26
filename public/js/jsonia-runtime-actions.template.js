@@ -54,7 +54,7 @@ async function registerComponentActions(action, event) {
             const componentName = component.name || component.type || 'unknown';
             for (const [actionName, actionDef] of Object.entries(component.behavior.actions)) {
                 this.registerAction(actionName, async (params) => {
-                    console.log(`🎯 コンポーネントアクション実行: ${actionName} (from ${componentName})`);
+                    //console.log(`🎯 コンポーネントアクション実行: ${actionName} (from ${componentName})`);
                     const event = params && params.event;
                     await this.executeAction(actionDef, event);
                 });
@@ -80,12 +80,25 @@ async function dragGetData(action, event) { /* defined in utils file as well; ke
 
 function addHelperMethods(JsoniaRuntimeClass) {
     JsoniaRuntimeClass.prototype.renderComponentFromJSON = function(componentData, childrenToInsert = null) {
+        // componentData resolved for rendering
         if (componentData.extends) {
             const baseComponentName = componentData.extends;
             const baseComponent = this.loadSharedComponent(baseComponentName);
             if (baseComponent && baseComponent.template) {
+                // Clone base template then overlay/merge any specific template keys from componentData
                 const mergedTemplate = JSON.parse(JSON.stringify(baseComponent.template));
+                // Preserve declared component type if present (so e.g. 'button' stays a button)
+                if (componentData.type) mergedTemplate.type = componentData.type;
+                // Merge attributes: component's attributes should override base attributes
                 if (componentData.attributes) mergedTemplate.attributes = { ...mergedTemplate.attributes, ...componentData.attributes };
+                // If the component provides its own template, let it override key parts of the base
+                if (componentData.template) {
+                    if (componentData.template.tag) mergedTemplate.tag = componentData.template.tag;
+                    if (componentData.template.attributes) mergedTemplate.attributes = { ...mergedTemplate.attributes, ...componentData.template.attributes };
+                    if (componentData.template.children) mergedTemplate.children = componentData.template.children;
+                    if (componentData.template.text) mergedTemplate.text = componentData.template.text;
+                }
+                // Special handling for common shortcuts like header/content on components that extend accordion
                 if (componentData.header) {
                     const headerElement = this.findElementByPath(mergedTemplate, '[data-accordion-header]');
                     if (headerElement && componentData.header.text) {
@@ -151,7 +164,36 @@ function addHelperMethods(JsoniaRuntimeClass) {
                 slotElement.appendChild(innerDropZone);
             }
         } else {
-            if (containerTypes.includes(componentType)) console.log('⚠️ スロットが見つかりません。このコンポーネントには子要素を追加できません。', { componentType: componentType, className: element.className });
+            if (containerTypes.includes(componentType)) {
+                // コンテナ系だが slot が見つからない場合、編集用に内部ドロップゾーンを自動追加して
+                // 後続の内部ドロップ(handleInnerDrop)を受け付けられるようにする
+                try {
+                    const innerDropZone = document.createElement('div');
+                    innerDropZone.className = 'inner-drop-zone';
+                    innerDropZone.setAttribute('data-drop-zone', 'true');
+                    innerDropZone.style.minHeight = '30px';
+                    innerDropZone.style.border = '1px dashed rgba(0,0,0,0.08)';
+                    innerDropZone.style.margin = '8px 0';
+                    innerDropZone.addEventListener('dragover', (e) => { e.preventDefault(); e.stopPropagation(); if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy'; innerDropZone.classList.add('drag-over-slot'); });
+                    innerDropZone.addEventListener('dragleave', (e) => { if (!innerDropZone.contains(e.relatedTarget)) innerDropZone.classList.remove('drag-over-slot'); });
+                    innerDropZone.addEventListener('drop', async (e) => {
+                        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+                        try {
+                            innerDropZone.classList.remove('drag-over-slot');
+                            const dropActions = this.getState('innerDropActions');
+                            if (dropActions) {
+                                this.setState('currentDropZone', element);
+                                await this.executeActions(dropActions, e);
+                            }
+                        } catch (err) { console.warn('⚠️ innerDropZone drop handler error', err); }
+                    });
+                    element.appendChild(innerDropZone);
+                } catch (err) {
+                    console.warn('⚠️ 自動 inner-drop-zone の追加に失敗しました', err);
+                }
+            } else {
+                console.log('⚠️ スロットが見つかりません。このコンポーネントには子要素を追加できません。', { componentType: componentType, className: element.className });
+            }
         }
         return element;
     };
@@ -194,7 +236,11 @@ function addHelperMethods(JsoniaRuntimeClass) {
             item.className = 'component-item' + (isShared ? ' shared-component' : '');
             item.draggable = true;
             try { item.setAttribute('data-component-type', component.type || component.tag || 'unknown'); } catch (e) {}
-            try { item.setAttribute('data-component', JSON.stringify(component)); } catch (e) {}
+            try {
+                // component object used to create the draggable item
+                const compJson = JSON.stringify(component);
+                item.setAttribute('data-component', compJson);
+            } catch (e) { console.warn('createComponentItem: failed to set data-component', e); }
 
             const icon = component.icon || iconMap[component.tag] || iconMap.default || '◼️';
             const name = component.name || component.tag || '';

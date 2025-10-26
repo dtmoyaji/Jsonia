@@ -447,6 +447,11 @@ projects/
 }
 ```
 
+注: 内蔵のWYSIWYGエディタ用スタイルは `jsonia-editor/components/editor/style.json` に統合済みです。
+上記の `css.json` パターンはプロジェクト単位のスタイルには引き続き有効で、
+`projects/<your-project>/css.json` にプロジェクト固有のスタイルを置くことができますが、
+`jsonia-editor/css.json` は削除されています。
+
 ### CSSのメリット
 
 - 📁 **分離管理**: スタイルとコンテンツを分離
@@ -503,36 +508,25 @@ Jsoniaの最大の特徴は、**JavaScript一切不要**でReact/Vue的なイン
 
 | コンポーネント | ファイル | 機能 |
 |------------|---------|------|
-| タブUI | `tabs-with-behavior/component.json` | タブ切り替え、状態管理 |
-| アコーディオン | `accordion-with-behavior/component.json` | 開閉制御、複数セクション |
-| ドロップダウン | `dropdown-with-behavior/component.json` | メニュー開閉、項目選択 |
-| モーダル | `modal-with-behavior/component.json` | ダイアログ表示、背景クローズ |
+| タブUI | `tabs/component.json` | タブ切り替え、状態管理 |
+| アコーディオン | `accordion/component.json` | 開閉制御、複数セクション |
+| ドロップダウン | `dropdown/component.json` | メニュー開閉、項目選択 |
+| モーダル | `modal/component.json` | ダイアログ表示、背景クローズ |
 
 **使用例**:
 
 ```json
 {
-  "$include": "components/tabs-with-behavior/component.json",
+  "$include": "components/tabs/component.json",
   "defaultTab": "tab1",
   "tabs": [
-    { "tag": "button", "text": "タブ1", "attributes": { "data-tab-button": "tab1" } }
+    { "tag": "button", "text": "タブ1", "attributes": { "data-tab-button": "tab1", "class": "active" } }
   ],
   "panels": [
     { "tag": "div", "text": "内容1", "attributes": { "data-tab-panel": "tab1" } }
   ]
 }
 ```
-
-### 40+種類のアクションタイプ
-
-**DOM操作**: select, selectAll, createElement, appendChild, setInnerHTML, setAttribute, addClass, removeClass, toggleClass
-
-**データ操作**: array.forEach, array.map, array.filter, object.set, object.get
-
-**文字列**: string.template, string.concat
-
-**フロー制御**: if, sequence
-
 **状態管理**: setState, getState
 
 **通信**: api, emit
@@ -549,9 +543,9 @@ public/js/
   ↑ コアエンジンとアクション実装が分離され、保守性と拡張性が向上
 
 jsonia-editor/
-├── behaviors/editor.json    # 動作定義
-├── extensions.json          # カスタムアクション
-└── data/components.json     # データ定義
+├── components/editor/behavior.json    # 動作定義（エディタコンポーネント内に移動）
+├── extensions.json                     # カスタムアクション
+└── data/components.json                # データ定義
 ```
 
 - プロジェクト固有のJavaScript: **0行**

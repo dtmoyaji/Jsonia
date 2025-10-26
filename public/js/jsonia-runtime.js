@@ -371,8 +371,17 @@ class JsoniaRuntime {
      */
     resolveTemplate(template, params = {}) {
         if (typeof template === 'string') {
-            return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
-                return params[key] ?? this.getState(key) ?? '';
+            // support dotted paths like {{draggedComponent.type}}
+            return template.replace(/\{\{([\w.]+)\}\}/g, (match, path) => {
+                const keys = path.split('.');
+                // try params first
+                let value = params[keys[0]];
+                if (value === undefined) value = this.getState(keys[0]);
+                // resolve nested properties
+                for (let i = 1; i < keys.length; i++) {
+                    if (value && typeof value === 'object') value = value[keys[i]]; else { value = undefined; break; }
+                }
+                return value ?? '';
             });
         }
         if (typeof template === 'object' && template !== null) {
@@ -831,6 +840,36 @@ class JsoniaRuntime {
     }
 
     /**
+     * 共有・組み込みコンポーネント定義を名前で検索して返す。
+     * name は component.name または component.type を想定します。
+     */
+    loadSharedComponent(name) {
+        if (!name) return null;
+        const lists = [ this.getState('componentsData'), this.getState('sharedComponents'), this.getState('editorComponents') ];
+        for (const list of lists) {
+            if (!Array.isArray(list)) continue;
+            for (const comp of list) {
+                if (!comp) continue;
+                if (comp.name === name || comp.type === name) return comp;
+                // Some entries may have filename like "tabs/component.json".
+                // Be conservative when matching by filename to avoid false-positives: prefer exact filename in root or
+                // a component.json whose parent folder matches the requested name.
+                if (comp.filename) {
+                    const parts = comp.filename.replace(/\\/g, '/').split('/');
+                    const base = parts.pop();
+                    const parent = parts.length > 0 ? parts[parts.length - 1] : null;
+                    // Match when the file is exactly '<name>.json' at the root of the components list
+                    if (base === `${name}.json` && parts.length === 0) return comp;
+                    // Match when the file is a 'component.json' located in a folder named after the component
+                    if (base === 'component.json' && parent === name) return comp;
+                }
+            }
+        }
+        // not found
+        return null;
+    }
+
+    /**
      * 動的にイベントを追加
      */
     addEventListener(target, type, actions) {
@@ -859,7 +898,149 @@ class JsoniaRuntime {
     // jsonia-runtime-actions.js で定義され、addJsoniaRuntimeHelpers() で追加されます
 }
 
+// ドロップ位置から最寄りの .sub-drop を解決して state に保存するユーティリティ
+JsoniaRuntime.prototype.resolveDropZone = function(params = {}) {
+    const event = params && params.event;
+    try {
+        // 優先的にクライアント座標を使う
+        function safeRead(ev, prop) {
+            try {
+                return ev && ev[prop];
+            } catch (err) {
+                // proxy event の場合、ネイティブイベントはプロトタイプにあるのでそちらから読む
+                try {
+                    const proto = ev && Object.getPrototypeOf(ev);
+                    return proto ? proto[prop] : undefined;
+                } catch (err2) {
+                    return undefined;
+                }
+            }
+        }
+        const touch = (safeRead(event, 'touches') && safeRead(event, 'touches')[0]) || null;
+        const x = (safeRead(event, 'clientX') || (touch && touch.clientX)) || null;
+        const y = (safeRead(event, 'clientY') || (touch && touch.clientY)) || null;
+        let el = null;
+        if (x !== null && y !== null) {
+            el = document.elementFromPoint(x, y);
+        }
+        // DEBUG: ログ出力して座標と要素を確認
+        try {
+            console.log('🔎 resolveDropZone coords:', { x, y, eventTarget: event && event.target, eventCurrentTarget: event && event.currentTarget });
+            console.log('🔎 elementFromPoint ->', el);
+        } catch (e) { /* ignore logging issues */ }
+        // fallback: event.target (if available) or the delegated currentTarget
+        if (!el && event) {
+            el = event.target || event.currentTarget || null;
+        }
+        const zone = el ? el.closest ? el.closest('.sub-drop') : null : null;
+        // フォールバック：main-drop を使う
+    const finalZone = zone || document.querySelector('#drop-zone .main-drop');
+    try { console.log('🔎 resolved zone ->', finalZone); } catch (e) {}
+        this.setState('dropZone', finalZone);
+        return finalZone;
+    } catch (err) {
+        console.warn('⚠️ resolveDropZone error', err, params);
+        const fallback = document.querySelector('#drop-zone .main-drop');
+        this.setState('dropZone', fallback);
+        return fallback;
+    }
+};
+
 // グローバルに公開
 if (typeof window !== 'undefined') {
     window.JsoniaRuntime = JsoniaRuntime;
+}
+
+// Inject accordion style object (from /editor/components/accordion/style.json)
+JsoniaRuntime.prototype.injectAccordionStyle = function(params = {}) {
+    try {
+        const styleObj = this.getState('accordionStyleResponse');
+        if (!styleObj) return false;
+        function camelToKebab(s) { return s.replace(/[A-Z]/g, function(m){ return '-' + m.toLowerCase(); }); }
+        let css = '';
+        for (const sel in styleObj) {
+            if (!Object.prototype.hasOwnProperty.call(styleObj, sel)) continue;
+            css += `${sel} {\n`;
+            const rules = styleObj[sel] || {};
+            for (const prop in rules) {
+                if (!Object.prototype.hasOwnProperty.call(rules, prop)) continue;
+                const val = rules[prop];
+                const propName = camelToKebab(prop);
+                css += `  ${propName}: ${val};\n`;
+            }
+            css += `}\n`;
+        }
+        const styleEl = document.createElement('style');
+        styleEl.setAttribute('data-injected-by','jsonia-editor');
+        styleEl.textContent = css;
+        document.head.appendChild(styleEl);
+        console.log('✅ accordion style injected (via runtime)');
+        return true;
+    } catch (err) {
+        console.warn('⚠️ injectAccordionStyle failed', err);
+        return false;
+    }
+};
+
+// Inject styles for editor-provided components (editorComponents[].style)
+JsoniaRuntime.prototype.injectEditorComponentsStyles = function(params = {}) {
+    try {
+        const comps = this.getState('editorComponents');
+        if (!Array.isArray(comps) || comps.length === 0) return false;
+        function camelToKebab(s) { return s.replace(/[A-Z]/g, function(m){ return '-' + m.toLowerCase(); }); }
+        comps.forEach(comp => {
+            try {
+                if (!comp || !comp.style || !comp.name) return;
+                const marker = 'jsonia-editor-style:' + comp.name;
+                const already = Array.from(document.querySelectorAll('style[data-injected-by]')).some(s => s.getAttribute('data-injected-by') === marker);
+                if (already) return;
+                let css = '';
+                for (const sel in comp.style) {
+                    if (!Object.prototype.hasOwnProperty.call(comp.style, sel)) continue;
+                    css += `${sel} {\n`;
+                    const rules = comp.style[sel] || {};
+                    for (const prop in rules) {
+                        if (!Object.prototype.hasOwnProperty.call(rules, prop)) continue;
+                        const val = rules[prop];
+                        css += `  ${camelToKebab(prop)}: ${val};\n`;
+                    }
+                    css += `}\n`;
+                }
+                const el = document.createElement('style');
+                el.setAttribute('data-injected-by', marker);
+                el.textContent = css;
+                document.head.appendChild(el);
+                console.log('✅ editor component style injected for', comp.name);
+            } catch (err) { console.warn('⚠️ injectEditorComponentsStyles: failed for', comp && comp.name, err); }
+        });
+        return true;
+    } catch (err) {
+        console.warn('⚠️ injectEditorComponentsStyles failed', err);
+        return false;
+    }
+};
+
+// Auto-bootstrap editor behavior when running inside the editor page.
+// If the DOM contains #drop-zone we assume this is the editor and attempt to fetch
+// the editor behavior definition and initialize the runtime. This replaces the
+// previous external `jsonia-editor-init.js` loader.
+if (typeof window !== 'undefined') {
+    try {
+        // Only auto-init if there's an editor canvas present
+        if (document && document.querySelector && document.querySelector('#drop-zone')) {
+            (async function(){
+                try {
+                    const resp = await fetch('/editor/components/editor/behavior.json');
+                    if (!resp.ok) { console.warn('⚠️ editor.behavior fetch failed', resp.status); return; }
+                    const def = await resp.json();
+                    window.jsoniaRuntime = new JsoniaRuntime();
+                    window.jsoniaRuntime.init(def);
+                } catch (err) {
+                    console.error('❌ auto-init editor failed', err);
+                }
+            })();
+        }
+    } catch (err) {
+        // ignore
+    }
 }

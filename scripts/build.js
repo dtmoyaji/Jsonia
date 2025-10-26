@@ -1,6 +1,21 @@
 const fs = require('fs');
 const path = require('path');
 const JsonToHtml = require('../server/lib/json-to-html');
+const cardBase = require('../components/card/component.json');
+
+function makeCard(src, title, text) {
+    const c = JSON.parse(JSON.stringify(cardBase));
+    try {
+        if (c.template && c.template.children && c.template.children[0] && c.template.children[0].attributes) {
+            c.template.children[0].attributes.src = src;
+        }
+        if (c.template && c.template.children && c.template.children[1] && c.template.children[1].children) {
+            c.template.children[1].children[0].text = title;
+            c.template.children[1].children[1].text = text;
+        }
+    } catch (e) {}
+    return c;
+}
 
 /**
  * ビルドスクリプト - 静的HTMLファイルの生成
@@ -200,42 +215,14 @@ const pages = {
                         attributes: { class: 'demo-item' },
                         children: [
                             { tag: 'h2', text: 'カード例' },
-                            {
-                                tag: 'div',
-                                attributes: { class: 'cards' },
-                                children: [
                                     {
                                         tag: 'div',
-                                        attributes: { class: 'card' },
+                                        attributes: { class: 'cards' },
                                         children: [
-                                            { tag: 'img', attributes: { src: 'https://via.placeholder.com/300x200?text=Card+1', alt: 'Card 1' } },
-                                            {
-                                                tag: 'div',
-                                                attributes: { class: 'card-body' },
-                                                children: [
-                                                    { tag: 'h3', text: 'サンプルカード1' },
-                                                    { tag: 'p', text: 'JSONから生成されたカードコンポーネント' }
-                                                ]
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        tag: 'div',
-                                        attributes: { class: 'card' },
-                                        children: [
-                                            { tag: 'img', attributes: { src: 'https://via.placeholder.com/300x200?text=Card+2', alt: 'Card 2' } },
-                                            {
-                                                tag: 'div',
-                                                attributes: { class: 'card-body' },
-                                                children: [
-                                                    { tag: 'h3', text: 'サンプルカード2' },
-                                                    { tag: 'p', text: '再利用可能なコンポーネント設計' }
-                                                ]
-                                            }
+                                            makeCard('https://via.placeholder.com/300x200?text=Card+1', 'サンプルカード1', 'JSONから生成されたカードコンポーネント'),
+                                            makeCard('https://via.placeholder.com/300x200?text=Card+2', 'サンプルカード2', '再利用可能なコンポーネント設計')
                                         ]
                                     }
-                                ]
-                            }
                         ]
                     }
                 ]

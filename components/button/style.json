@@ -1,5 +1,64 @@
 {
-  "styles": {
-    "inline": "background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 16px;"
+  ".btn": {
+    "background": "#3498db",
+    "color": "white",
+    "border": "none",
+    "padding": "8px 16px",
+    "borderRadius": "4px",
+    "cursor": "pointer",
+    "fontSize": "14px",
+    "transition": "background 0.2s"
+  },
+  ".btn:hover": {
+    "background": "#2980b9"
+  },
+  ".btn-success": {
+    "background": "#27ae60"
+  },
+  ".btn-success:hover": {
+    "background": "#229954"
+  },
+  ".btn-warning": {
+    "background": "#f39c12"
+  },
+  ".btn-warning:hover": {
+    "background": "#e67e22"
+  },
+  ".btn-danger": {
+    "background": "#e74c3c"
+  },
+  ".btn-danger:hover": {
+    "background": "#c0392b"
+  },
+  ".btn-sm": {
+    "padding": "4px 8px",
+    "fontSize": "12px",
+    "border": "none",
+    "background": "#ecf0f1",
+    "borderRadius": "3px",
+    "cursor": "pointer"
+  },
+  ".btn-sm:hover": {
+    "background": "#bdc3c7"
+  },
+  ".btn-sm.btn-danger": {
+    "background": "#e74c3c",
+    "color": "white"
+  },
+  ".btn-sm.btn-danger:hover": {
+    "background": "#c0392b"
+  },
+  ".btn-close": {
+    "background": "transparent",
+    "border": "none",
+    "fontSize": "24px",
+    "cursor": "pointer",
+    "color": "#7f8c8d",
+    "padding": "0",
+    "width": "30px",
+    "height": "30px"
+  },
+  ".btn-close:hover": {
+    "color": "#2c3e50"
   }
 }

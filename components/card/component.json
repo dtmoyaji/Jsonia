@@ -9,8 +9,7 @@
   "template": {
     "tag": "div",
     "attributes": {
-      "class": "card",
-      "style": "border: 1px solid #dee2e6; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 300px;"
+      "class": "card"
     },
     "children": [
       {
@@ -18,36 +17,35 @@
         "attributes": {
           "src": "https://via.placeholder.com/300x150?text=Card+Image",
           "alt": "カード画像",
-          "style": "width: 100%; height: 150px; object-fit: cover;"
+          "class": "card-image"
         }
       },
       {
         "tag": "div",
         "attributes": {
           "data-slot": "children",
-          "style": "padding: 16px;"
+          "class": "card-body"
         },
         "children": [
           {
             "tag": "h3",
             "text": "カードタイトル",
             "attributes": {
-              "style": "margin: 0 0 8px 0; color: #333;"
+              "class": "card-title"
             }
           },
           {
             "tag": "p",
             "text": "カードの説明文です。ここに詳細な内容を記述します。",
             "attributes": {
-              "style": "margin: 0 0 12px 0; color: #666; line-height: 1.5;"
+              "class": "card-text"
             }
           },
           {
             "tag": "button",
             "text": "詳細を見る",
             "attributes": {
-              "class": "btn",
-              "style": "background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 14px;"
+              "class": "btn card-btn"
             }
           }
         ]

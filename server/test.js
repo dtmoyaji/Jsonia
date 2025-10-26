@@ -1,4 +1,24 @@
 const JsonToHtml = require('./lib/json-to-html');
+const cardBase = require('../components/card/component.json');
+
+function makeCard(src, title, text, btnClass = 'btn btn-outline') {
+    const c = JSON.parse(JSON.stringify(cardBase));
+    try {
+        if (c.template && c.template.children && c.template.children[0] && c.template.children[0].attributes) {
+            c.template.children[0].attributes.src = src;
+        }
+        if (c.template && c.template.children && c.template.children[1] && c.template.children[1].children) {
+            c.template.children[1].children[0].text = title;
+            c.template.children[1].children[1].text = text;
+            if (c.template.children[1].children[2] && c.template.children[1].children[2].attributes) {
+                c.template.children[1].children[2].attributes.class = btnClass;
+            }
+        }
+    } catch (e) {
+        // fallback: leave base unchanged
+    }
+    return c;
+}
 
 // サンプルJSON設定
 const sampleConfigs = {
@@ -120,72 +140,10 @@ const sampleConfigs = {
         ]
     },
 
-    // カード式レイアウト例
+    // カード式レイアウト例 — components/card に集約
     cards: [
-        {
-            tag: 'div',
-            attributes: { class: 'card' },
-            children: [
-                {
-                    tag: 'img',
-                    attributes: {
-                        src: 'https://via.placeholder.com/300x200',
-                        alt: 'サンプル画像1'
-                    }
-                },
-                {
-                    tag: 'div',
-                    attributes: { class: 'card-body' },
-                    children: [
-                        {
-                            tag: 'h3',
-                            text: 'カードタイトル1'
-                        },
-                        {
-                            tag: 'p',
-                            text: 'カードの説明文です。JSONから生成されたカードコンポーネント。'
-                        },
-                        {
-                            tag: 'button',
-                            text: '詳細を見る',
-                            attributes: { class: 'btn btn-outline' }
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            tag: 'div',
-            attributes: { class: 'card' },
-            children: [
-                {
-                    tag: 'img',
-                    attributes: {
-                        src: 'https://via.placeholder.com/300x200',
-                        alt: 'サンプル画像2'
-                    }
-                },
-                {
-                    tag: 'div',
-                    attributes: { class: 'card-body' },
-                    children: [
-                        {
-                            tag: 'h3',
-                            text: 'カードタイトル2'
-                        },
-                        {
-                            tag: 'p',
-                            text: '別のカードの説明文です。同じ構造で異なる内容。'
-                        },
-                        {
-                            tag: 'button',
-                            text: '詳細を見る',
-                            attributes: { class: 'btn btn-outline' }
-                        }
-                    ]
-                }
-            ]
-        }
+        makeCard('https://via.placeholder.com/300x200', 'カードタイトル1', 'カードの説明文です。JSONから生成されたカードコンポーネント。', 'btn btn-outline'),
+        makeCard('https://via.placeholder.com/300x200', 'カードタイトル2', '別のカードの説明文です。同じ構造で異なる内容。', 'btn btn-outline')
     ]
 };
 
