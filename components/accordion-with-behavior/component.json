@@ -1,0 +1,60 @@
+{
+  "extends": "component",
+  "icon": "📂",
+  "name": "アコーディオン",
+  "tag": "div",
+  "type": "container",
+  "category": "interactive",
+  "description": "開閉可能なアコーディオンコンポーネント",
+  "template": {
+    "tag": "div",
+    "attributes": { 
+      "class": "accordion"
+    },
+    "children": [
+      {
+        "tag": "div",
+        "attributes": {
+          "class": "accordion-item"
+        },
+        "children": [
+          {
+            "tag": "div",
+            "attributes": {
+              "class": "accordion-header expanded",
+              "data-accordion-header": "true",
+              "data-accordion-id": "section-1"
+            },
+            "children": [
+              {
+                "tag": "span",
+                "attributes": {
+                  "class": "accordion-icon"
+                },
+                "text": "▼"
+              },
+              {
+                "tag": "span",
+                "text": "セクション 1"
+              }
+            ]
+          },
+          {
+            "tag": "div",
+            "attributes": {
+              "class": "accordion-content",
+              "data-accordion-content": "section-1",
+              "data-slot": "children"
+            },
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  "defaultAttributes": {
+    "class": "accordion"
+  },
+  "behaviorFile": "behavior.json",
+  "styleFile": "style.json"
+}

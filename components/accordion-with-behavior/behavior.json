@@ -1,0 +1,242 @@
+{
+  "methods": {
+    "addChild": {
+      "description": "アコーディオンのコンテンツに子要素を追加（data-accordion-content属性で検索）",
+      "params": [
+        "accordionId",
+        "childElement"
+      ],
+      "steps": [
+        {
+          "type": "dom.select",
+          "selector": "[data-accordion-content=\"{{accordionId}}\"]",
+          "output": "content"
+        },
+        {
+          "type": "if",
+          "condition": "{{content}}",
+          "then": [
+            {
+              "type": "dom.appendChild",
+              "parent": "{{content}}",
+              "child": "{{childElement}}"
+            },
+            {
+              "type": "dom.removeInnerDropZone",
+              "parent": "{{content}}"
+            }
+          ]
+        }
+      ]
+    },
+    "removeChild": {
+      "description": "アコーディオンのコンテンツから子要素を削除（data-accordion-content属性で検索）",
+      "params": [
+        "accordionId",
+        "childElement"
+      ],
+      "steps": [
+        {
+          "type": "dom.select",
+          "selector": "[data-accordion-content=\"{{accordionId}}\"]",
+          "output": "content"
+        },
+        {
+          "type": "if",
+          "condition": "{{content}}",
+          "then": [
+            {
+              "type": "dom.removeChild",
+              "parent": "{{content}}",
+              "child": "{{childElement}}"
+            }
+          ]
+        }
+      ]
+    },
+    "clearChildren": {
+      "description": "アコーディオンのコンテンツをクリア（data-accordion-content属性で検索）",
+      "params": [
+        "accordionId"
+      ],
+      "steps": [
+        {
+          "type": "dom.select",
+          "selector": "[data-accordion-content=\"{{accordionId}}\"]",
+          "output": "content"
+        },
+        {
+          "type": "if",
+          "condition": "{{content}}",
+          "then": [
+            {
+              "type": "dom.setInnerHTML",
+              "target": "{{content}}",
+              "value": ""
+            }
+          ]
+        }
+      ]
+    },
+    "setChildren": {
+      "description": "アコーディオンのコンテンツを一括設定（data-accordion-content属性で検索）",
+      "params": [
+        "accordionId",
+        "children"
+      ],
+      "steps": [
+        {
+          "type": "dom.select",
+          "selector": "[data-accordion-content=\"{{accordionId}}\"]",
+          "output": "content"
+        },
+        {
+          "type": "if",
+          "condition": "{{content}}",
+          "then": [
+            {
+              "type": "dom.setInnerHTML",
+              "target": "{{content}}",
+              "value": ""
+            },
+            {
+              "type": "array.forEach",
+              "array": "{{children}}",
+              "item": "child",
+              "do": [
+                {
+                  "type": "dom.appendChild",
+                  "parent": "{{content}}",
+                  "child": "{{child}}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "actions": {
+    "toggleAccordion": {
+      "type": "sequence",
+      "steps": [
+        {
+          "type": "util.getAttribute",
+          "target": "{{event.currentTarget}}",
+          "name": "data-accordion-id",
+          "output": "accordionId"
+        },
+        {
+          "type": "console",
+          "message": "🔔 accordion.toggleAccordion start: {{accordionId}}"
+        },
+        {
+          "type": "dom.select",
+          "selector": "[data-accordion-content='{{accordionId}}']",
+          "output": "content"
+        },
+        {
+          "type": "util.getAttribute",
+          "target": "{{content}}",
+          "name": "style",
+          "output": "contentStyle"
+        },
+        {
+          "type": "util.getAttribute",
+          "target": "{{content}}",
+          "name": "class",
+          "output": "contentClass"
+        },
+        {
+          "type": "util.closest",
+          "target": "{{content}}",
+          "selector": "#drop-zone",
+          "output": "inDropZone"
+        },
+        {
+          "type": "console",
+          "message": "DEBUG contentStyle={{contentStyle}} contentClass={{contentClass}} inDropZone={{inDropZone}}"
+        },
+        {
+          "type": "util.querySelector",
+          "parent": "{{event.currentTarget}}",
+          "selector": ".accordion-icon",
+          "output": "icon"
+        },
+        {
+          "type": "if",
+          "condition": "{{content}}",
+          "then": [
+            {
+              "type": "dom.toggleClass",
+              "target": "{{content}}",
+              "className": "collapsed"
+            },
+            {
+              "type": "dom.toggleClass",
+              "target": "{{event.currentTarget}}",
+              "className": "expanded"
+            },
+            {
+              "type": "dom.setAttribute",
+              "target": "{{content}}",
+              "name": "style",
+              "value": ""
+            },
+            {
+              "type": "if",
+              "condition": "{{icon}}",
+              "then": [
+                {
+                  "type": "if",
+                  "condition": "{{event.currentTarget.classList.contains('expanded')}}",
+                  "then": [
+                    {
+                      "type": "dom.removeClass",
+                      "target": "{{icon}}",
+                      "className": "rotated"
+                    }
+                  ],
+                  "else": [
+                    {
+                      "type": "dom.addClass",
+                      "target": "{{icon}}",
+                      "className": "rotated"
+                    }
+                  ]
+                },
+                {
+                  "type": "dom.setAttribute",
+                  "target": "{{icon}}",
+                  "name": "style",
+                  "value": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "util.getAttribute",
+          "target": "{{content}}",
+          "name": "class",
+          "output": "newContentClass"
+        },
+        {
+          "type": "console",
+          "message": "DEBUG newContentClass={{newContentClass}}"
+        },
+        {
+          "type": "console",
+          "message": "🔔 accordion.toggleAccordion end: {{accordionId}}"
+        }
+      ]
+    }
+  },
+  "events": [
+    {
+      "target": "[data-accordion-header]",
+      "type": "click",
+      "action": "toggleAccordion"
+    }
+  ]
+}

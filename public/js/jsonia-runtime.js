@@ -474,27 +474,88 @@ class JsoniaRuntime {
      * イベントの初期化
      */
     initEvents(eventsDefinition) {
+        // Prevent adding delegated listeners multiple times (initEvents may be called again)
+        if (this.__jsoniaDelegationListenersAdded) {
+            this.events = eventsDefinition;
+            return;
+        }
         this.events = eventsDefinition;
 
+        // Use event delegation so dynamically rendered elements (e.g. components
+        // added after initialization) still respond to registered events.
         for (const event of this.events) {
-            const elements = document.querySelectorAll(event.target);
-            
-            elements.forEach(element => {
-                element.addEventListener(event.type, (e) => {
-                    // dragoverとdropイベントではデフォルト動作を防止
+            // Attach a delegated listener at document level
+            document.addEventListener(event.type, (e) => {
+                try {
+                    // For dragover and drop, always prevent default to allow drop handling
                     if (event.type === 'dragover' || event.type === 'drop') {
                         e.preventDefault();
                     }
-                    // デバッグログ: dragover, dragstart, dragend 以外のみ表示
+
+                    // Find the nearest ancestor (including the event target itself)
+                    // that matches the configured selector. If none, ignore.
+                    const matched = e.target.closest ? e.target.closest(event.target) : null;
+                    if (!matched) return;
+
+                    // Debug log for non-frequent events
                     if (!['dragover', 'dragstart', 'dragend'].includes(event.type)) {
-                        console.log(`⚡ Event: ${event.type} on ${event.target}`);
+                        console.log(`⚡ Delegated Event: ${event.type} on ${event.target}`);
                     }
-                    this.executeActions(event.actions, e);
-                });
+
+                    // Provide the matched element as the event.currentTarget by
+                    // creating a proxy event that inherits from the native event
+                    // but overrides currentTarget. This preserves methods like
+                    // preventDefault/stopPropagation while ensuring action
+                    // definitions that reference {{event.currentTarget}} work.
+                    const proxyEvent = Object.create(e);
+                    try {
+                        Object.defineProperty(proxyEvent, 'currentTarget', {
+                            value: matched,
+                            writable: false,
+                            enumerable: true,
+                            configurable: true
+                        });
+                    } catch (err) {
+                        // Fallback: assign directly if defineProperty fails in some envs
+                        proxyEvent.currentTarget = matched;
+                    }
+
+                    // Support both legacy single "action" (string) and new "actions" (array)
+                    try {
+                        if (event.actions && Array.isArray(event.actions)) {
+                            this.executeActions(event.actions, proxyEvent);
+                        } else if (event.action) {
+                            // If a single action name is provided, call it as a registered function on the runtime
+                            // Build a small action wrapper that invokes the named function
+                            const namedAction = { type: 'function', name: event.action };
+                            this.executeActions([namedAction], proxyEvent);
+                        } else {
+                            // Nothing to run
+                        }
+
+                        // Mark the native event as handled by Jsonia to avoid duplicate handlers
+                        try {
+                            // prefer to set on the proxyEvent first (if consumer checks there)
+                            proxyEvent.__jsoniaHandled = true;
+                            // also set on the original native event for compatibility with other handlers
+                            e.__jsoniaHandled = true;
+                        } catch (flagErr) {
+                            // ignore
+                        }
+                    } catch (err) {
+                        console.error('❌ Error executing delegated event actions:', err);
+                    }
+                } catch (err) {
+                    console.error('❌ Delegated event handler error:', err);
+                }
             });
         }
 
         // console.log('⚡ Events登録:', this.events.length);
+        // Expose a flag so that external fallback handlers can detect that
+        // delegated event handling is active and avoid attaching duplicate handlers.
+        try { if (typeof window !== 'undefined') window.__jsoniaDelegationActive = true; } catch (e) {}
+        this.__jsoniaDelegationListenersAdded = true;
     }
 
     /**
@@ -636,7 +697,17 @@ class JsoniaRuntime {
                         const errorEl = document.querySelector(action.errorTarget);
                         if (errorEl) {
                             errorEl.textContent = result.errors.join(', ');
-                            errorEl.style.display = result.valid ? 'none' : 'block';
+                            // Prefer class-based visibility control so CSS can manage transitions
+                            try {
+                                if (result.valid) {
+                                    errorEl.classList.add('hidden');
+                                } else {
+                                    errorEl.classList.remove('hidden');
+                                }
+                            } catch (err) {
+                                // Fallback for environments without classList
+                                errorEl.style.display = result.valid ? 'none' : 'block';
+                            }
                         }
                     }
                 }

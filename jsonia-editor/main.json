@@ -7,6 +7,9 @@
   "styles": [
     {
       "$include": "css.json"
+    },
+    {
+      "$include": "components/accordion-with-behavior/style.json"
     }
   ],
   "body": [
@@ -26,9 +29,12 @@
   ],
   "scripts": [
     "/js/jsonia-runtime.js",
-    "/js/jsonia-runtime-actions.js",
+    "/js/jsonia-runtime-actions.dom.js",
+    "/js/jsonia-runtime-actions.utils.js",
+    "/js/jsonia-runtime-actions.template.js",
+    "/js/jsonia-runtime-actions.core.js",
     {
-      "content": "console.log('🔄 behaviors/editor.jsonを読み込み中...'); fetch('/editor/behaviors/editor.json').then(r => { console.log('📡 Fetch完了:', r.status); return r.json(); }).then(behaviorDef => { console.log('✅ JSON解析完了:', behaviorDef); window.jsoniaRuntime = new JsoniaRuntime(); window.jsoniaRuntime.init(behaviorDef); console.log('✅ JsoniaRuntime初期化完了 - 完全JSON駆動エディタ 🎉'); }).catch(err => console.error('❌ 読み込みエラー:', err));"
+      "content": "console.log('🔄 behaviors/editor.jsonを読み込み中...');\nfetch('/editor/behaviors/editor.json').then(r => { console.log('📡 Fetch完了:', r.status); return r.json(); }).then(behaviorDef => {\n    console.log('✅ JSON解析完了:', behaviorDef);\n    window.jsoniaRuntime = new JsoniaRuntime();\n    window.jsoniaRuntime.init(behaviorDef);\n    console.log('✅ JsoniaRuntime初期化完了 - 完全JSON駆動エディタ 🎉');\n\n    // クライアント側でアコーディオンの style.json を動的に読み込み、head に注入する\n    fetch('/editor/components/accordion-with-behavior/style.json')\n      .then(r => { if (!r.ok) throw new Error('Style fetch failed ' + r.status); return r.json(); })\n      .then(styleObj => {\n        function camelToKebab(s) { return s.replace(/[A-Z]/g, m => '-' + m.toLowerCase()); }\n        let css = '';\n        for (const sel in styleObj) {\n          css += sel + ' {\\n';\n          const rules = styleObj[sel];\n          for (const prop in rules) {\n            const val = rules[prop];\n            const propName = camelToKebab(prop);\n            css += '  ' + propName + ': ' + val + ';\\n';\n          }\n          css += '}\\n';\n        }\n        const styleEl = document.createElement('style');\n        styleEl.setAttribute('data-injected-by','jsonia-editor');\n        styleEl.textContent = css;\n        document.head.appendChild(styleEl);\n        console.log('✅ accordion style injected');\n\n        // Fallback: attach native click handlers to headers to call the runtime action directly\n        function attachAccordionFallback() {\n          try {\n            // If Jsonia runtime delegates events globally, skip attaching per-element fallbacks\n            if (window.__jsoniaDelegationActive) {\n              console.log('⏭️ delegation active, skipping accordion fallbacks');\n              return;\n            }\n            document.querySelectorAll('[data-accordion-header]').forEach(h => {\n              if (h.__accordionFallbackAttached) return;\n              h.addEventListener('click', (e) => {\n                try {\n                  // Skip fallback when the runtime's delegated handler already processed this event\n                  if (e && e.__jsoniaHandled) return;\n                  if (window.jsoniaRuntime && typeof window.jsoniaRuntime.toggleAccordion === 'function') {\n                    window.jsoniaRuntime.toggleAccordion({ event: e });\n                  }\n                } catch (err) {\n                  console.error('⚠️ accordion fallback handler error', err);\n                }\n              });\n              h.__accordionFallbackAttached = true;\n            });\n          } catch (err) {\n            console.warn('⚠️ attachAccordionFallback failed', err);\n          }\n        }\n        attachAccordionFallback();\n        const mo = new MutationObserver(() => attachAccordionFallback());\n        mo.observe(document.body, { childList: true, subtree: true });\n      })\n      .catch(err => { console.warn('⚠️ accordion style load failed', err); });\n\n}).catch(err => console.error('❌ 読み込みエラー:', err));"
     }
   ]
 }

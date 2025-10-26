@@ -1,0 +1,5 @@
+{
+  "styles": {
+    "inline": "background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 16px;"
+  }
+}

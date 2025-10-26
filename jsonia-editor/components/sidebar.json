@@ -82,42 +82,31 @@
             "then": [
               { "type": "console", "message": "🔍 トグル実行" },
               {
-                "type": "dom.toggleClass",
-                "target": "{{content}}",
-                "className": "collapsed"
-              },
-              {
-                "type": "dom.toggleClass",
-                "target": "{{event.currentTarget}}",
-                "className": "expanded"
-              },
-              {
-                "type": "if",
-                "condition": "{{icon}}",
-                "then": [
-                  {
-                    "type": "if",
-                    "condition": "{{content.classList.contains('collapsed')}}",
-                    "then": [
-                      { "type": "console", "message": "📥 状態: 縮小" },
-                      {
-                        "type": "dom.setAttribute",
-                        "target": "{{icon}}",
-                        "name": "style",
-                        "value": "transform: rotate(-90deg); transition: transform 0.3s ease;"
-                      }
-                    ],
-                    "else": [
-                      { "type": "console", "message": "📤 状態: 展開" },
-                      {
-                        "type": "dom.setAttribute",
-                        "target": "{{icon}}",
-                        "name": "style",
-                        "value": "transform: rotate(0deg); transition: transform 0.3s ease;"
-                      }
-                    ]
-                  }
+                "type": "sequence",
+                "steps": [
+                  { "type": "console", "message": "� トグル実行" },
+                  { "type": "dom.toggleClass", "target": "[data-accordion-content='{{accordionId}}']", "className": "collapsed" },
+                  { "type": "dom.toggleClass", "target": "[data-accordion-id='{{accordionId}}']", "className": "expanded" },
+                  { "type": "dom.toggleClass", "target": "[data-accordion-id='{{accordionId}}'] .accordion-icon", "className": "rotated" }
                 ]
+              }
+            ]
+          },
+          {
+            "type": "util.closest",
+            "target": "[data-accordion-content='{{accordionId}}']",
+            "selector": "#drop-zone",
+            "output": "inDropZone"
+          },
+          {
+            "type": "if",
+            "condition": "!{{inDropZone}}",
+            "then": [
+              {
+                "type": "dom.setAttribute",
+                "target": "[data-accordion-content='{{accordionId}}']",
+                "name": "style",
+                "value": ""
               }
             ]
           },
@@ -203,13 +192,13 @@
           { "type": "object.set", "object": {}, "key": "type", "value": "{{draggedComponentType}}", "storeIn": "draggedComponent" },
           { "type": "object.set", "object": "{{draggedComponent}}", "key": "data", "value": "{{draggedComponentData}}", "storeIn": "draggedComponent" },
           { "type": "drag.setData", "data": "{{draggedComponent}}", "effectAllowed": "copy" },
-          { "type": "dom.setAttribute", "target": "{{event.currentTarget}}", "name": "style", "value": "opacity: 0.5;" }
+          { "type": "dom.addClass", "target": "{{event.currentTarget}}", "className": "dragging" }
         ]
       },
       "handleDragEnd": {
         "type": "sequence",
         "steps": [
-          { "type": "dom.setAttribute", "target": "{{event.currentTarget}}", "name": "style", "value": "opacity: 1;" }
+          { "type": "dom.removeClass", "target": "{{event.currentTarget}}", "className": "dragging" }
         ]
       }
     }

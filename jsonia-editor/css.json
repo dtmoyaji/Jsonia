@@ -104,55 +104,7 @@
         "display": "flex",
         "flexDirection": "column"
     },
-    ".accordion-section": {
-        "borderBottom": "1px solid #e0e0e0"
-    },
-    ".accordion-header": {
-        "padding": "12px 15px",
-        "background": "#f8f9fa",
-        "cursor": "pointer",
-        "display": "flex",
-        "alignItems": "center",
-        "gap": "8px",
-        "fontWeight": "600",
-        "fontSize": "14px",
-        "color": "#2c3e50",
-        "transition": "background 0.2s",
-        "userSelect": "none"
-    },
-    ".accordion-header:hover": {
-        "background": "#e9ecef"
-    },
-    ".accordion-header.expanded": {
-        "background": "#34495e",
-        "color": "white"
-    },
-    ".accordion-icon": {
-        "fontSize": "10px",
-        "transition": "transform 0.2s",
-        "display": "inline-block"
-    },
-    ".accordion-header:not(.expanded) .accordion-icon": {
-        "transform": "rotate(-90deg)"
-    },
-    ".accordion-content": {
-        "maxHeight": "400px",
-        "overflowY": "auto",
-        "transition": "max-height 0.3s ease, opacity 0.3s ease",
-        "opacity": "1",
-        "padding": "16px"
-    },
-    ".accordion-content.collapsed": {
-        "maxHeight": "0",
-        "opacity": "0",
-        "overflow": "hidden"
-    },
-    "#drop-zone .accordion-content.collapsed": {
-        "maxHeight": "none",
-        "opacity": "1",
-        "display": "block",
-        "minHeight": "60px"
-    },
+    
     ".structure-tree": {
         "padding": "10px"
     },
@@ -451,6 +403,10 @@
         "cursor": "grabbing",
         "transform": "scale(0.98)",
         "opacity": "0.7"
+    },
+    ".component-item.dragging": {
+        "opacity": "0.5",
+        "cursor": "grabbing"
     },
     ".component-category": {
         "marginBottom": "15px"
