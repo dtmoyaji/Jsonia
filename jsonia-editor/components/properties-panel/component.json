@@ -1,6 +1,7 @@
 {
   "extends": "component",
   "name": "properties-panel",
+  "styleFile": "style.json",
   "template": {
     "tag": "aside",
     "attributes": { "class": "properties-panel", "data-panel": "structure" },

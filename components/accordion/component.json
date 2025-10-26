@@ -8,7 +8,7 @@
   "description": "開閉可能なアコーディオンコンポーネント",
   "template": {
     "tag": "div",
-    "attributes": { 
+    "attributes": {
       "class": "accordion"
     },
     "children": [

@@ -1,6 +1,7 @@
 {
   "extends": "component",
   "name": "behavior-panel",
+  "styleFile": "style.json",
   "template": {
     "tag": "aside",
     "attributes": { "class": "behavior-panel", "data-panel": "behavior", "style": "display: none;" },

@@ -143,4 +143,7 @@
       }
     ]
   }
+
+  ,
+  "styleFile": "style.json"
 }

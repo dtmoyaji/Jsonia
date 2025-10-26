@@ -1,6 +1,7 @@
 {
   "extends": "component",
   "name": "sidebar",
+  "styleFile": "style.json",
   "template": {
     "tag": "aside",
     "attributes": {

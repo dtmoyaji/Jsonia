@@ -2,6 +2,7 @@
   "extends": "component",
   "icon": "📋",
   "name": "フォーム",
+  "styleFile": "style.json",
   "tag": "form",
   "type": "container",
   "category": "form",
