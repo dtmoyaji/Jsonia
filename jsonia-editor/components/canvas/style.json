@@ -54,17 +54,14 @@
     "minHeight": "80px"
   },
   ".drop-zone .sub-drop.modal-drop": {
-    "position": "absolute",
-    "right": "20px",
-    "top": "20px",
-    "width": "360px",
+    "/* changed */": "modal drop now flows after footer (removed absolute positioning)",
+    "width": "100%",
     "minHeight": "140px",
     "background": "rgba(255,255,255,0.98)",
     "border": "1px dashed rgba(150,150,150,0.6)",
     "boxShadow": "0 8px 24px rgba(0,0,0,0.08)",
     "padding": "12px",
-    "borderRadius": "8px",
-    "zIndex": "20"
+    "borderRadius": "8px"
   }
 
   ,".drop-zone:empty::before": {
