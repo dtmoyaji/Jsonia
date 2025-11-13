@@ -1,24 +1,26 @@
-# Jsonia Components 作成規約
+# Jsonia コンポーネント規約 (簡潔版)
 
-## ディレクトリ構成
-- コントロール（コンポーネント）1つにつき、1つのフォルダを作成する。
-- ルート `components/` および `jsonia-editor/components/` 配下ともに同じ規約を適用する。
+## 目的
+コンポーネント構造を統一して可読性・保守性を高めるための最小限の規約です。`components/` と `jsonia-editor/components/` の両方に適用します。
 
-## フォルダ内ファイル
-- `component.json`（必須）: UI構造・属性・slot定義など、コンポーネント本体の定義。
-- `behavior.json`（任意）: イベントやアクション、状態管理などの振る舞い定義。
-- `style.json`（任意）: CSS-in-JS形式でのスタイル定義。
+## 基本ルール（要点）
 
-## 例
+- 1コンポーネント = 1フォルダ。
+- 各コンポーネントは必ず `component.json` を持つ（必須）。
+- `behavior.json` / `style.json` は必要に応じて作成（任意）。
+
+## 推奨ファイル構成（例）
+
 ```
 components/
   button/
     component.json
-    behavior.json   # 省略可
-    style.json      # 省略可
+    behavior.json   # 任意
+    style.json      # 任意
   card/
     component.json
     style.json
+
 jsonia-editor/components/
   sidebar/
     component.json
@@ -28,22 +30,37 @@ jsonia-editor/components/
     component.json
 ```
 
-## 命名・パス規則
-- 各includeや参照は `components/xxx/component.json` のように、必ずサブフォルダ＋ファイル名で指定する。
-- サブフォルダ名はコントロール名（英小文字・ケバブケース推奨）とする。
-- `component.json` 以外は必要な場合のみ作成。
+## 命名と参照ルール
 
-## 注意事項
-- 旧来の `components/xxx.json` 直置きは禁止。
-- ルート/サブディレクトリ問わず、全てこの構成に統一する。
-- 既存プロジェクトも順次この規約にリファクタすること。
+- フォルダ名は英小文字・ケバブケース推奨（例: `primary-button`）。
+- 参照は常にサブフォルダ経由で行う（例: `components/accordion/component.json`）。
+- 既存の `components/xxx.json` の直置きは避け、フォルダ化して移行する。
 
-## 基底ファイルの扱い（2025-10-26追記）
-- `components/component.json`・`behavior.json`・`style.json` は「全てのコンポーネントの基底」として必ず残すこと。
-    - これらはスタブ化・空ファイル化してはならない。
-    - 共通のテンプレート・メソッド・スタイルを定義し、各コンポーネントはこれを継承・参照する。
-- 各コンポーネントは必ず自身のフォルダ内に `component.json` を持つこと。
-- ルート直下の基底ファイルを削除・無効化したり、内容を消す行為は禁止。
+## 基底ファイル（ルート）の扱い
 
----
-この規約に従うことで、拡張性・保守性・可読性が向上します。
+- ルート直下の `components/component.json`、`behavior.json`、`style.json` はプロジェクト共通の基底設定として残すこと。
+- これらを空にしたり削除してはいけません。共通テンプレートやユーティリティを定義してください。
+
+## 移行と互換性
+
+- 既存プロジェクトは段階的にフォルダ構成へリファクタすること。重大な破壊的変更を行う場合は手順をドキュメント化してレビューを行ってください。
+
+## 実践的な注意点
+
+- 小さなコンポーネントでも `component.json` は必ず用意する（将来の拡張対応）。
+- 大きな共通ロジックは `components/` の基底ファイルに集約する。
+
+## 付録: 最小 `component.json` の例
+
+```json
+{
+  "name": "primary-button",
+  "props": {
+    "label": { "type": "string", "default": "Button" }
+  },
+  "slots": {},
+  "template": { "type": "element", "tag": "button" }
+}
+```
+
+この規約に従うことで拡張性・保守性・可読性が向上します。
