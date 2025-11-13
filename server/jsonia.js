@@ -36,14 +36,26 @@ const handlers = createHandlers(app);
 // エントリロジック（既存の startServer ロジックを引き継ぐ）
 function startServer() {
     const args = process.argv.slice(2);
-    
-    if (args.length > 0 && args[0].startsWith('projects/')) {
-        const projectPath = args[0];
-        const projectName = path.basename(projectPath);
-        const fullProjectPath = path.join(__dirname, '..', projectPath);
+    // 引数がある場合はプロジェクト指定モードへ入る。
+    if (args.length > 0) {
+        // Allow either 'projects/<name>' or just '<name>' as convenience.
+        let projectArg = args[0];
+        if (!projectArg.startsWith('projects/')) {
+            projectArg = path.join('projects', projectArg);
+        }
+
+        const projectName = path.basename(projectArg);
+        const fullProjectPath = path.resolve(path.join(__dirname, '..', projectArg));
+        const allowedRoot = path.resolve(path.join(__dirname, '..', 'projects'));
 
         console.log(`🎯 プロジェクト指定モード: ${projectName}`);
-        console.log(`📁 パス: ${fullProjectPath}`);
+        console.log(`📁 指定パス (resolved): ${fullProjectPath}`);
+
+        // Prevent path traversal: ensure fullProjectPath is inside allowedRoot
+        if (!fullProjectPath.startsWith(allowedRoot + path.sep) && fullProjectPath !== allowedRoot) {
+            console.error(`❌ 不正なプロジェクトパスが指定されました: ${fullProjectPath}`);
+            process.exit(1);
+        }
 
         if (!fs.existsSync(fullProjectPath)) {
             console.error(`❌ プロジェクトが見つかりません: ${fullProjectPath}`);
@@ -58,6 +70,7 @@ function startServer() {
 
         // 指定プロジェクトのみを読み込み
         loadSingleProject(projectName, fullProjectPath);
+        return;
     } else {
         console.log(`🎨 jsonia-editor モードで起動`);
         const editorPath = path.join(__dirname, '../jsonia-editor');
@@ -75,16 +88,39 @@ function loadSingleProject(projectName, projectPath) {
     try {
         const routesPath = path.join(projectPath, 'routes.json');
         const routesData = fs.readFileSync(routesPath, 'utf8');
-        const routesConfig = JSON.parse(routesData);
+        let routesConfig;
+        try {
+            routesConfig = JSON.parse(routesData);
+        } catch (jsonErr) {
+            console.error(`❌ routes.json の解析に失敗しました: ${routesPath}`, jsonErr.message);
+            process.exit(1);
+        }
 
         console.log(`📋 プロジェクト: ${routesConfig.project || projectName}`);
         console.log(`📝 説明: ${routesConfig.description || '説明なし'}`);
 
-        for (const route of routesConfig.routes) {
-            handlers.registerProjectRoute(projectPath, route);
+        if (!Array.isArray(routesConfig.routes)) {
+            console.error(`❌ routes.json の routes フィールドが配列ではありません: ${routesPath}`);
+            process.exit(1);
         }
 
-        console.log(`✅ ${routesConfig.routes.length} 個のルートを登録しました`);
+        let registered = 0;
+        for (const route of routesConfig.routes) {
+            // Basic validation for route shape
+            if (!route || typeof route !== 'object' || !route.method || !route.path) {
+                console.warn(`⚠️ 無効なルート定義をスキップします: ${JSON.stringify(route)}`);
+                continue;
+            }
+            try {
+                handlers.registerProjectRoute(projectPath, route);
+                registered++;
+            } catch (regErr) {
+                console.error(`❌ ルート登録中にエラー: ${route.path}`, regErr && regErr.message);
+                // continue with remaining routes
+            }
+        }
+
+        console.log(`✅ ${registered} 個のルートを登録しました`);
 
         app.get('/api/project-info', (req, res) => {
             res.json({
@@ -122,13 +158,34 @@ function loadEditorProject(editorPath) {
     try {
         const routesPath = path.join(editorPath, 'routes.json');
         const routesData = fs.readFileSync(routesPath, 'utf8');
-        const routesConfig = JSON.parse(routesData);
+        let routesConfig;
+        try {
+            routesConfig = JSON.parse(routesData);
+        } catch (jsonErr) {
+            console.error(`❌ editor/routes.json の解析に失敗しました: ${routesPath}`, jsonErr.message);
+            return;
+        }
 
         console.log(`🎨 jsonia-editor を読み込みました`);
         console.log(`📝 説明: ${routesConfig.description || 'WYSIWYGエディタ'}`);
 
+        if (!Array.isArray(routesConfig.routes)) {
+            console.warn(`⚠️ editor routes.json の routes が配列ではありません: ${routesPath}`);
+            return;
+        }
+
+        let registered = 0;
         for (const route of routesConfig.routes) {
-            handlers.registerProjectRoute(editorPath, route);
+            if (!route || typeof route !== 'object' || !route.method || !route.path) {
+                console.warn(`⚠️ 無効なエディタールートをスキップ: ${JSON.stringify(route)}`);
+                continue;
+            }
+            try {
+                handlers.registerProjectRoute(editorPath, route);
+                registered++;
+            } catch (err) {
+                console.error('❌ エディタールート登録エラー:', err && err.message);
+            }
         }
 
         handlers.setupEditorAPIs();
@@ -137,7 +194,7 @@ function loadEditorProject(editorPath) {
             res.redirect('/editor');
         });
 
-        console.log(`✅ ${routesConfig.routes.length} 個のエディタールートを登録しました`);
+        console.log(`✅ ${registered} 個のエディタールートを登録しました`);
 
     } catch (error) {
         console.error(`❌ jsonia-editor読み込みエラー:`, error.message);
