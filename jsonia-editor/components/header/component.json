@@ -5,48 +5,48 @@
     "tag": "header",
     "attributes": { "class": "header" },
     "children": [
-    {
-      "tag": "h1",
-      "text": "🎨 Jsonia WYSIWYG Editor"
-    },
-    {
-      "tag": "div",
-      "attributes": { "class": "header-actions", "data-slot": "children" },
-      "children": [
-        {
-          "tag": "button",
-          "text": "📁 プロジェクト",
-          "attributes": {
-            "class": "btn",
-            "onclick": "window.location.href='/manager'"
+      {
+        "tag": "h1",
+        "text": "🎨 Jsonia WYSIWYG Editor"
+      },
+      {
+        "tag": "div",
+        "attributes": { "class": "header-actions", "data-slot": "children" },
+        "children": [
+          {
+            "tag": "button",
+            "text": "📁 プロジェクト",
+            "attributes": {
+              "class": "btn",
+              "onclick": "window.location.href='/manager'"
+            }
+          },
+          {
+            "tag": "button",
+            "text": "👁️ プレビュー",
+            "attributes": {
+              "class": "btn",
+              "data-action": "preview"
+            }
+          },
+          {
+            "tag": "button",
+            "text": "📋 JSON出力",
+            "attributes": {
+              "class": "btn btn-warning",
+              "data-action": "export-json"
+            }
+          },
+          {
+            "tag": "button",
+            "text": "💾 保存",
+            "attributes": {
+              "class": "btn btn-success",
+              "data-action": "save"
+            }
           }
-        },
-        {
-          "tag": "button",
-          "text": "👁️ プレビュー",
-          "attributes": {
-            "class": "btn",
-            "data-action": "preview"
-          }
-        },
-        {
-          "tag": "button",
-          "text": "📋 JSON出力",
-          "attributes": {
-            "class": "btn btn-warning",
-            "data-action": "export-json"
-          }
-        },
-        {
-          "tag": "button",
-          "text": "💾 保存",
-          "attributes": {
-            "class": "btn btn-success",
-            "data-action": "save"
-          }
-        }
-      ]
-    }
+        ]
+      }
     ]
   },
   "behavior": {
@@ -54,17 +54,30 @@
       "handleAction": {
         "type": "sequence",
         "steps": [
-          { "type": "console", "message": "🎬 アクション実行: {{event.currentTarget.getAttribute('data-action')}}" },
-          { "type": "setState", "key": "currentAction", "value": "{{event.currentTarget.getAttribute('data-action')}}" },
-          { "type": "if", "condition": "{{currentAction}} === 'preview'", "then": [
-            { "type": "alert", "message": "プレビュー機能は準備中です" }
-          ]},
-          { "type": "if", "condition": "{{currentAction}} === 'export-json'", "then": [
-            { "type": "alert", "message": "JSON エクスポート機能は準備中です" }
-          ]},
-          { "type": "if", "condition": "{{currentAction}} === 'save'", "then": [
-            { "type": "alert", "message": "保存機能は準備中です" }
-          ]}
+          {
+            "type": "console",
+            "message": "🎬 アクション実行: {{event.currentTarget.getAttribute('data-action')}}"
+          },
+          {
+            "type": "setState",
+            "key": "currentAction",
+            "value": "{{event.currentTarget.getAttribute('data-action')}}"
+          },
+          {
+            "type": "if",
+            "condition": "{{currentAction}} === 'preview'",
+            "then": [{ "type": "alert", "message": "プレビュー機能は準備中です" }]
+          },
+          {
+            "type": "if",
+            "condition": "{{currentAction}} === 'export-json'",
+            "then": [{ "type": "alert", "message": "JSON エクスポート機能は準備中です" }]
+          },
+          {
+            "type": "if",
+            "condition": "{{currentAction}} === 'save'",
+            "then": [{ "type": "alert", "message": "保存機能は準備中です" }]
+          }
         ]
       }
     }

@@ -6,20 +6,20 @@
     "tag": "aside",
     "attributes": { "class": "properties-panel", "data-panel": "structure" },
     "children": [
-    {
-      "tag": "div",
-      "attributes": { "class": "panel-header" },
-      "text": "プロパティ"
-    },
-    {
-      "tag": "div",
-      "attributes": {
-        "class": "properties-content",
-        "id": "properties-content",
-        "data-slot": "children"
+      {
+        "tag": "div",
+        "attributes": { "class": "panel-header" },
+        "text": "プロパティ"
       },
-      "text": "要素を選択してプロパティを編集"
-    }
+      {
+        "tag": "div",
+        "attributes": {
+          "class": "properties-content",
+          "id": "properties-content",
+          "data-slot": "children"
+        },
+        "text": "要素を選択してプロパティを編集"
+      }
     ]
   }
 }

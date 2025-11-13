@@ -139,18 +139,18 @@ Jsonia/
 const JsonToEJS = require('./server/lib/json-to-ejs');
 
 const config = {
-    tag: 'div',
-    attributes: { class: 'container' },
-    children: [
-        {
-            tag: 'h1',
-            text: '<%= title %>'
-        },
-        {
-            tag: 'p',
-            text: '<%= content %>'
-        }
-    ]
+  tag: 'div',
+  attributes: { class: 'container' },
+  children: [
+    {
+      tag: 'h1',
+      text: '<%= title %>',
+    },
+    {
+      tag: 'p',
+      text: '<%= content %>',
+    },
+  ],
 };
 
 const ejsTemplate = JsonToEJS.render(config);
@@ -161,18 +161,18 @@ const ejsTemplate = JsonToEJS.render(config);
 
 ```javascript
 const config = {
-    tag: 'div',
-    attributes: { class: 'card' },
-    children: [
-        {
-            tag: 'h3',
-            text: 'Title'
-        },
-        {
-            tag: 'p',
-            text: 'Content'
-        }
-    ]
+  tag: 'div',
+  attributes: { class: 'card' },
+  children: [
+    {
+      tag: 'h3',
+      text: 'Title',
+    },
+    {
+      tag: 'p',
+      text: 'Content',
+    },
+  ],
 };
 
 // Render into a DOM element
@@ -185,18 +185,18 @@ JsoniaClient.render('#container', config);
 
 ```json
 {
-    "tag": "div",
-    "attributes": {
-        "class": "container",
-        "id": "main"
-    },
-    "text": "Some text",
-    "children": [
-        {
-            "tag": "p",
-            "text": "Child element"
-        }
-    ]
+  "tag": "div",
+  "attributes": {
+    "class": "container",
+    "id": "main"
+  },
+  "text": "Some text",
+  "children": [
+    {
+      "tag": "p",
+      "text": "Child element"
+    }
+  ]
 }
 ```
 
@@ -204,29 +204,29 @@ JsoniaClient.render('#container', config);
 
 ```json
 {
-    "title": "Page Title",
-    "meta": {
-        "charset": "UTF-8",
-        "viewport": "width=device-width, initial-scale=1.0"
-    },
-    "styles": [
-        "/css/style.css",
-        {
-            "content": "body { margin: 0; }"
-        }
-    ],
-    "body": [
-        {
-            "tag": "h1",
-            "text": "Main content"
-        }
-    ],
-    "scripts": [
-        "/js/app.js",
-        {
-            "content": "console.log('inline script');"
-        }
-    ]
+  "title": "Page Title",
+  "meta": {
+    "charset": "UTF-8",
+    "viewport": "width=device-width, initial-scale=1.0"
+  },
+  "styles": [
+    "/css/style.css",
+    {
+      "content": "body { margin: 0; }"
+    }
+  ],
+  "body": [
+    {
+      "tag": "h1",
+      "text": "Main content"
+    }
+  ],
+  "scripts": [
+    "/js/app.js",
+    {
+      "content": "console.log('inline script');"
+    }
+  ]
 }
 ```
 
@@ -234,13 +234,13 @@ JsoniaClient.render('#container', config);
 
 ### Comparison with traditional HTML development
 
-| Traditional | Jsonia | Effect |
-|------------|--------|--------|
-| Separate HTML/CSS/JS | Unified JSON format | 🔄 Single source of truth |
-| Build required | Interpreter execution | ⚡ Zero build time |
-| Manual reload | Automatic preview | 👀 Immediate feedback |
-| React/Vue bundle | JSON definitions | 📦 No bundler required |
-| JavaScript required | Pure JSON | 🪶 Lower learning curve |
+| Traditional          | Jsonia                | Effect                    |
+| -------------------- | --------------------- | ------------------------- |
+| Separate HTML/CSS/JS | Unified JSON format   | 🔄 Single source of truth |
+| Build required       | Interpreter execution | ⚡ Zero build time        |
+| Manual reload        | Automatic preview     | 👀 Immediate feedback     |
+| React/Vue bundle     | JSON definitions      | 📦 No bundler required    |
+| JavaScript required  | Pure JSON             | 🪶 Lower learning curve   |
 
 ### Key advantages
 
@@ -503,12 +503,12 @@ Dynamic component (structure + behavior):
 
 ### Built-in components
 
-| Component | File | Function |
-|-----------|------|----------|
-| Tabs UI | `tabs/component.json` | Tab switching and state management |
+| Component | File                       | Function                              |
+| --------- | -------------------------- | ------------------------------------- |
+| Tabs UI   | `tabs/component.json`      | Tab switching and state management    |
 | Accordion | `accordion/component.json` | Open/close control, multiple sections |
-| Dropdown | `dropdown/component.json` | Menu open/close and item selection |
-| Modal | `modal/component.json` | Dialog display with backdrop close |
+| Dropdown  | `dropdown/component.json`  | Menu open/close and item selection    |
+| Modal     | `modal/component.json`     | Dialog display with backdrop close    |
 
 Example usage:
 
@@ -516,12 +516,8 @@ Example usage:
 {
   "$include": "components/tabs/component.json",
   "defaultTab": "tab1",
-  "tabs": [
-    { "tag": "button", "text": "Tab 1", "attributes": { "data-tab-button": "tab1" } }
-  ],
-  "panels": [
-    { "tag": "div", "text": "Content 1", "attributes": { "data-tab-panel": "tab1" } }
-  ]
+  "tabs": [{ "tag": "button", "text": "Tab 1", "attributes": { "data-tab-button": "tab1" } }],
+  "panels": [{ "tag": "div", "text": "Content 1", "attributes": { "data-tab-panel": "tab1" } }]
 }
 ```
 
@@ -566,4 +562,6 @@ See `components/README.md` for details.
 
 MIT License
 
-````
+```
+
+```

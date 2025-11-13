@@ -1,0 +1,49 @@
+/* Minimal styling for component browser */
+.component-library {
+  max-height: 300px;
+  overflow: auto;
+  padding: 6px;
+}
+.lib-loading,
+.lib-empty,
+.lib-error {
+  color: #666;
+  font-size: 12px;
+}
+.lib-category {
+  margin-bottom: 8px;
+}
+.lib-category h5 {
+  margin: 6px 0;
+  font-size: 12px;
+  color: #333;
+}
+.lib-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.lib-item {
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  border: 1px solid #eee;
+  background: #fafafa;
+}
+.lib-icon {
+  margin-right: 8px;
+}
+.lib-meta {
+  flex: 1;
+}
+.lib-name {
+  font-size: 13px;
+  font-weight: 600;
+}
+.lib-desc {
+  font-size: 11px;
+  color: #666;
+}
+.lib-actions button {
+  padding: 4px 8px;
+}

@@ -272,10 +272,7 @@
               {
                 "type": "if",
                 "condition": {
-                  "eq": [
-                    "{{componentCount}}",
-                    0
-                  ]
+                  "eq": ["{{componentCount}}", 0]
                 },
                 "then": [
                   {

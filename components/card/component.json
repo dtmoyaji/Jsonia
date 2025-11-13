@@ -54,7 +54,6 @@
   },
   "defaultAttributes": {
     "class": "card"
-  }
-  ,
+  },
   "styleFile": "style.json"
 }

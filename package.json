@@ -10,7 +10,12 @@
     "editor": "node server/jsonia.js",
     "project": "node server/jsonia.js",
     "build": "node scripts/build.js",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand",
+    "lint": "eslint . --ext .js",
+    "format": "prettier --write \"**/*.{js,json,md}\"",
+    "validate:components": "node scripts/validate-components.js",
+    "audit": "npm audit --audit-level=moderate",
+    "axe-audit": "node scripts/axe-audit.js"
   },
   "keywords": [
     "json",
@@ -18,19 +23,38 @@
     "server-side-rendering",
     "client-side"
   ],
-  "author": "",
+  "author": "dtmoyaji",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dtmoyaji/Jsonia.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dtmoyaji/Jsonia/issues"
+  },
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
     "ejs": "^3.1.10",
     "express": "^4.18.2",
     "jsdom": "^27.0.1",
-    "puppeteer": "^24.26.1"
+    "puppeteer": "^24.26.1",
+    "ajv": "^8.12.0"
   },
   "devDependencies": {
     "jest": "^29.0.0",
     "jest-environment-jsdom": "^29.7.0",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "eslint": "^8.48.0",
+    "prettier": "^2.8.8",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "semantic-release": "^22.0.0",
+    "@semantic-release/changelog": "^6.0.0",
+    "@semantic-release/git": "^10.0.0",
+    "@semantic-release/github": "^9.0.0",
+    "@semantic-release/npm": "^9.0.0",
+    "@semantic-release/commit-analyzer": "^10.0.0",
+    "@semantic-release/release-notes-generator": "^10.0.0"
   },
   "jest": {
     "testEnvironment": "jsdom",

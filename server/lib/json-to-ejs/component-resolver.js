@@ -26,8 +26,8 @@ const componentCache = new Map();
  * Useful for tests or developer workflows where files change and you want to force re-resolution.
  */
 function clearCaches() {
-    pathCache.clear();
-    componentCache.clear();
+  pathCache.clear();
+  componentCache.clear();
 }
 
 /**
@@ -37,15 +37,15 @@ function clearCaches() {
  * @returns {string} - resolved workspace root directory
  */
 function getWorkspaceRoot(basePath) {
-    // Try to find workspace root by stepping up until we find package.json or .git, else parent
-    let dir = basePath || process.cwd();
-    for (let i = 0; i < 4; i++) {
-        const pkg = path.join(dir, 'package.json');
-        const git = path.join(dir, '.git');
-        if (fs.existsSync(pkg) || fs.existsSync(git)) return dir;
-        dir = path.resolve(dir, '..');
-    }
-    return path.resolve(process.cwd(), '..');
+  // Try to find workspace root by stepping up until we find package.json or .git, else parent
+  let dir = basePath || process.cwd();
+  for (let i = 0; i < 4; i++) {
+    const pkg = path.join(dir, 'package.json');
+    const git = path.join(dir, '.git');
+    if (fs.existsSync(pkg) || fs.existsSync(git)) return dir;
+    dir = path.resolve(dir, '..');
+  }
+  return path.resolve(process.cwd(), '..');
 }
 
 /**
@@ -60,39 +60,39 @@ function getWorkspaceRoot(basePath) {
  * @returns {string|null} - absolute filesystem path to found .json or null
  */
 function resolveIncludePath(includePath, options = {}) {
-    const basePath = options.basePath || process.cwd();
-    const workspaceRoot = getWorkspaceRoot(basePath);
+  const basePath = options.basePath || process.cwd();
+  const workspaceRoot = getWorkspaceRoot(basePath);
 
-    let candidatePaths = [];
+  let candidatePaths = [];
 
-    if (includePath.startsWith('/')) {
-        candidatePaths.push(path.join(basePath, includePath.substring(1)));
-    } else if (includePath.startsWith('components/')) {
-        const componentName = includePath.substring('components/'.length);
-        // project-local then workspace shared
-        candidatePaths.push(path.join(basePath, 'components', componentName));
-        candidatePaths.push(path.join(workspaceRoot, 'components', componentName));
-    } else {
-        candidatePaths.push(path.join(basePath, includePath));
+  if (includePath.startsWith('/')) {
+    candidatePaths.push(path.join(basePath, includePath.substring(1)));
+  } else if (includePath.startsWith('components/')) {
+    const componentName = includePath.substring('components/'.length);
+    // project-local then workspace shared
+    candidatePaths.push(path.join(basePath, 'components', componentName));
+    candidatePaths.push(path.join(workspaceRoot, 'components', componentName));
+  } else {
+    candidatePaths.push(path.join(basePath, includePath));
+  }
+
+  candidatePaths = candidatePaths.map((p) => (p.endsWith('.json') ? p : p + '.json'));
+
+  for (const candidate of candidatePaths) {
+    if (fs.existsSync(candidate)) {
+      return candidate;
     }
+  }
 
-    candidatePaths = candidatePaths.map(p => p.endsWith('.json') ? p : p + '.json');
+  // If includePath referenced 'components/<name>' but the actual component is in a folder
+  // like components/<name>/component.json, attempt to resolve via resolveComponentPath
+  if (includePath.startsWith('components/')) {
+    const componentName = includePath.substring('components/'.length).replace(/\.json$/i, '');
+    const resolved = resolveComponentPath(componentName, basePath);
+    if (resolved) return resolved;
+  }
 
-    for (const candidate of candidatePaths) {
-        if (fs.existsSync(candidate)) {
-            return candidate;
-        }
-    }
-
-    // If includePath referenced 'components/<name>' but the actual component is in a folder
-    // like components/<name>/component.json, attempt to resolve via resolveComponentPath
-    if (includePath.startsWith('components/')) {
-        const componentName = includePath.substring('components/'.length).replace(/\.json$/i, '');
-        const resolved = resolveComponentPath(componentName, basePath);
-        if (resolved) return resolved;
-    }
-
-    return null;
+  return null;
 }
 
 /**
@@ -106,16 +106,16 @@ function resolveIncludePath(includePath, options = {}) {
  * @returns {string[]} - list of candidate absolute paths (not filtered)
  */
 function findComponentCandidates(componentName, basePath) {
-    const componentsDir = path.join(process.cwd(), 'components');
-    const workspaceRoot = getWorkspaceRoot(basePath || process.cwd());
+  const componentsDir = path.join(process.cwd(), 'components');
+  const workspaceRoot = getWorkspaceRoot(basePath || process.cwd());
 
-    const candidates = [
-        path.join(componentsDir, `${componentName}.json`),
-        path.join(componentsDir, componentName, 'component.json'),
-        path.join(workspaceRoot, 'components', `${componentName}.json`),
-        path.join(workspaceRoot, 'components', componentName, 'component.json')
-    ];
-    return candidates;
+  const candidates = [
+    path.join(componentsDir, `${componentName}.json`),
+    path.join(componentsDir, componentName, 'component.json'),
+    path.join(workspaceRoot, 'components', `${componentName}.json`),
+    path.join(workspaceRoot, 'components', componentName, 'component.json'),
+  ];
+  return candidates;
 }
 
 /**
@@ -127,25 +127,25 @@ function findComponentCandidates(componentName, basePath) {
  * @returns {string|null}
  */
 function resolveComponentPath(componentName, basePath) {
-    const cacheKey = `${componentName}|${basePath || ''}`;
-    // validate cached path: if file has been removed, invalidate cache
-    if (pathCache.has(cacheKey)) {
-        const cached = pathCache.get(cacheKey);
-        if (cached && fs.existsSync(cached)) return cached;
-        // stale entry
-        pathCache.delete(cacheKey);
-    }
+  const cacheKey = `${componentName}|${basePath || ''}`;
+  // validate cached path: if file has been removed, invalidate cache
+  if (pathCache.has(cacheKey)) {
+    const cached = pathCache.get(cacheKey);
+    if (cached && fs.existsSync(cached)) return cached;
+    // stale entry
+    pathCache.delete(cacheKey);
+  }
 
-    const candidates = findComponentCandidates(componentName, basePath);
-    let found = null;
-    for (const c of candidates) {
-        if (fs.existsSync(c)) {
-            found = c;
-            break;
-        }
+  const candidates = findComponentCandidates(componentName, basePath);
+  let found = null;
+  for (const c of candidates) {
+    if (fs.existsSync(c)) {
+      found = c;
+      break;
     }
-    pathCache.set(cacheKey, found);
-    return found;
+  }
+  pathCache.set(cacheKey, found);
+  return found;
 }
 
 /**
@@ -156,27 +156,27 @@ function resolveComponentPath(componentName, basePath) {
  * @throws {Error} - when file read or JSON parse fails
  */
 function loadComponent(componentPath) {
-    // return cached if mtime matches
-    try {
-        const stats = fs.statSync(componentPath);
-        const mtimeMs = stats.mtimeMs;
+  // return cached if mtime matches
+  try {
+    const stats = fs.statSync(componentPath);
+    const mtimeMs = stats.mtimeMs;
 
-        if (componentCache.has(componentPath)) {
-            const entry = componentCache.get(componentPath);
-            if (entry && entry.mtimeMs === mtimeMs) {
-                return entry.parsed;
-            }
-        }
-
-        const content = fs.readFileSync(componentPath, 'utf8');
-        const parsed = JSON.parse(content);
-        componentCache.set(componentPath, { parsed, mtimeMs });
-        return parsed;
-    } catch (err) {
-        // On error (missing file or parse error) ensure cache cleared and rethrow
-        componentCache.delete(componentPath);
-        throw err;
+    if (componentCache.has(componentPath)) {
+      const entry = componentCache.get(componentPath);
+      if (entry && entry.mtimeMs === mtimeMs) {
+        return entry.parsed;
+      }
     }
+
+    const content = fs.readFileSync(componentPath, 'utf8');
+    const parsed = JSON.parse(content);
+    componentCache.set(componentPath, { parsed, mtimeMs });
+    return parsed;
+  } catch (err) {
+    // On error (missing file or parse error) ensure cache cleared and rethrow
+    componentCache.delete(componentPath);
+    throw err;
+  }
 }
 
 /**
@@ -197,72 +197,81 @@ function loadComponent(componentPath) {
  * @returns {string}
  */
 function resolveExtends(config, options = {}, renderFunc) {
-    try {
-        const componentName = config.extends;
-        if (!componentName) return renderFunc(config, options);
+  try {
+    const componentName = config.extends;
+    if (!componentName) return renderFunc(config, options);
 
-        // use a visited set to detect cyclic extends
-        const visited = options._visited || new Set();
-        if (visited.has(componentName)) {
-            console.error(`❌ Detected cyclic extends for component: ${componentName}`);
-            return `<!-- extends cycle detected: ${componentName} -->`;
-        }
-        visited.add(componentName);
-
-        // resolve full parent template JSON (handles multi-level extends)
-        const parentTemplate = resolveComponentTemplate(componentName, options);
-        if (!parentTemplate) {
-            console.warn(`⚠️ Component not found (checked candidates) for: ${componentName}`);
-            return `<!-- extends: ${componentName} (component not found) -->`;
-        }
-
-        if (componentName === 'component') {
-            const cfg = { ...config };
-            delete cfg.extends;
-            if (cfg.template) return renderFunc(cfg.template, options);
-            return renderFunc(cfg, options);
-        }
-
-        let mergedTemplate = JSON.parse(JSON.stringify(parentTemplate));
-
-        if (mergedTemplate.attributes && mergedTemplate.attributes.class === 'accordion' && mergedTemplate.children && mergedTemplate.children[0]) {
-            mergedTemplate = mergedTemplate.children[0];
-        }
-
-        if (config.attributes) {
-            mergedTemplate.attributes = { ...mergedTemplate.attributes, ...config.attributes };
-        }
-
-        const accordionId = config.attributes && config.attributes['data-accordion-id'];
-
-        if (config.header || accordionId) {
-            const headerElement = findElementByAttribute(mergedTemplate, 'data-accordion-header');
-            if (headerElement) {
-                if (accordionId) headerElement.attributes['data-accordion-id'] = accordionId;
-                if (config.header && config.header.text) {
-                    const textSpan = headerElement.children.find(c => !c.attributes || !c.attributes.class || !c.attributes.class.includes('accordion-icon'));
-                    if (textSpan) textSpan.text = config.header.text;
-                }
-            }
-        }
-
-        if (config.content || accordionId) {
-            const contentElement = findElementByAttribute(mergedTemplate, 'data-accordion-content');
-            if (contentElement) {
-                const contentId = config.content && config.content.id ? config.content.id : accordionId;
-                if (contentId) {
-                    contentElement.attributes.id = contentId;
-                    contentElement.attributes['data-accordion-content'] = accordionId || contentId;
-                }
-                if (config.content && config.content.children) contentElement.children = config.content.children;
-            }
-        }
-
-        return renderFunc(mergedTemplate, options);
-    } catch (err) {
-        console.error(`❌ Error resolving extends: ${config.extends} - ${err.message}`);
-        return `<!-- extends error: ${config.extends} - ${err.message} -->`;
+    // use a visited set to detect cyclic extends
+    const visited = options._visited || new Set();
+    if (visited.has(componentName)) {
+      console.error(`❌ Detected cyclic extends for component: ${componentName}`);
+      return `<!-- extends cycle detected: ${componentName} -->`;
     }
+    visited.add(componentName);
+
+    // resolve full parent template JSON (handles multi-level extends)
+    const parentTemplate = resolveComponentTemplate(componentName, options);
+    if (!parentTemplate) {
+      console.warn(`⚠️ Component not found (checked candidates) for: ${componentName}`);
+      return `<!-- extends: ${componentName} (component not found) -->`;
+    }
+
+    if (componentName === 'component') {
+      const cfg = { ...config };
+      delete cfg.extends;
+      if (cfg.template) return renderFunc(cfg.template, options);
+      return renderFunc(cfg, options);
+    }
+
+    let mergedTemplate = JSON.parse(JSON.stringify(parentTemplate));
+
+    if (
+      mergedTemplate.attributes &&
+      mergedTemplate.attributes.class === 'accordion' &&
+      mergedTemplate.children &&
+      mergedTemplate.children[0]
+    ) {
+      mergedTemplate = mergedTemplate.children[0];
+    }
+
+    if (config.attributes) {
+      mergedTemplate.attributes = { ...mergedTemplate.attributes, ...config.attributes };
+    }
+
+    const accordionId = config.attributes && config.attributes['data-accordion-id'];
+
+    if (config.header || accordionId) {
+      const headerElement = findElementByAttribute(mergedTemplate, 'data-accordion-header');
+      if (headerElement) {
+        if (accordionId) headerElement.attributes['data-accordion-id'] = accordionId;
+        if (config.header && config.header.text) {
+          const textSpan = headerElement.children.find(
+            (c) =>
+              !c.attributes || !c.attributes.class || !c.attributes.class.includes('accordion-icon')
+          );
+          if (textSpan) textSpan.text = config.header.text;
+        }
+      }
+    }
+
+    if (config.content || accordionId) {
+      const contentElement = findElementByAttribute(mergedTemplate, 'data-accordion-content');
+      if (contentElement) {
+        const contentId = config.content && config.content.id ? config.content.id : accordionId;
+        if (contentId) {
+          contentElement.attributes.id = contentId;
+          contentElement.attributes['data-accordion-content'] = accordionId || contentId;
+        }
+        if (config.content && config.content.children)
+          contentElement.children = config.content.children;
+      }
+    }
+
+    return renderFunc(mergedTemplate, options);
+  } catch (err) {
+    console.error(`❌ Error resolving extends: ${config.extends} - ${err.message}`);
+    return `<!-- extends error: ${config.extends} - ${err.message} -->`;
+  }
 }
 
 /**
@@ -276,30 +285,32 @@ function resolveExtends(config, options = {}, renderFunc) {
  * @returns {Object|null}
  */
 function resolveComponentTemplate(componentName, options = {}, visited = new Set()) {
-    if (visited.has(componentName)) {
-        console.error(`❌ Detected cyclic extends while resolving template: ${componentName}`);
-        return null;
+  if (visited.has(componentName)) {
+    console.error(`❌ Detected cyclic extends while resolving template: ${componentName}`);
+    return null;
+  }
+  visited.add(componentName);
+
+  const componentPath = resolveComponentPath(componentName, options.basePath);
+  if (!componentPath) return null;
+
+  const comp = loadComponent(componentPath);
+
+  // start with this component's own template or the component object itself
+  let baseTemplate = comp.template
+    ? JSON.parse(JSON.stringify(comp.template))
+    : JSON.parse(JSON.stringify(comp));
+
+  if (comp.extends) {
+    const parentName = comp.extends;
+    const parentTemplate = resolveComponentTemplate(parentName, options, visited);
+    if (parentTemplate) {
+      // deep merge parentTemplate <- baseTemplate
+      baseTemplate = deepMergeTemplates(parentTemplate, baseTemplate);
     }
-    visited.add(componentName);
+  }
 
-    const componentPath = resolveComponentPath(componentName, options.basePath);
-    if (!componentPath) return null;
-
-    const comp = loadComponent(componentPath);
-
-    // start with this component's own template or the component object itself
-    let baseTemplate = comp.template ? JSON.parse(JSON.stringify(comp.template)) : JSON.parse(JSON.stringify(comp));
-
-    if (comp.extends) {
-        const parentName = comp.extends;
-        const parentTemplate = resolveComponentTemplate(parentName, options, visited);
-        if (parentTemplate) {
-            // deep merge parentTemplate <- baseTemplate
-            baseTemplate = deepMergeTemplates(parentTemplate, baseTemplate);
-        }
-    }
-
-    return baseTemplate;
+  return baseTemplate;
 }
 
 /**
@@ -316,53 +327,55 @@ function resolveComponentTemplate(componentName, options = {}, visited = new Set
  * @returns {Object}
  */
 function deepMergeTemplates(parent, child) {
-    if (!parent) return child || null;
-    if (!child) return parent || null;
+  if (!parent) return child || null;
+  if (!child) return parent || null;
 
-    const merged = JSON.parse(JSON.stringify(parent));
+  const merged = JSON.parse(JSON.stringify(parent));
 
-    // merge attributes
-    merged.attributes = { ...(parent.attributes || {}), ...(child.attributes || {}) };
+  // merge attributes
+  merged.attributes = { ...(parent.attributes || {}), ...(child.attributes || {}) };
 
-    // merge tag
-    merged.tag = child.tag || parent.tag;
+  // merge tag
+  merged.tag = child.tag || parent.tag;
 
-    // merge text
-    merged.text = child.text !== undefined ? child.text : parent.text;
+  // merge text
+  merged.text = child.text !== undefined ? child.text : parent.text;
 
-    // children: prefer child if it defines children, otherwise keep parent's children
-    if (child.children && Array.isArray(child.children) && child.children.length > 0) {
-        merged.children = child.children;
-    } else {
-        merged.children = parent.children ? JSON.parse(JSON.stringify(parent.children)) : (child.children || []);
-    }
+  // children: prefer child if it defines children, otherwise keep parent's children
+  if (child.children && Array.isArray(child.children) && child.children.length > 0) {
+    merged.children = child.children;
+  } else {
+    merged.children = parent.children
+      ? JSON.parse(JSON.stringify(parent.children))
+      : child.children || [];
+  }
 
-    // copy other keys from child
-    for (const [k, v] of Object.entries(child)) {
-        if (['attributes', 'tag', 'text', 'children'].includes(k)) continue;
-        merged[k] = v;
-    }
+  // copy other keys from child
+  for (const [k, v] of Object.entries(child)) {
+    if (['attributes', 'tag', 'text', 'children'].includes(k)) continue;
+    merged[k] = v;
+  }
 
-    return merged;
+  return merged;
 }
 
 function findElementByAttribute(template, attrName) {
-    if (!template) return null;
-    if (template.attributes && template.attributes[attrName]) return template;
-    if (template.children && Array.isArray(template.children)) {
-        for (const child of template.children) {
-            const found = findElementByAttribute(child, attrName);
-            if (found) return found;
-        }
+  if (!template) return null;
+  if (template.attributes && template.attributes[attrName]) return template;
+  if (template.children && Array.isArray(template.children)) {
+    for (const child of template.children) {
+      const found = findElementByAttribute(child, attrName);
+      if (found) return found;
     }
-    return null;
+  }
+  return null;
 }
 
 module.exports = {
-    resolveIncludePath,
-    resolveComponentPath,
-    loadComponent,
-    resolveExtends,
-    findComponentCandidates,
-    clearCaches
+  resolveIncludePath,
+  resolveComponentPath,
+  loadComponent,
+  resolveExtends,
+  findComponentCandidates,
+  clearCaches,
 };

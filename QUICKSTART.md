@@ -1,14 +1,16 @@
 # 🚀 Jsonia ルーティングインタプリタ - クイックスタート
 
-## 1分でスタート！
+## 1 分でスタート！
 
 ### 1. 基本起動
+
 ```bash
 cd c:\misc\scripts\Jsonia
 npm start
 ```
 
 ### 2. プロジェクトにアクセス
+
 - **プロジェクト一覧**: http://localhost:3000/projects
 - **ブログプロジェクト**: http://localhost:3000/blog
 - **エディタープロジェクト**: http://localhost:3000/editor
@@ -18,6 +20,7 @@ npm start
 ## ✨ システム特徴
 
 ### � プロジェクトベース構造
+
 各プロジェクトが独立したルーティング定義を持ちます：
 
 ```
@@ -26,15 +29,17 @@ projects/
 │   ├── routes.json      # ブログのルート定義
 │   └── main.json        # ブログテンプレート
 ├── editor-project/
-│   ├── routes.json      # エディターのルート定義  
+│   ├── routes.json      # エディターのルート定義
 │   └── main.json        # エディターテンプレート
 └── form-project/
     ├── routes.json      # フォームのルート定義
     └── main.json        # フォームテンプレート
 ```
 
-### 🎯 JSON定義ルーティング
-routes.jsonでルートを定義：
+### 🎯 JSON 定義ルーティング
+
+routes.json でルートを定義：
+
 ```json
 {
   "routes": [
@@ -51,12 +56,14 @@ routes.jsonでルートを定義：
 }
 ```
 
-### ⚡ EJSインタプリタ
-JSON→EJS変換の自動実行：
+### ⚡ EJS インタプリタ
+
+JSON→EJS 変換の自動実行：
+
 ```javascript
 // JSONテンプレート
 {
-  "tag": "h1", 
+  "tag": "h1",
   "text": "<%= title %>"
 }
 
@@ -67,41 +74,47 @@ JSON→EJS変換の自動実行：
 ## � 利用可能なプロジェクト
 
 ### ブログプロジェクト (/blog)
-- メインページ、記事一覧、記事詳細の3ルート
 
-### エディタープロジェクト (/editor) 
-- エディター、プレビュー、保存、API の4ルート
+- メインページ、記事一覧、記事詳細の 3 ルート
+
+### エディタープロジェクト (/editor)
+
+- エディター、プレビュー、保存、API の 4 ルート
 
 ### フォームプロジェクト (/form)
-- フォーム表示、送信処理、完了画面の3ルート  
+
+- フォーム表示、送信処理、完了画面の 3 ルート
 
 ### サンプルプロジェクト (/sample)
-- サンプル表示、データ処理、テスト、APIの4ルート
+
+- サンプル表示、データ処理、テスト、API の 4 ルート
 
 ## 🎯 主な利点
 
-- ✅ **JSON定義**: ルーティングをJSONで簡単定義
+- ✅ **JSON 定義**: ルーティングを JSON で簡単定義
 - ✅ **プロジェクト分離**: 独立したプロジェクト管理
-- ✅ **EJSインタプリタ**: JSON→EJS自動変換
+- ✅ **EJS インタプリタ**: JSON→EJS 自動変換
 - ✅ **動的ロード**: 新プロジェクトの自動認識
-- ✅ **API統合**: プロジェクト情報のREST API
+- ✅ **API 統合**: プロジェクト情報の REST API
 - ✅ **スケーラブル**: プロジェクト単位での拡張
 
 ## 🚀 新しいプロジェクトを作る
 
 ### 1. プロジェクトフォルダ作成
+
 ```bash
 mkdir projects/my-project
 ```
 
-### 2. routes.json定義
+### 2. routes.json 定義
+
 ```json
 {
   "routes": [
     {
       "method": "GET",
       "path": "/my-project",
-      "handler": "renderTemplate", 
+      "handler": "renderTemplate",
       "template": "main.json",
       "data": {
         "title": "My Project"
@@ -112,6 +125,7 @@ mkdir projects/my-project
 ```
 
 ### 3. テンプレートファイル作成 (main.json)
+
 ```json
 {
   "tag": "div",
@@ -125,6 +139,7 @@ mkdir projects/my-project
 ```
 
 ### 4. サーバー再起動
+
 ```bash
 npm start
 ```

@@ -374,25 +374,46 @@
       el.appendChild(handle);
     }
 
-    // ensure element is positioned and marked as a canvas component for tree sync
-    el.style.left = x + 'px';
-    el.style.top = y + 'px';
-    // give persistent id for tree binding
+    return finalizeElement(el, x, y);
+  }
+
+  function createComponentFromTemplate(template, x = 20, y = 20) {
+    if (hasCore) {
+      const el = window.JsoniaEditor.createElementFromTemplate(template);
+      return finalizeElement(el, x, y);
+    }
+    const type =
+      (template && (template.type || template.templateType || template.filename)) || 'component';
+    return createComponent(type, x, y);
+  }
+
+  // common finalization for created elements (centralize duplicated logic)
+  function finalizeElement(el, x = 20, y = 20) {
     try {
-      const id = 'c-' + Date.now() + '-' + Math.floor(Math.random() * 10000);
-      el.setAttribute('data-component-id', id);
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+    } catch (err) {
+      /* ignore */
+    }
+
+    try {
+      if (!el.getAttribute('data-component-id')) {
+        const id = 'c-' + Date.now() + '-' + Math.floor(Math.random() * 10000);
+        el.setAttribute('data-component-id', id);
+      }
       el.classList.add('canvas-component');
     } catch (err) {
       /* ignore */
     }
+
     canvas.appendChild(el);
-    // accessibility: set ARIA and keyboard handlers for created elements
+
+    // accessibility and keyboard handlers
     try {
       el.setAttribute('role', 'listitem');
       el.setAttribute('tabindex', '0');
       el.setAttribute('aria-grabbed', 'false');
       el.addEventListener('keydown', (ev) => {
-        // arrow keys to nudge position
         const step = ev.shiftKey ? 1 : 10;
         let moved = false;
         const left = parseInt(el.style.left || 0, 10);
@@ -410,20 +431,10 @@
           el.style.top = top + step + 'px';
           moved = true;
         } else if (ev.key === 'Delete' || ev.key === 'Backspace') {
-          // remove element
           try {
             if (el.parentNode) el.parentNode.removeChild(el);
-            try {
-              announce('Component removed');
-            } catch (err) {
-              /* ignore */
-            }
-            // update structure tree after deletion
-            try {
-              updateStructureTree();
-            } catch (err) {
-              /* ignore */
-            }
+            announce('Component removed');
+            updateStructureTree();
           } catch (err) {
             /* ignore */
           }
@@ -435,51 +446,42 @@
         }
       });
     } catch (err) {
-      // ignore
+      /* ignore */
     }
+
     if (interactions) interactions.attachDraggable(el);
     else attachDraggableFallback(el);
     if (interactions) interactions.selectElement(el);
-    // refresh structure tree to reflect new element
+
     try {
       updateStructureTree();
     } catch (err) {
       /* ignore */
     }
-    return el;
-  }
 
-  function createComponentFromTemplate(template, x = 20, y = 20) {
-    if (hasCore) {
-      const el = window.JsoniaEditor.createElementFromTemplate(template);
-      el.style.left = x + 'px';
-      el.style.top = y + 'px';
-      try {
-        const id = 'c-' + Date.now() + '-' + Math.floor(Math.random() * 10000);
-        el.setAttribute('data-component-id', id);
-        el.classList.add('canvas-component');
-      } catch (err) {
-        /* ignore */
-      }
-      canvas.appendChild(el);
-      if (interactions) interactions.attachDraggable(el);
-      else attachDraggableFallback(el);
-      if (interactions) interactions.selectElement(el);
-      try {
-        updateStructureTree();
-      } catch (err) {
-        /* ignore */
-      }
-      return el;
-    }
-    const type =
-      (template && (template.type || template.templateType || template.filename)) || 'component';
-    return createComponent(type, x, y);
+    return el;
   }
 
   // rebuild the structure tree placed in `#structure-tree` from the current drop-zone
   function updateStructureTree() {
     try {
+      // prefer runtime-provided tree updater if available to avoid duplicate implementations
+      try {
+        if (window.JsoniaEditor && typeof window.JsoniaEditor.updateStructureTree === 'function') {
+          window.JsoniaEditor.updateStructureTree();
+          return;
+        }
+      } catch (e) {
+        /* ignore and fallback */
+      }
+      try {
+        if (typeof window.updateStructureTree === 'function') {
+          window.updateStructureTree();
+          return;
+        }
+      } catch (e) {
+        /* ignore and fallback */
+      }
       const container = document.getElementById('structure-tree');
       if (!container) return;
       // find the framework drop-zone if present, otherwise fall back to canvas
@@ -521,23 +523,62 @@
       for (let t of top) out += buildNode(t);
       out += '</ul>';
       container.innerHTML = out;
-
-      // attach click handlers to tree nodes to select corresponding element
-      Array.from(container.querySelectorAll('.tree-node')).forEach((node) => {
-        node.addEventListener('click', (ev) => {
-          ev.stopPropagation();
-          const id = node.getAttribute('data-component-id');
-          if (!id) return;
-          const el = dropZone.querySelector('[data-component-id="' + id + '"]');
-          if (el) {
-            if (interactions && typeof interactions.selectElement === 'function') {
-              interactions.selectElement(el);
-            } else {
-              selectElement(el);
-            }
-          }
-        });
-      });
+      // attach ARIA roles and click/keyboard handlers to tree for accessibility
+      try {
+        const rootUl = container.querySelector('.tree-root');
+        if (rootUl) {
+          rootUl.setAttribute('role', 'tree');
+          const nodes = Array.from(rootUl.querySelectorAll('.tree-node'));
+          nodes.forEach((node, idx) => {
+            node.setAttribute('role', 'treeitem');
+            node.setAttribute('tabindex', idx === 0 ? '0' : '-1');
+            node.addEventListener('click', (ev) => {
+              ev.stopPropagation();
+              const id = node.getAttribute('data-component-id');
+              if (!id) return;
+              const el = dropZone.querySelector('[data-component-id="' + id + '"]');
+              if (el) {
+                if (interactions && typeof interactions.selectElement === 'function') {
+                  interactions.selectElement(el);
+                } else {
+                  selectElement(el);
+                }
+              }
+            });
+            node.addEventListener('keydown', (ev) => {
+              const key = ev.key;
+              if (key === 'Enter' || key === ' ') {
+                ev.preventDefault();
+                node.click();
+                return;
+              }
+              // navigation: ArrowDown / ArrowUp / Home / End
+              if (key === 'ArrowDown' || key === 'ArrowUp' || key === 'Home' || key === 'End') {
+                ev.preventDefault();
+                const sibs = Array.from(rootUl.querySelectorAll('.tree-node'));
+                let targetIndex = sibs.indexOf(node);
+                if (key === 'ArrowDown') targetIndex = Math.min(sibs.length - 1, targetIndex + 1);
+                else if (key === 'ArrowUp') targetIndex = Math.max(0, targetIndex - 1);
+                else if (key === 'Home') targetIndex = 0;
+                else if (key === 'End') targetIndex = sibs.length - 1;
+                const target = sibs[targetIndex];
+                if (target) {
+                  // move tabindex and focus
+                  sibs.forEach((n) => n.setAttribute('tabindex', '-1'));
+                  target.setAttribute('tabindex', '0');
+                  try {
+                    target.focus();
+                  } catch (err) {
+                    /* ignore focus issues */
+                  }
+                }
+              }
+            });
+          });
+        }
+      } catch (err) {
+        /* ignore */
+      }
     } catch (err) {
       // ignore tree update errors
     }
@@ -580,6 +621,32 @@
     if (prev) prev.classList.remove('selected');
     if (el) el.classList.add('selected');
     renderProperties(el);
+    // Sync selection with structure tree (if present)
+    try {
+      const tree = document.getElementById('structure-tree');
+      if (tree) {
+        // clear previous selection
+        const prevNode = tree.querySelector('.tree-node.selected');
+        if (prevNode) prevNode.classList.remove('selected');
+        if (el) {
+          const id = el.getAttribute('data-component-id');
+          if (id) {
+            const node = tree.querySelector('.tree-node[data-component-id="' + id + '"]');
+            if (node) {
+              node.classList.add('selected');
+              // ensure visible
+              try {
+                node.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+              } catch (err) {
+                /* ignore */
+              }
+            }
+          }
+        }
+      }
+    } catch (err) {
+      /* ignore tree sync errors */
+    }
   }
 
   btnNew.addEventListener('click', () => {

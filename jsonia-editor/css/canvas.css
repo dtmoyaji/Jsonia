@@ -1,0 +1,43 @@
+:root{
+  --bg:#f6f7fb;
+  --panel:#ffffff;
+  --accent:#2b6cb0;
+  /* Themeable vars for drag/drop UX */
+  --jsonia-ghost-bg: rgba(43,108,176,0.08);
+  --jsonia-placeholder-bg: rgba(43,108,176,0.06);
+  --jsonia-placeholder-border: rgba(43,108,176,0.4);
+  --jsonia-highlight-border: rgba(43,108,176,0.6);
+  --jsonia-highlight-bg: rgba(43,108,176,0.04);
+  --jsonia-grid-line: rgba(0,0,0,0.03);
+}
+*{box-sizing:border-box;font-family:Inter,Segoe UI,Arial,sans-serif}
+body{margin:0;background:var(--bg);height:100vh;display:flex;flex-direction:column}
+.toolbar{height:48px;background:#fff;border-bottom:1px solid #e6e9ef;display:flex;align-items:center;justify-content:space-between;padding:0 12px}
+.toolbar button{margin-right:8px}
+.workspace{display:flex;flex:1;min-height:0}
+.palette{width:200px;background:var(--panel);border-right:1px solid #e6e9ef;padding:12px;overflow:auto}
+.properties{width:260px;background:var(--panel);border-left:1px solid #e6e9ef;padding:12px;overflow:auto}
+.properties label{display:block;margin-top:8px;font-size:12px;color:#3b4252}
+.properties input[type="text"],.properties input[type="number"],.properties select,.properties textarea{width:100%;padding:6px;margin-top:4px;border:1px solid #e6e9ef;border-radius:4px}
+.properties .section{margin-bottom:12px}
+.properties .validation{color:#d64545;font-size:12px;margin-top:6px}
+.canvas{flex:1;position:relative;overflow:auto;padding:16px;background:linear-gradient(180deg,#fff,#f7fbff)}
+.canvas .canvas-hint{position:absolute;left:50%;top:10px;transform:translateX(-50%);color:#8b95a6}
+.component{background:#f0f5ff;border:1px dashed #b6d0ff;padding:8px;margin:6px 0;cursor:grab}
+.draggable{position:absolute;border:1px solid rgba(43,108,176,.8);background:#fff;padding:8px;border-radius:4px;box-shadow:0 2px 8px rgba(16,24,40,.06)}
+.draggable.selected{outline:2px dashed #2b6cb0}
+.resize-handle{width:10px;height:10px;background:#2b6cb0;position:absolute;right:-6px;bottom:-6px;border-radius:2px;cursor:nwse-resize}
+
+/* Ghost preview and placeholder styles */
+.jsonia-ghost{position:fixed;pointer-events:none;z-index:9999;padding:6px 10px;border-radius:6px;background:var(--jsonia-ghost-bg,rgba(43,108,176,0.08));border:1px solid rgba(43,108,176,0.18);box-shadow:0 6px 18px rgba(16,24,40,0.12);font-size:12px;color:#1f2d3d}
+.jsonia-placeholder{background:var(--jsonia-placeholder-bg,rgba(43,108,176,0.06));border:1px dashed var(--jsonia-placeholder-border,rgba(43,108,176,0.4));min-height:28px;border-radius:4px}
+.jsonia-highlight{outline:2px solid var(--jsonia-highlight-border,rgba(43,108,176,0.6));box-shadow:0 4px 12px rgba(43,108,176,0.06);background:var(--jsonia-highlight-bg,rgba(43,108,176,0.04))}
+
+/* small helper for grid snap visual (optional) */
+.jsonia-snap-grid{background-image:linear-gradient(var(--jsonia-grid-line,rgba(0,0,0,0.03)) 1px,transparent 1px);background-size:20px 20px}
+
+/* Insertion animation helpers */
+.draggable{position:absolute;border:1px solid rgba(43,108,176,.8);background:#fff;padding:8px;border-radius:4px;box-shadow:0 2px 8px rgba(16,24,40,.06);transition:transform .18s ease,opacity .18s ease,height .18s ease}
+.jsonia-insert{opacity:0;transform:translateY(8px)}
+.jsonia-placeholder{background:var(--jsonia-placeholder-bg,rgba(43,108,176,0.06));border:1px dashed var(--jsonia-placeholder-border,rgba(43,108,176,0.4));min-height:28px;border-radius:4px;transition:background .14s ease,height .18s ease,opacity .18s ease}
+

@@ -9,12 +9,8 @@
     "history": [],
     "historyIndex": -1,
     "draggedComponent": null,
-    "dragStartActions": [
-      { "type": "function", "name": "handleDragStart" }
-    ],
-    "innerDropActions": [
-      { "type": "function", "name": "handleInnerDrop" }
-    ]
+    "dragStartActions": [{ "type": "function", "name": "handleDragStart" }],
+    "innerDropActions": [{ "type": "function", "name": "handleInnerDrop" }]
   },
   "computed": {},
   "apis": {
@@ -28,12 +24,24 @@
   "initialization": [
     { "type": "api", "name": "loadComponents", "storeIn": "sharedComponentsResponse" },
     { "type": "api", "name": "loadBuiltinComponents", "storeIn": "builtinComponentsResponse" },
-    { "type": "setState", "key": "sharedComponents", "value": "{{sharedComponentsResponse.components}}" },
-    { "type": "setState", "key": "componentsData", "value": "{{builtinComponentsResponse.components}}" },
+    {
+      "type": "setState",
+      "key": "sharedComponents",
+      "value": "{{sharedComponentsResponse.components}}"
+    },
+    {
+      "type": "setState",
+      "key": "componentsData",
+      "value": "{{builtinComponentsResponse.components}}"
+    },
     { "type": "setState", "key": "iconMap", "value": "{{builtinComponentsResponse.iconMap}}" },
     { "type": "registerComponentMethods", "components": "{{sharedComponents}}" },
     { "type": "api", "name": "loadEditorComponents", "storeIn": "editorComponentsResponse" },
-    { "type": "setState", "key": "editorComponents", "value": "{{editorComponentsResponse.components}}" },
+    {
+      "type": "setState",
+      "key": "editorComponents",
+      "value": "{{editorComponentsResponse.components}}"
+    },
     { "type": "registerComponentActions", "components": "{{editorComponents}}" },
     { "type": "function", "name": "injectEditorComponentsStyles" },
     { "type": "api", "name": "loadExtensions", "storeIn": "extensionsResponse" },
@@ -50,58 +58,42 @@
     {
       "target": ".editor-tab",
       "type": "click",
-      "actions": [
-        { "type": "function", "name": "switchTab" }
-      ]
+      "actions": [{ "type": "function", "name": "switchTab" }]
     },
     {
       "target": ".accordion-header",
       "type": "click",
-      "actions": [
-        { "type": "function", "name": "toggleAccordion" }
-      ]
+      "actions": [{ "type": "function", "name": "toggleAccordion" }]
     },
     {
       "target": "[data-action]",
       "type": "click",
-      "actions": [
-        { "type": "function", "name": "handleAction" }
-      ]
+      "actions": [{ "type": "function", "name": "handleAction" }]
     },
     {
       "target": ".component-item",
       "type": "dragstart",
-      "actions": [
-        { "type": "function", "name": "handleDragStart" }
-      ]
+      "actions": [{ "type": "function", "name": "handleDragStart" }]
     },
     {
       "target": ".component-item",
       "type": "dragend",
-      "actions": [
-        { "type": "function", "name": "handleDragEnd" }
-      ]
+      "actions": [{ "type": "function", "name": "handleDragEnd" }]
     },
     {
       "target": "#drop-zone",
       "type": "dragover",
-      "actions": [
-        { "type": "function", "name": "handleDragOver" }
-      ]
+      "actions": [{ "type": "function", "name": "handleDragOver" }]
     },
     {
       "target": "#drop-zone",
       "type": "drop",
-      "actions": [
-        { "type": "function", "name": "handleDrop" }
-      ]
+      "actions": [{ "type": "function", "name": "handleDrop" }]
     },
     {
       "target": ".delete-component-btn",
       "type": "click",
-      "actions": [
-        { "type": "function", "name": "handleDeleteComponent" }
-      ]
+      "actions": [{ "type": "function", "name": "handleDeleteComponent" }]
     }
   ]
 }

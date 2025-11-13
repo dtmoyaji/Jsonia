@@ -2,10 +2,7 @@
   "methods": {
     "addChild": {
       "description": "アコーディオンのコンテンツに子要素を追加（data-accordion-content属性で検索）",
-      "params": [
-        "accordionId",
-        "childElement"
-      ],
+      "params": ["accordionId", "childElement"],
       "steps": [
         {
           "type": "dom.select",
@@ -31,10 +28,7 @@
     },
     "removeChild": {
       "description": "アコーディオンのコンテンツから子要素を削除（data-accordion-content属性で検索）",
-      "params": [
-        "accordionId",
-        "childElement"
-      ],
+      "params": ["accordionId", "childElement"],
       "steps": [
         {
           "type": "dom.select",
@@ -56,9 +50,7 @@
     },
     "clearChildren": {
       "description": "アコーディオンのコンテンツをクリア（data-accordion-content属性で検索）",
-      "params": [
-        "accordionId"
-      ],
+      "params": ["accordionId"],
       "steps": [
         {
           "type": "dom.select",
@@ -80,10 +72,7 @@
     },
     "setChildren": {
       "description": "アコーディオンのコンテンツを一括設定（data-accordion-content属性で検索）",
-      "params": [
-        "accordionId",
-        "children"
-      ],
+      "params": ["accordionId", "children"],
       "steps": [
         {
           "type": "dom.select",
@@ -187,11 +176,11 @@
               "type": "if",
               "condition": "{{icon}}",
               "then": [
-                  {
-                    "type": "dom.toggleClass",
-                    "target": "[data-accordion-id='{{accordionId}}'] .accordion-icon",
-                    "className": "rotated"
-                  },
+                {
+                  "type": "dom.toggleClass",
+                  "target": "[data-accordion-id='{{accordionId}}'] .accordion-icon",
+                  "className": "rotated"
+                },
                 {
                   "type": "dom.setAttribute",
                   "target": "{{icon}}",

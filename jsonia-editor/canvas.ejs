@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title><%= title || 'Jsonia - Editor Canvas' %></title>
+    <link rel="stylesheet" href="/editor/css/canvas.css" />
+    <link rel="stylesheet" href="/editor/css/browser.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="toolbar">
+        <div class="left">
+          <button id="btn-new">New</button>
+          <button id="btn-save">Save</button>
+          <button id="btn-undo">Undo</button>
+          <button id="btn-redo">Redo</button>
+        </div>
+        <div class="right">Jsonia Editor - Canvas</div>
+      </header>
+
+      <div class="workspace">
+        <aside class="palette">
+          <h3>Components</h3>
+          <div class="component" draggable="true" data-type="button">Button</div>
+          <div class="component" draggable="true" data-type="card">Card</div>
+          <div class="component" draggable="true" data-type="text">Text</div>
+
+          <hr />
+          <h4>Library</h4>
+          <div id="component-library" class="component-library">
+            <div class="lib-loading">Loading library...</div>
+          </div>
+        </aside>
+
+        <main class="canvas" id="canvas">
+          <div class="canvas-hint">Drop components here</div>
+        </main>
+
+        <aside class="properties" id="properties">
+          <h3>Properties</h3>
+          <div id="props-content">Select a component on the canvas</div>
+        </aside>
+      </div>
+    </div>
+
+    <script src="/editor/js/editor-core.js"></script>
+    <script src="/editor/js/editor-interactions.js"></script>
+    <script src="/editor/js/editor-properties.js"></script>
+    <script src="/editor/js/editor-api.js"></script>
+    <script src="/editor/js/browser.js"></script>
+    <script src="/editor/js/canvas.js"></script>
+  </body>
+</html>

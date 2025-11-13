@@ -8,7 +8,7 @@
   "description": "選択可能なドロップダウンメニュー",
   "template": {
     "tag": "div",
-    "attributes": { 
+    "attributes": {
       "class": "dropdown",
       "style": "position: relative; display: inline-block;"
     },
@@ -75,9 +75,11 @@
         "params": ["dropdownId"],
         "steps": [
           { "type": "dom.select", "selector": "[data-dropdown-menu]", "output": "menu" },
-          { "type": "if", "condition": "{{menu}}", "then": [
-            { "type": "dom.toggleClass", "target": "{{menu}}", "className": "hidden" }
-          ]}
+          {
+            "type": "if",
+            "condition": "{{menu}}",
+            "then": [{ "type": "dom.toggleClass", "target": "{{menu}}", "className": "hidden" }]
+          }
         ]
       },
       "selectItem": {

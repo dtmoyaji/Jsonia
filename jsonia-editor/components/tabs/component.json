@@ -5,38 +5,38 @@
     "tag": "div",
     "attributes": { "class": "editor-tabs" },
     "children": [
-    {
-      "tag": "button",
-      "text": "📦 構造",
-      "attributes": {
-        "class": "editor-tab active",
-        "data-tab": "structure"
+      {
+        "tag": "button",
+        "text": "📦 構造",
+        "attributes": {
+          "class": "editor-tab active",
+          "data-tab": "structure"
+        }
+      },
+      {
+        "tag": "button",
+        "text": "🎨 スタイル",
+        "attributes": {
+          "class": "editor-tab",
+          "data-tab": "styles"
+        }
+      },
+      {
+        "tag": "button",
+        "text": "⚡ 動作",
+        "attributes": {
+          "class": "editor-tab",
+          "data-tab": "behavior"
+        }
+      },
+      {
+        "tag": "button",
+        "text": "💾 データ",
+        "attributes": {
+          "class": "editor-tab",
+          "data-tab": "data"
+        }
       }
-    },
-    {
-      "tag": "button",
-      "text": "🎨 スタイル",
-      "attributes": {
-        "class": "editor-tab",
-        "data-tab": "styles"
-      }
-    },
-    {
-      "tag": "button",
-      "text": "⚡ 動作",
-      "attributes": {
-        "class": "editor-tab",
-        "data-tab": "behavior"
-      }
-    },
-    {
-      "tag": "button",
-      "text": "💾 データ",
-      "attributes": {
-        "class": "editor-tab",
-        "data-tab": "data"
-      }
-    }
     ]
   },
   "behavior": {
@@ -45,7 +45,11 @@
         "type": "sequence",
         "steps": [
           { "type": "console", "message": "📑 タブ切り替え" },
-          { "type": "setState", "key": "selectedTab", "value": "{{event.currentTarget.getAttribute('data-tab')}}" }
+          {
+            "type": "setState",
+            "key": "selectedTab",
+            "value": "{{event.currentTarget.getAttribute('data-tab')}}"
+          }
         ]
       }
     }

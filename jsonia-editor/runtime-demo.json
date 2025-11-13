@@ -315,16 +315,12 @@
         {
           "target": "#name",
           "type": "blur",
-          "actions": [
-            { "type": "validate", "field": "name", "errorTarget": "#nameError" }
-          ]
+          "actions": [{ "type": "validate", "field": "name", "errorTarget": "#nameError" }]
         },
         {
           "target": "#email",
           "type": "blur",
-          "actions": [
-            { "type": "validate", "field": "email", "errorTarget": "#emailError" }
-          ]
+          "actions": [{ "type": "validate", "field": "email", "errorTarget": "#emailError" }]
         },
         {
           "target": "#userForm",
@@ -334,13 +330,20 @@
               "type": "submit",
               "onValid": [
                 { "type": "console", "message": "バリデーション成功!" },
-                { "type": "updateDOM", "target": "#userInfo", "content": "<h3>✅ 登録完了!</h3><p><strong>名前:</strong> {{name}}</p><p><strong>メール:</strong> {{email}}</p>" },
-                { "type": "updateDOM", "target": "#userInfo", "attribute": "style", "content": "display: block;" },
+                {
+                  "type": "updateDOM",
+                  "target": "#userInfo",
+                  "content": "<h3>✅ 登録完了!</h3><p><strong>名前:</strong> {{name}}</p><p><strong>メール:</strong> {{email}}</p>"
+                },
+                {
+                  "type": "updateDOM",
+                  "target": "#userInfo",
+                  "attribute": "style",
+                  "content": "display: block;"
+                },
                 { "type": "alert", "message": "ユーザー登録が完了しました!" }
               ],
-              "onInvalid": [
-                { "type": "alert", "message": "入力内容を確認してください" }
-              ]
+              "onInvalid": [{ "type": "alert", "message": "入力内容を確認してください" }]
             }
           ]
         }

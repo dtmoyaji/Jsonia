@@ -16,14 +16,14 @@
     "children": [
       {
         "tag": "div",
-        "attributes": { 
+        "attributes": {
           "class": "modal-content",
           "style": "background: white; border-radius: 8px; max-width: 500px; width: 90%; box-shadow: 0 4px 20px rgba(0,0,0,0.3);"
         },
         "children": [
           {
             "tag": "div",
-            "attributes": { 
+            "attributes": {
               "class": "modal-header",
               "style": "padding: 16px 20px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center;"
             },
@@ -48,7 +48,7 @@
           },
           {
             "tag": "div",
-            "attributes": { 
+            "attributes": {
               "class": "modal-body",
               "data-slot": "children",
               "style": "padding: 20px;"
@@ -57,7 +57,7 @@
           },
           {
             "tag": "div",
-            "attributes": { 
+            "attributes": {
               "class": "modal-footer",
               "style": "padding: 16px 20px; border-top: 1px solid #ddd; text-align: right;"
             },
@@ -94,10 +94,14 @@
         "params": ["modalId"],
         "steps": [
           { "type": "dom.select", "selector": "[data-modal='{{modalId}}']", "output": "modal" },
-          { "type": "if", "condition": "{{modal}}", "then": [
-            { "type": "dom.removeClass", "target": "{{modal}}", "className": "hidden" },
-            { "type": "setState", "key": "isOpen", "value": true }
-          ]}
+          {
+            "type": "if",
+            "condition": "{{modal}}",
+            "then": [
+              { "type": "dom.removeClass", "target": "{{modal}}", "className": "hidden" },
+              { "type": "setState", "key": "isOpen", "value": true }
+            ]
+          }
         ]
       },
       "close": {
@@ -105,10 +109,14 @@
         "params": ["modalId"],
         "steps": [
           { "type": "dom.select", "selector": "[data-modal='{{modalId}}']", "output": "modal" },
-          { "type": "if", "condition": "{{modal}}", "then": [
-            { "type": "dom.addClass", "target": "{{modal}}", "className": "hidden" },
-            { "type": "setState", "key": "isOpen", "value": false }
-          ]}
+          {
+            "type": "if",
+            "condition": "{{modal}}",
+            "then": [
+              { "type": "dom.addClass", "target": "{{modal}}", "className": "hidden" },
+              { "type": "setState", "key": "isOpen", "value": false }
+            ]
+          }
         ]
       }
     },
@@ -142,8 +150,7 @@
         ]
       }
     ]
-  }
+  },
 
-  ,
   "styleFile": "style.json"
 }

@@ -4,61 +4,73 @@
   "styleFile": "style.json",
   "template": {
     "tag": "aside",
-    "attributes": { "class": "behavior-panel", "data-panel": "behavior", "style": "display: none;" },
+    "attributes": {
+      "class": "behavior-panel",
+      "data-panel": "behavior",
+      "style": "display: none;"
+    },
     "children": [
-    {
-      "tag": "div",
-      "attributes": { "class": "panel-header" },
-      "text": "⚡ 動作定義"
-    },
-    {
-      "tag": "div",
-      "attributes": { "class": "behavior-tabs" },
-      "children": [
-        {
-          "tag": "button",
-          "attributes": { "class": "behavior-tab active", "data-tab": "events" },
-          "text": "🎯 イベント"
-        },
-        {
-          "tag": "button",
-          "attributes": { "class": "behavior-tab", "data-tab": "state" },
-          "text": "💾 状態"
-        },
-        {
-          "tag": "button",
-          "attributes": { "class": "behavior-tab", "data-tab": "validation" },
-          "text": "✅ バリデーション"
-        },
-        {
-          "tag": "button",
-          "attributes": { "class": "behavior-tab", "data-tab": "apis" },
-          "text": "🌐 API"
-        }
-      ]
-    },
-    {
-      "tag": "div",
-      "attributes": { "class": "behavior-content" },
-      "children": [
-        {
-          "tag": "div",
-          "attributes": { "id": "events-panel", "class": "behavior-section active", "data-slot": "events" }
-        },
-        {
-          "tag": "div",
-          "attributes": { "id": "state-panel", "class": "behavior-section", "data-slot": "state" }
-        },
-        {
-          "tag": "div",
-          "attributes": { "id": "validation-panel", "class": "behavior-section", "data-slot": "validation" }
-        },
-        {
-          "tag": "div",
-          "attributes": { "id": "apis-panel", "class": "behavior-section", "data-slot": "apis" }
-        }
-      ]
-    }
+      {
+        "tag": "div",
+        "attributes": { "class": "panel-header" },
+        "text": "⚡ 動作定義"
+      },
+      {
+        "tag": "div",
+        "attributes": { "class": "behavior-tabs" },
+        "children": [
+          {
+            "tag": "button",
+            "attributes": { "class": "behavior-tab active", "data-tab": "events" },
+            "text": "🎯 イベント"
+          },
+          {
+            "tag": "button",
+            "attributes": { "class": "behavior-tab", "data-tab": "state" },
+            "text": "💾 状態"
+          },
+          {
+            "tag": "button",
+            "attributes": { "class": "behavior-tab", "data-tab": "validation" },
+            "text": "✅ バリデーション"
+          },
+          {
+            "tag": "button",
+            "attributes": { "class": "behavior-tab", "data-tab": "apis" },
+            "text": "🌐 API"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "attributes": { "class": "behavior-content" },
+        "children": [
+          {
+            "tag": "div",
+            "attributes": {
+              "id": "events-panel",
+              "class": "behavior-section active",
+              "data-slot": "events"
+            }
+          },
+          {
+            "tag": "div",
+            "attributes": { "id": "state-panel", "class": "behavior-section", "data-slot": "state" }
+          },
+          {
+            "tag": "div",
+            "attributes": {
+              "id": "validation-panel",
+              "class": "behavior-section",
+              "data-slot": "validation"
+            }
+          },
+          {
+            "tag": "div",
+            "attributes": { "id": "apis-panel", "class": "behavior-section", "data-slot": "apis" }
+          }
+        ]
+      }
     ]
   },
   "behavior": {
@@ -67,7 +79,11 @@
         "type": "sequence",
         "steps": [
           { "type": "console", "message": "🎨 BehaviorEditor初期化中..." },
-          { "type": "setState", "key": "behaviorEditorState", "value": { "events": {}, "state": {}, "validation": {}, "apis": {} } },
+          {
+            "type": "setState",
+            "key": "behaviorEditorState",
+            "value": { "events": {}, "state": {}, "validation": {}, "apis": {} }
+          },
           { "type": "console", "message": "✅ BehaviorEditor初期化完了" }
         ]
       },
@@ -88,17 +104,13 @@
             "type": "array.forEach",
             "array": "{{tabs}}",
             "item": "tab",
-            "do": [
-              { "type": "dom.removeClass", "target": "{{tab}}", "className": "active" }
-            ]
+            "do": [{ "type": "dom.removeClass", "target": "{{tab}}", "className": "active" }]
           },
           {
             "type": "array.forEach",
             "array": "{{sections}}",
             "item": "section",
-            "do": [
-              { "type": "dom.removeClass", "target": "{{section}}", "className": "active" }
-            ]
+            "do": [{ "type": "dom.removeClass", "target": "{{section}}", "className": "active" }]
           }
         ]
       }

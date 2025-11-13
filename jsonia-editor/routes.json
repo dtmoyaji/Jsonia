@@ -14,6 +14,11 @@
     },
     {
       "method": "GET",
+      "path": "/editor/api/schemas",
+      "handler": "listSchemas"
+    },
+    {
+      "method": "GET",
       "path": "/editor/api/components",
       "handler": "loadComponentLibrary"
     },

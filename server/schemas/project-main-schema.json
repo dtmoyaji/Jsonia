@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Jsonia Project Main",
+  "type": "object",
+  "properties": {
+    "title": { "type": "string" },
+    "body": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tag": { "type": "string" },
+          "text": { "type": ["string", "null"] },
+          "attributes": { "type": "object" },
+          "children": { "$ref": "#/properties/body" }
+        },
+        "required": ["tag"],
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

@@ -8,7 +8,7 @@
   "description": "切り替え可能なタブコンポーネント",
   "template": {
     "tag": "div",
-    "attributes": { 
+    "attributes": {
       "class": "tabs-container",
       "style": "border: 1px solid #ddd; border-radius: 4px;"
     },

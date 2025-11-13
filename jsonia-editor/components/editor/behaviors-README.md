@@ -25,12 +25,11 @@ editorRuntime.init(behavior);
 新しい動作パターンを追加する場合:
 
 1. 必要なら `components/<your-component>/behavior.json` に定義を作成
-2. state, events, apisを定義
+2. state, events, apis を定義
 3. 必要に応じてカスタムアクションを `jsonia-editor-extensions.js` に登録
 4. 適切な場所から新しい動作定義を読み込む
 
 ## 注意
 
 このファイルは移設済みのドキュメントです。将来的には `behaviors/` ディレクトリ自体を削除してリポジトリをクリーンにする予定です。
-
 ````

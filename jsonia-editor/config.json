@@ -46,13 +46,13 @@
         "filename": "page-config.json"
       },
       "export-html": {
-        "type": "export", 
+        "type": "export",
         "format": "html",
         "filename": "generated-page.html"
       },
       "export-ejs": {
         "type": "export",
-        "format": "ejs", 
+        "format": "ejs",
         "filename": "generated-template.ejs"
       },
       "save": {
@@ -70,7 +70,7 @@
         "method": "undo"
       },
       "redo": {
-        "type": "history", 
+        "type": "history",
         "method": "redo"
       },
       "device-desktop": {
@@ -159,23 +159,17 @@
         {
           "type": "alert",
           "label": "アラート表示",
-          "fields": [
-            { "name": "message", "label": "メッセージ", "type": "text" }
-          ]
+          "fields": [{ "name": "message", "label": "メッセージ", "type": "text" }]
         },
         {
           "type": "console",
           "label": "コンソール出力",
-          "fields": [
-            { "name": "message", "label": "メッセージ", "type": "text" }
-          ]
+          "fields": [{ "name": "message", "label": "メッセージ", "type": "text" }]
         },
         {
           "type": "setState",
           "label": "状態を更新",
-          "fields": [
-            { "name": "updates", "label": "更新内容(JSON)", "type": "textarea" }
-          ]
+          "fields": [{ "name": "updates", "label": "更新内容(JSON)", "type": "textarea" }]
         },
         {
           "type": "updateDOM",
@@ -212,9 +206,7 @@
         {
           "type": "navigate",
           "label": "ページ遷移",
-          "fields": [
-            { "name": "url", "label": "URL", "type": "text" }
-          ]
+          "fields": [{ "name": "url", "label": "URL", "type": "text" }]
         },
         {
           "type": "api",
@@ -283,7 +275,7 @@
       },
       "drop": {
         "event": "drop",
-        "selector": "#drop-zone", 
+        "selector": "#drop-zone",
         "handler": "handleDrop"
       },
       "categoryToggle": {
@@ -309,7 +301,7 @@
           },
           {
             "name": "id",
-            "type": "text", 
+            "type": "text",
             "label": "ID"
           }
         ]

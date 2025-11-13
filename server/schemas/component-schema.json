@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Jsonia Component",
+  "type": "object",
+  "properties": {
+    "name": { "type": "string" },
+    "tag": { "type": "string" },
+    "props": { "type": "object" },
+    "style": { "type": "object" },
+    "behavior": { "type": "object" }
+  },
+  "required": ["name"],
+  "additionalProperties": true
+}
