@@ -59,3 +59,7 @@ projects/*
 # 下書き・バックアップファイル
 *.draft.json
 *.backup.json
+
+# Ignore repository metadata and workflow config if you prefer not to track them
+# Note: ignoring `.github/` will stop tracking GitHub Actions workflows, templates, and related files.
+.github/
