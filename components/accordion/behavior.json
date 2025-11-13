@@ -187,24 +187,11 @@
               "type": "if",
               "condition": "{{icon}}",
               "then": [
-                {
-                  "type": "if",
-                  "condition": "{{event.currentTarget.classList.contains('expanded')}}",
-                  "then": [
-                    {
-                      "type": "dom.addClass",
-                      "target": "{{icon}}",
-                      "className": "rotated"
-                    }
-                  ],
-                  "else": [
-                    {
-                      "type": "dom.removeClass",
-                      "target": "{{icon}}",
-                      "className": "rotated"
-                    }
-                  ]
-                },
+                  {
+                    "type": "dom.toggleClass",
+                    "target": "[data-accordion-id='{{accordionId}}'] .accordion-icon",
+                    "className": "rotated"
+                  },
                 {
                   "type": "dom.setAttribute",
                   "target": "{{icon}}",
